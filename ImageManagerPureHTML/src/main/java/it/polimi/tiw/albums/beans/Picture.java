@@ -1,4 +1,4 @@
-package it.polimi.tiw.galleries.beans;
+package it.polimi.tiw.albums.beans;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package it.polimi.tiw.galleries.beans;
+package it.polimi.tiw.albums.beans;
 
 public class User{
 	//ATTRIBUTES
