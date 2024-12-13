@@ -6,7 +6,7 @@
 	<display-name>TIW-Image-Manager-Pure-HTML</display-name>
 	<context-param>
 		<param-name>dbUrl</param-name>
-		<param-value>jdbc:mysql://localhost:3306/MessBoardDb?serverTimezone=UTC</param-value>
+		<param-value>jdbc:mysql://localhost:3306/ImageManagerDB?serverTimezone=UTC</param-value>
 	</context-param>
 	<context-param>
 		<param-name>dbUser</param-name>
