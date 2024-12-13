@@ -20,7 +20,19 @@
 		<param-name>dbDriver</param-name>
 		<param-value>com.mysql.cj.jdbc.Driver</param-value>
 	</context-param>
+
+
+	<filter>
+		<filter-name>LogInFilter</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.LogInFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>LogInFilter</filter-name>
+		<url-pattern>/Home</url-pattern>
+	</filter-mapping>
+
+
 	<welcome-file-list>
-		<welcome-file>GetTopics</welcome-file>
+		<welcome-file>Home</welcome-file>
 	</welcome-file-list>
 </web-app>
