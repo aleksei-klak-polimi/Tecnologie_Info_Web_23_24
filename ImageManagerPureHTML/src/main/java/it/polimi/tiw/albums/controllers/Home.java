@@ -9,9 +9,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/Home")
 public class Home extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	// ATTRIBUTES
 	private Connection conn;
 
@@ -41,5 +44,11 @@ public class Home extends HttpServlet {
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
 		}
+	}
+	
+	
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		
 	}
 }
