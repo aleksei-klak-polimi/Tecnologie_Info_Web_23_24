@@ -81,7 +81,7 @@ public class UserDAO{
 	
 	
 	public void createUser(String username, String email, String pwd) throws SQLException{
-		String query = "INSERT INTO User (username, email, password) VALUES ?, ?, ?";
+		String query = "INSERT INTO User (username, email, password) VALUES (?, ?, ?)";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setString(1, username);
