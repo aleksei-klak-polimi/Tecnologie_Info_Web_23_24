@@ -75,7 +75,7 @@ public final class InputSanitizer {
         String uppercaseRegex = ".*[A-Z].*"; // At least one uppercase letter
         String lowercaseRegex = ".*[a-z].*"; // At least one lowercase letter
         String numberRegex = ".*[0-9].*";    // At least one numeric digit
-        String specialCharRegex = ".*[!@#$%^&*()_+\\-=[\\]{}|;:'\",.<>?/`~].*"; // At least one special character
+        String specialCharRegex = ".*[!@#$%^&*()_+\\-=\\[\\]{}|;:'\",.<>?/`~].*"; // At least one special character
 
         boolean hasUppercase = Pattern.matches(uppercaseRegex, password);
         boolean hasLowercase = Pattern.matches(lowercaseRegex, password);
