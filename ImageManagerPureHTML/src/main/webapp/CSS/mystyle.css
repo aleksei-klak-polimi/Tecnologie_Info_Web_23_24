@@ -1,0 +1,109 @@
+/* General page styling */
+body {
+    background-color: #f4f6f8;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    /*display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;*/
+}
+
+/* Span for Sign In */
+span {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+}
+
+span button {
+	border-radius: 4px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+}
+
+span button:hover {
+    opacity: 0.9;
+}
+
+/* Form container styling */
+#formContainer {
+    background-color: #ffffff;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px; /* Ensure form container does not become too wide */
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 85px;
+}
+
+/* Form styling */
+#formContainer form {
+    width: 100%; /* Ensure the form width matches its content */
+    /*max-width: fit-content;*/ /* Match the width of the h1 */
+    margin: 0 auto; /* Center form within the container */
+}
+
+#formContainer .errorText{
+	text-align:left;
+	color: red;
+	font-weight: thin;
+	font-size: 0.75em;
+	padding-top: 10px;
+	padding-left: 5px;
+}
+
+/* Form inputs container */
+#textInputsContainer {
+    margin-bottom: 60px; /* Space between inputs and the submit button */
+}
+
+#textInputsContainer input {
+    display: block;
+    width: 100%; /* Make inputs fill the full width */
+    margin-top: 25px; /* Vertical spacing between inputs */
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Submit button */
+input[type="submit"] {
+    display: block;
+    width: 100%; /* Make submit button fill the full width */
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: black; /* Changed to black */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px; /* Vertical spacing */
+    box-sizing: border-box;
+}
+
+input[type="submit"]:hover {
+    background-color: #333333; /* Slightly lighter black for hover effect */
+}
+
+
+
+/* Heading styling to match form width */
+#formContainer h1 {
+	text-align: left;
+    margin-bottom: 40px;
+    max-width: fit-content; /* Allow h1 to control its width */
+    margin-left: 0;
+    margin-top : 0;
+}

@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta charset="ISO-8859-1">
-		<title>Register</title>
-	</head>
-	<body>
-		<span>
-			Already have an account?
-			<button>Sign In</button>
-		</span>
-		<div>
-			<h1>WELCOME TO THE TEMPORARY SIGN-UP PAGE</h1>
-			<div>
-				<div th:if="${error}" th:text="${error}" style="color: red; font-weight: bold;"></div>
-				<!-- div for thymeleaf to use -->
+<head>
+<meta charset="ISO-8859-1">
+<title>Register</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
+</head>
+<body>
+	<span> Already have an account?
+		<button>Sign In</button>
+	</span>
+	<div id="formContainer">
+		<h1>Welcome to my page</h1>
+		<form action="http://localhost:8080/ImageManagerPureHTML/SignUp"
+			method="post">
+			<div id="textInputsContainer">
+				<div id="textContainer">
+					<input type="text" name="username" placeholder="Username">
+					<input type="email" name="email" placeholder="Email">
+					<input type="password" name="password" placeholder="Password">
+					<input type="password" name="repeatPassword"
+						placeholder="Repeat password">
 				</div>
-			<form action="http://localhost:8080/ImageManagerPureHTML/SignUp" method = "post">
-				<label for="username">USERNAME:</label><br>
-				<input type="text" name = "username"><br>
-				<label for="email">EMAIL:</label><br>
-				<input type="email" name = "email"><br>
-				<label for="username">PASSWORD:</label><br>
-				<input type="password" name = "password"><br>
-				<label for="repeatPassword">REPEAT PASSWORD:</label><br>
-				<input type="password" name = "repeatPassword"><br><br>
-				<input type="submit" value="SING-UP">
-			</form>
+				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 			</div>
-		</div>
-	</body>
+			<input type="submit" value="Sign up">
+		</form>
+	</div>
+</body>
 </html>
