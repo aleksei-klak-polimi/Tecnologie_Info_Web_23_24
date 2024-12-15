@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="ISO-8859-1">
 		<title>Register</title>
@@ -11,17 +11,22 @@
 		</span>
 		<div>
 			<h1>WELCOME TO THE TEMPORARY SIGN-UP PAGE</h1>
-			<form>
-				<label for="username">USERNAME:</label>
+			<div>
+				<div th:if="${error}" th:text="${error}" style="color: red; font-weight: bold;"></div>
+				<!-- div for thymeleaf to use -->
+				</div>
+			<form action="http://localhost:8080/ImageManagerPureHTML/SignUp" method = "post">
+				<label for="username">USERNAME:</label><br>
 				<input type="text" name = "username"><br>
-				<label for="email">EMAIL:</label>
+				<label for="email">EMAIL:</label><br>
 				<input type="email" name = "email"><br>
-				<label for="username">PASSWORD:</label>
+				<label for="username">PASSWORD:</label><br>
 				<input type="password" name = "password"><br>
-				<label for="repeatPassword">REPEAT PASSWORD:</label>
+				<label for="repeatPassword">REPEAT PASSWORD:</label><br>
 				<input type="password" name = "repeatPassword"><br><br>
 				<input type="submit" value="SING-UP">
 			</form>
+			</div>
 		</div>
 	</body>
 </html>
