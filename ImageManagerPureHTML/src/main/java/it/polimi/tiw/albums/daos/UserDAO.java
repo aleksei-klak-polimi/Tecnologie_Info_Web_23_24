@@ -40,6 +40,24 @@ public class UserDAO{
 	}
 	
 	
+	public boolean isEmailAvailable(String email) throws SQLException{
+		String query = "SELECT id FROM User WHERE email = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setString(1, email);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				if(!qres.isBeforeFirst()) {
+					//If isBeforeFirst() = false, result set is empty
+					//and username is available
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	
 	public User getUserByCredentials(String username, String pwd) throws SQLException{
 		User user = null;
 		
