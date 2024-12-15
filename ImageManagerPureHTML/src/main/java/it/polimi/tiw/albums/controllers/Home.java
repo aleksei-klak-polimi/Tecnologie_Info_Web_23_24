@@ -1,9 +1,11 @@
 package it.polimi.tiw.albums.controllers;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
@@ -48,7 +50,9 @@ public class Home extends HttpServlet {
 	
 	
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = "/WEB-INF/Home.html";
+		RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+		dispatcher.forward(request, response);
 	}
 }
