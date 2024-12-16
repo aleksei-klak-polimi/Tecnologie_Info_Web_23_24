@@ -2,23 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
-<title>Register</title>
+<title>Sign Up</title>
 <link rel="stylesheet" type="text/css" media="all"
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
 	<span> Already have an account?
-		<button>Sign In</button>
+		<a href="#" th:href="@{/LogIn}" class="btn">Log in</a>
 	</span>
 	<div id="formContainer">
 		<h1>Welcome to my page</h1>
 		<form action="#" th:action="@{/SignUp}" method="post">
 			<div id="textInputsContainer">
 				<div id="textContainer">
-					<input type="text" name="username" placeholder="Username" th:value="${username}">
-					<input type="email" name="email" placeholder="Email" th:value="${email}">
-					<input type="password" name="password" placeholder="Password" th:value="${password}">
-					<input type="password" name="repeatPassword"
+					<input type="text" name="username" placeholder="Username" required th:value="${username}">
+					<input type="email" name="email" placeholder="Email" required th:value="${email}">
+					<input type="password" name="password" placeholder="Password" required>
+					<input type="password" name="repeatPassword" required
 						placeholder="Repeat password">
 				</div>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
