@@ -12,8 +12,7 @@
 	</span>
 	<div id="formContainer">
 		<h1>Welcome to my page</h1>
-		<form action="http://localhost:8080/ImageManagerPureHTML/SignUp"
-			method="post">
+		<form action="#" th:action="@{/SignUp}" method="post">
 			<div id="textInputsContainer">
 				<div id="textContainer">
 					<input type="text" name="username" placeholder="Username" th:value="${username}">
