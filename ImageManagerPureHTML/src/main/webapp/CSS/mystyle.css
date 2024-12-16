@@ -17,11 +17,13 @@ span {
     padding: 10px;
 }
 
-span .btn {
+.btn {
 	border-radius: 4px;
     background-color: black;
     color: white;
-    border: none;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
@@ -30,8 +32,27 @@ span .btn {
     display: inline-block;
 }
 
-span .btn:hover {
+.btn:hover {
     background-color: #333333;
+}
+
+.btnSecondary{
+	border-radius: 4px;
+    background-color: #f4f6f8;
+    color: black;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btnSecondary:hover {
+    background-color: lightgray;
 }
 
 /* Form container styling */
@@ -46,6 +67,30 @@ span .btn:hover {
 	margin-left:auto;
 	margin-right:auto;
 	margin-top: 85px;
+}
+
+.binaryChoiceContainer{
+	background-color: #ffffff;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 390px; /* Ensure form container does not become too wide */
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 30vh;
+}
+.binaryChoiceContainer p{
+	text-align: center;
+}
+
+.binaryChoiceContainer #buttons{
+	display: flex;
+	flex-direction: row;
+  	justify-content: flex-end;
+  	column-gap: 5px;
+  	margin-top: 40px;
 }
 
 /* Form styling */
@@ -80,7 +125,7 @@ span .btn:hover {
 }
 
 /* Submit button */
-input[type="submit"] {
+#formContainer input[type="submit"] {
     display: block;
     width: 100%; /* Make submit button fill the full width */
     padding: 15px;
@@ -94,7 +139,7 @@ input[type="submit"] {
     box-sizing: border-box;
 }
 
-input[type="submit"]:hover {
+#formContainer input[type="submit"]:hover {
     background-color: #333333; /* Slightly lighter black for hover effect */
 }
 
