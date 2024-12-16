@@ -86,10 +86,16 @@ public class SignUp extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String path = "/WEB-INF/Sign-Up.html";
-		ServletContext servletContext = getServletContext();
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String error = request.getParameter("error");
 		
 		final IWebExchange webExchange = this.application.buildExchange(request, response);
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
+		ctx.setVariable("username", username);
+		ctx.setVariable("email", email);
+		ctx.setVariable("error", error);
+		
 		final Writer writer = response.getWriter();
 		
 		templateEngine.process(path, ctx, writer);
@@ -99,6 +105,10 @@ public class SignUp extends HttpServlet{
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		boolean validCredentials = true;
+		String signUpPath = request.getServletContext().getContextPath() + "/SignUp";
+		
+		final IWebExchange webExchange = this.application.buildExchange(request, response);
+		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
 		
 		//Retrieve inputs
 		String username = request.getParameter("username");
@@ -116,18 +126,22 @@ public class SignUp extends HttpServlet{
 		}
 		else if(!InputSanitizer.isVaildEmail(email)) {
 			error = "Missing or wrong email";
+			signUpPath = signUpPath.concat("?username=").concat(username);
 			validCredentials = false;
 		}
 		else if(!InputSanitizer.isValidPassword(password)) {
 			error = "Missing or wrong password";
+			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(repeatPassword == null || repeatPassword.isBlank() || repeatPassword.isEmpty()) {
 			error = "Missing repeat password";
+			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(!password.equals(repeatPassword)) {
 			error = "Passwords don't match";
+			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		
@@ -156,13 +170,8 @@ public class SignUp extends HttpServlet{
 		
 		
 		if(validCredentials == false) {
-			String path = "/WEB-INF/Sign-Up.html";
-			final IWebExchange webExchange = this.application.buildExchange(request, response);
-			WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
-			ctx.setVariable("error", error);
-			final Writer writer = response.getWriter();
-			
-			templateEngine.process(path, ctx, writer);
+			signUpPath = signUpPath.concat("&error=").concat(error);
+			response.sendRedirect(signUpPath);
 		}
 		else {
 			//Credentials are valid, create user and redirect to home page
