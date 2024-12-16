@@ -16,9 +16,9 @@
 			method="post">
 			<div id="textInputsContainer">
 				<div id="textContainer">
-					<input type="text" name="username" placeholder="Username">
-					<input type="email" name="email" placeholder="Email">
-					<input type="password" name="password" placeholder="Password">
+					<input type="text" name="username" placeholder="Username" th:value="${username}">
+					<input type="email" name="email" placeholder="Email" th:value="${email}">
+					<input type="password" name="password" placeholder="Password" th:value="${password}">
 					<input type="password" name="repeatPassword"
 						placeholder="Repeat password">
 				</div>
