@@ -17,7 +17,7 @@ span {
     padding: 10px;
 }
 
-span button {
+span .btn {
 	border-radius: 4px;
     background-color: black;
     color: white;
@@ -26,11 +26,12 @@ span button {
     font-size: 16px;
     cursor: pointer;
     text-align: center;
+    text-decoration: none;
     display: inline-block;
 }
 
-span button:hover {
-    opacity: 0.9;
+span .btn:hover {
+    background-color: #333333;
 }
 
 /* Form container styling */
