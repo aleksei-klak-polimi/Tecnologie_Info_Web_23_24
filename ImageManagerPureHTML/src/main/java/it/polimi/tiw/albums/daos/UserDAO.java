@@ -67,8 +67,9 @@ public class UserDAO{
 			pstat.setString(2, pwd);
 			
 			try(ResultSet qres = pstat.executeQuery()){
-				user = new User();
-				while(qres.next()) {
+				while(qres.next()){
+					//If true then match was found, else no user was found, return null
+					user = new User();
 					user.setId(qres.getInt("id"));
 					user.setUsername(qres.getString("username"));
 					user.setEmail(qres.getString("email"));
