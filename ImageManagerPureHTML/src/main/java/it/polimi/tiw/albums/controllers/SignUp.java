@@ -121,26 +121,26 @@ public class SignUp extends HttpServlet{
 		
 		//Sanitize Inputs
 		if(!InputSanitizer.isValidUsername(username)) {
-			error = "Missing or wrong username";
+			error = "Missing or wrong username.";
 			validCredentials = false;
 		}
 		else if(!InputSanitizer.isVaildEmail(email)) {
-			error = "Missing or wrong email";
+			error = "Missing or wrong email.";
 			paramString = paramString.concat("&username=").concat(username);
 			validCredentials = false;
 		}
 		else if(!InputSanitizer.isValidPassword(password)) {
-			error = "Missing or wrong password";
+			error = "Missing or wrong password.";
 			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(repeatPassword == null || repeatPassword.isBlank() || repeatPassword.isEmpty()) {
-			error = "Missing repeat password";
+			error = "Missing repeat password.";
 			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(!password.equals(repeatPassword)) {
-			error = "Passwords don't match";
+			error = "Passwords don't match.";
 			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
@@ -152,12 +152,12 @@ public class SignUp extends HttpServlet{
 			UserDAO userDao = new UserDAO(conn);
 			try {
 				if (!userDao.isUsernameAvailable(username)) {
-					error = "Username is not available";
+					error = "Username is not available.";
 					validCredentials = false;
 				}
 
 				else if (!userDao.isEmailAvailable(email)) {
-					error = "Email is not available";
+					error = "Email is not available.";
 					validCredentials = false;
 				}
 			} 
