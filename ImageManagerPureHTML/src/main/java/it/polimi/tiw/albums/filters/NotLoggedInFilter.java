@@ -18,7 +18,7 @@ public class NotLoggedInFilter implements Filter{
 			throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		String loginpath = req.getServletContext().getContextPath() + "/SignUp";
+		String loginpath = req.getServletContext().getContextPath() + "/LogIn";
 
 		HttpSession s = req.getSession();
 		if (s.isNew() || s.getAttribute("user") == null) {
