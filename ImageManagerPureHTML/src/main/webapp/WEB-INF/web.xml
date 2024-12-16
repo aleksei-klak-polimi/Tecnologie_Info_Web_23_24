@@ -23,11 +23,11 @@
 
 
 	<filter>
-		<filter-name>LogInFilter</filter-name>
-		<filter-class>it.polimi.tiw.albums.filters.LogInFilter</filter-class>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>LogInFilter</filter-name>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/Home</url-pattern>
 	</filter-mapping>
 
