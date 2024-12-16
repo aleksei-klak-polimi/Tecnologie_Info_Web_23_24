@@ -12,14 +12,23 @@
 	</span>
 	<div id="formContainer">
 		<h1>Welcome to my page</h1>
-		<form action="#" th:action="@{/SignUp}" method="post">
+		<form action="#" th:action="@{/SignUp}" method="post" autocomplete="on">
 			<div id="textInputsContainer">
 				<div id="textContainer">
-					<input type="text" name="username" placeholder="Username" required th:value="${username}">
-					<input type="email" name="email" placeholder="Email" required th:value="${email}">
-					<input type="password" name="password" placeholder="Password" required>
+					<input type="text" name="username" placeholder="Username"
+						autofocus required th:value="${username}" maxlength="44"
+						minlength="3" pattern="^[a-zA-Z0-9]+$"
+						title="Username can only include upper and lower case letters and numbers">
+					<input type="email" name="email" placeholder="Email" required
+						th:value="${email}" maxlength="44">
+					<input type="password" name="password" placeholder="Password"
+						required maxlength="44" minlength="8"
+						pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E]).{8,}$"
+						title="Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.">
 					<input type="password" name="repeatPassword" required
-						placeholder="Repeat password">
+						placeholder="Repeat password" maxlength="44" minlength="8"
+						pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E]).{8,}$"
+						title="Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.">
 				</div>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 			</div>

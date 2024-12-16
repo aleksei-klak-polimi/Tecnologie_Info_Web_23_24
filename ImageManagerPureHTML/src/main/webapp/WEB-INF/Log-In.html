@@ -12,10 +12,10 @@
 	</span>
 	<div id="formContainer">
 		<h1>Welcome to my page</h1>
-		<form action="#" th:action="@{/LogIn}" method="post">
+		<form action="#" th:action="@{/LogIn}" method="post" autocomplete="on">
 			<div id="textInputsContainer">
 				<div id="textContainer">
-					<input type="text" name="username" placeholder="Username" required th:value="${username}">
+					<input type="text" name="username" placeholder="Username" required autofocus th:value="${username}">
 					<input type="password" name="password" placeholder="Password" required>
 				</div>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
