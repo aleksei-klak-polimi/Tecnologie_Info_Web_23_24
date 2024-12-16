@@ -102,9 +102,6 @@ public class LogIn extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		boolean validCredentials = true;
 		
-		final IWebExchange webExchange = this.application.buildExchange(request, response);
-		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
-		
 		//Retrieve inputs
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
