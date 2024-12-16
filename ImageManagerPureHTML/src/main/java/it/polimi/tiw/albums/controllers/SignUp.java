@@ -105,7 +105,7 @@ public class SignUp extends HttpServlet{
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		boolean validCredentials = true;
-		String signUpPath = request.getServletContext().getContextPath() + "/SignUp";
+		String paramString = "";
 		
 		final IWebExchange webExchange = this.application.buildExchange(request, response);
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
@@ -126,22 +126,22 @@ public class SignUp extends HttpServlet{
 		}
 		else if(!InputSanitizer.isVaildEmail(email)) {
 			error = "Missing or wrong email";
-			signUpPath = signUpPath.concat("?username=").concat(username);
+			paramString = paramString.concat("&username=").concat(username);
 			validCredentials = false;
 		}
 		else if(!InputSanitizer.isValidPassword(password)) {
 			error = "Missing or wrong password";
-			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
+			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(repeatPassword == null || repeatPassword.isBlank() || repeatPassword.isEmpty()) {
 			error = "Missing repeat password";
-			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
+			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		else if(!password.equals(repeatPassword)) {
 			error = "Passwords don't match";
-			signUpPath = signUpPath.concat("?username=").concat(username).concat("&email=").concat(email);
+			paramString = paramString.concat("&username=").concat(username).concat("&email=").concat(email);
 			validCredentials = false;
 		}
 		
@@ -170,7 +170,9 @@ public class SignUp extends HttpServlet{
 		
 		
 		if(validCredentials == false) {
-			signUpPath = signUpPath.concat("&error=").concat(error);
+			paramString = "?error=".concat(error).concat(paramString);
+			String signUpPath = request.getServletContext().getContextPath() + "/SignUp";
+			signUpPath = signUpPath.concat(paramString);
 			response.sendRedirect(signUpPath);
 		}
 		else {
