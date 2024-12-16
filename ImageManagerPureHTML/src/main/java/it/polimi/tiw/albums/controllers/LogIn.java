@@ -116,7 +116,7 @@ public class LogIn extends HttpServlet {
 			validCredentials = false;
 		} 
 		else if (!InputSanitizer.isValidPassword(password)) {
-			error = "Missing or wrong password.";
+			error = "Missing or malformed password.";
 			paramString = paramString.concat("&username=").concat(username);
 			validCredentials = false;
 		}
