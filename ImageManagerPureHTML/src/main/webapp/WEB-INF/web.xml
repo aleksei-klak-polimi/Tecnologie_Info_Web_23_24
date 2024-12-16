@@ -36,6 +36,10 @@
 		<url-pattern>/Home</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/LogOut</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>AlreadyLoggedInFilter</filter-name>
 		<url-pattern>/SignUp</url-pattern>
 	</filter-mapping>
