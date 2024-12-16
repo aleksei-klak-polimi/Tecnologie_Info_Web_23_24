@@ -44,7 +44,7 @@ public final class InputSanitizer {
 		}
 
 		// Check if username exceeds maximum database allowed length
-		if (username.length() > 44) {
+		if (username.length() < 3 ||  username.length() > 44) {
 			return false;
 		}
 
@@ -71,11 +71,14 @@ public final class InputSanitizer {
         if (password.length() < 8 || password.length() > 44) {
             return false;
         }
+        
+        // !@#$%^&*()_+-=[]{}|;:'",.<>?/\~
+        // \x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E
 
         String uppercaseRegex = ".*[A-Z].*"; // At least one uppercase letter
         String lowercaseRegex = ".*[a-z].*"; // At least one lowercase letter
         String numberRegex = ".*[0-9].*";    // At least one numeric digit
-        String specialCharRegex = ".*[!@#$%^&*()_+\\-=\\[\\]{}|;:'\",.<>?/`~].*"; // At least one special character
+        String specialCharRegex = ".*[\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E].*"; // At least one special character
 
         boolean hasUppercase = Pattern.matches(uppercaseRegex, password);
         boolean hasLowercase = Pattern.matches(lowercaseRegex, password);
