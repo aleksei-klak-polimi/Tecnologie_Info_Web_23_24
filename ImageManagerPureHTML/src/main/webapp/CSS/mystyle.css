@@ -5,8 +5,8 @@ body {
     font-family: Arial, sans-serif;
     /*display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;*/
+    align-items: center;*/
+    min-height: 100vh;
 }
 
 /* Span for Sign In */
@@ -91,6 +91,130 @@ span {
   	justify-content: flex-end;
   	column-gap: 5px;
   	margin-top: 40px;
+}
+
+#homeContainer{
+	width: 80vw;
+	max-height:50%;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:40px;
+	margin-bottom:40px;
+	box-sizing: border-box;
+	
+	display: flex;
+	flex-direction: row;
+  	justify-content: space-evenly;
+  	
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+}
+
+#homeContainer .bigSection{
+	width: 33vw;
+	padding: 20px;
+}
+
+#homeContainer #middleDiv{
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+#homeContainer #rightDiv{
+	width:25%;
+}
+
+#homeContainer table{
+	border-collapse: collapse;
+	width: 100%;
+	text-align:left;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 8px;
+    overflow:scroll;
+}
+
+#homeContainer table .odd{
+	background-color:lightgray;
+}
+
+#createAlbumForm{
+	display:flex;
+	flex-direction: column;
+  	justify-content: space-evenly;
+  	align-items:center;
+  	row-gap: 20px;
+}
+
+#createAlbumForm label{
+	display: flex;
+    align-items: center;
+    justify-content: space-around;
+	box-sizing: border-box;
+	width: 100%;
+	padding:0;
+	
+	height: 200px;
+	background-color: #f4f6f8;
+	border: 1px solid lightgray;
+    border-radius: 4px;
+    
+    color:gray;
+}
+
+#createAlbumForm input[type=file]::file-selector-button{
+	display:none;
+}
+
+#createAlbumForm input{
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding:0;
+}
+
+#createAlbumForm input[type="submit"]{
+	padding:15px;
+}
+
+#createAlbumForm input[type="text"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+	
+}
+
+#navbar{
+	position: sticky;
+  	top: 0;
+	list-style-type: none;
+  	margin: 0;
+  	padding: 0;
+  	overflow: hidden;
+  	background-color: black;
+}
+
+#navbar li{
+	float: left;
+}
+
+#navbar a{
+	display: block;
+	color: white;
+  	text-decoration: none;
+  	padding: 14px 16px;
 }
 
 /* Form styling */
