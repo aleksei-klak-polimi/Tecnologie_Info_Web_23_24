@@ -76,7 +76,7 @@ private Connection con;
 	
 	
 	public void createAlbum(int owner, String title, Date creationDate) throws SQLException {
-		String query = "INSERT INTO Album (title, owner, creationDate) VALUES (?, ?, ?)";
+		String query = "INSERT INTO Album (title, owner, creationDate) VALUES (?, ?, ?);";
 	
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setString(1, title);
@@ -95,6 +95,23 @@ private Connection con;
 			pstat.executeUpdate();
 		}
 		//TODO check if is necessary to manually delete entries from Album_Picture table
+	}
+	
+	public int getLatestAlbumByUser(int userId) throws SQLException{
+		int albumId = -1;
+		
+		String query = "SELECT MAX(id) FROM Album WHERE owner = ?;";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, userId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()){
+					albumId = qres.getInt("MAX(id)");
+				}
+			}
+		}
+		
+		return albumId;
 	}
 }
 
