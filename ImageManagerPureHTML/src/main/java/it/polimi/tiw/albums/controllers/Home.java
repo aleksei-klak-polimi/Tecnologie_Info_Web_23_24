@@ -87,6 +87,7 @@ public class Home extends HttpServlet {
 		
 		HttpSession s = request.getSession();
 		User user = (User) s.getAttribute("user");
+		String error = request.getParameter("error");
 		AlbumDAO albumDao = new AlbumDAO(conn);
 		List<Album> myAlbums = null;
 		List<Album> otherAlbums = null;
@@ -106,6 +107,7 @@ public class Home extends HttpServlet {
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
 		ctx.setVariable("myAlbums", myAlbums);
 		ctx.setVariable("otherAlbums", otherAlbums);
+		ctx.setVariable("error", error);
 		
 		final Writer writer = response.getWriter();
 		
