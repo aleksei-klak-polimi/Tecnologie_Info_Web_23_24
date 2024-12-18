@@ -103,7 +103,7 @@ public final class InputSanitizer {
 	}
 	
 	
-	public static boolean isValidAlbumTitle(String albumTitle) {
+	public static boolean isValidTitle(String albumTitle) {
 		if (albumTitle == null || albumTitle.isEmpty()) {
             return false;
         }
