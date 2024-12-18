@@ -6,7 +6,7 @@ public class Album{
 	//ATTRIBUTES
 	private int id;
 	private String title;
-	private int owner;
+	private String owner;
 	private Date creationDate;
 	
 	
@@ -18,7 +18,7 @@ public class Album{
 	public String getTitle() {
 		return title;
 	}
-	public int getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 	public Date getCreationDate() {
@@ -34,7 +34,7 @@ public class Album{
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public void setOwner(int owner) {
+	public void setOwner(String owner) {
 		this.owner = owner;
 	}
 	public void setCreationDate(Date creationDate) {
