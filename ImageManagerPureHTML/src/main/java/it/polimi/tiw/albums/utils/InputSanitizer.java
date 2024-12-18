@@ -101,4 +101,28 @@ public final class InputSanitizer {
         // Password is valid only if all conditions are met
         return hasUppercase && hasLowercase && hasNumber && hasSpecialChar && doesntHaveSpace;
 	}
+	
+	
+	public static boolean isValidAlbumTitle(String albumTitle) {
+		if (albumTitle == null || albumTitle.isEmpty()) {
+            return false;
+        }
+		
+		if (albumTitle.length() < 3 || albumTitle.length() > 127) {
+            return false;
+        }
+		
+		//Album title can contain alpha numerics, spaces and select special characters
+		String albumTitleRegex = "^[a-zA-Z0-9\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
+		Pattern pattern = Pattern.compile(albumTitleRegex);
+
+		// Check if the album Title matches the regex
+		if (!pattern.matcher(albumTitle).matches()) {
+			// Contains invalid characters
+			return false;
+		}
+
+		// albumTitle is valid
+		return true;
+	}
 }
