@@ -21,6 +21,13 @@
 					</tr>
 				</thead>
 				<tbody>
+					<tr
+					th:each="album, iStat: ${myAlbums}"
+					th:class="${iStat.odd}?'odd':'even'">
+						<td th:text="${album.title}"/>	
+					</tr>
+				</tbody>
+				<tbody th:if="${falseBoolean}">
 					<tr class="odd">
 						<td>Album 1</td>
 					</tr>
@@ -46,6 +53,14 @@
 					</tr>
 				</thead>
 				<tbody>
+					<tr
+					th:each="album, iStat: ${otherAlbums}"
+					th:class="${iStat.odd}?'odd':'even'">
+						<td th:text="${album.title}"/>
+						<td th:text="${album.owner}"/>
+					</tr>
+				</tbody>
+				<tbody th:if="${falseBoolean}">
 					<tr class="odd">
 						<td>Album 1</td>
 						<td>Author 1</td>
