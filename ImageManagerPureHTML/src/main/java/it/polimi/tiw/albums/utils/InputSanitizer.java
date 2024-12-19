@@ -207,7 +207,6 @@ public final class InputSanitizer {
 			return false;
 		}
 		
-		System.out.println("Extension is valid, checking with apache tika...");
 		//Assert file type with apache tika
 		String fileType ="";
 		String fileSubType ="";
@@ -230,6 +229,15 @@ public final class InputSanitizer {
 		else if(!fileSubType.equals("jpg") && !fileSubType.equals("jpeg") && !fileSubType.equals("webp") && !fileSubType.equals("png")) {
 			return false;
 		}
+		
+		if(!extension.equals("."+fileSubType)) {
+			return false;
+		}
+		
+		
+		//Check for viruses in the file
+		if(VirusScanner.containsVirus(filePart))
+			return false;
 		
 		return true;
 	}
