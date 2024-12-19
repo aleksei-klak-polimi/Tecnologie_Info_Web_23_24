@@ -20,6 +20,10 @@
 		<param-name>dbDriver</param-name>
 		<param-value>com.mysql.cj.jdbc.Driver</param-value>
 	</context-param>
+	<context-param>
+		<param-name>uploadPath</param-name>
+		<param-value>../../../../var/ImageManagerPureHTML/uploads/images/</param-value>
+	</context-param>
 
 
 	<filter>
