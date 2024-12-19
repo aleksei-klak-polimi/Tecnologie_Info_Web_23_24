@@ -1,6 +1,16 @@
 package it.polimi.tiw.albums.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
+
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tomcat.jakartaee.commons.compress.utils.FileNameUtils;
+
+import jakarta.servlet.http.Part;
 
 public final class InputSanitizer {
 	//ATTRIBUTES
@@ -103,12 +113,12 @@ public final class InputSanitizer {
 	}
 	
 	
-	public static boolean isValidTitle(String albumTitle) {
-		if (albumTitle == null || albumTitle.isEmpty()) {
+	public static boolean isValidTitle(String title) {
+		if (title == null || title.isEmpty()) {
             return false;
         }
 		
-		if (albumTitle.length() < 3 || albumTitle.length() > 127) {
+		if (title.length() < 3 || title.length() > 127) {
             return false;
         }
 		
@@ -117,7 +127,7 @@ public final class InputSanitizer {
 		Pattern pattern = Pattern.compile(albumTitleRegex);
 
 		// Check if the album Title matches the regex
-		if (!pattern.matcher(albumTitle).matches()) {
+		if (!pattern.matcher(title).matches()) {
 			// Contains invalid characters
 			return false;
 		}
@@ -125,4 +135,109 @@ public final class InputSanitizer {
 		// albumTitle is valid
 		return true;
 	}
+	
+	
+	
+	public static boolean isValidImageDescription(String description) {
+		if (description == null || description.isEmpty()) {
+			//Images can be without descriptions
+            return true;
+        }
+		
+		if (description.length() > 1023) {
+            return false;
+        }
+		
+		//Image description can contain alpha numerics, spaces and select special characters
+		String albumTitleRegex = "^[a-zA-Z0-9\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
+		Pattern pattern = Pattern.compile(albumTitleRegex);
+
+		// Check if the album Title matches the regex
+		if (!pattern.matcher(description).matches()) {
+			// Contains invalid characters
+			return false;
+		}
+
+		// albumTitle is valid
+		return true;
+	}
+	
+	
+	
+	public static boolean isValidId(String id) {
+		if (id == null || id.isEmpty()) {
+            return false;
+        }
+		
+		if (id.length() > 10) {
+			//INT type for id is 32bits so max number is 2,147,483,647, 10 digits
+            return false;
+        }
+		
+		// Id can only contain numeric chars
+		String idRegex = "^[0-9]+$";
+		Pattern pattern = Pattern.compile(idRegex);
+
+		if (!pattern.matcher(id).matches()) {
+			// Contains invalid characters
+			return false;
+		}
+		
+		try {
+			int testIntParsing = Integer.valueOf(id);
+		}
+		catch(NumberFormatException e){
+			//string can't be converted to int so is not a valid id
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	public static boolean isValidImageFile(Part filePart) {
+		if(filePart == null) {
+			return false;
+		}
+		
+		String fileName = filePart.getSubmittedFileName();
+		//Check if valid extension
+		String extension = FileNameUtils.getExtension(fileName);
+		if(!extension.equals("jpg") && !extension.equals("jpeg") && !extension.equals("webp") && !extension.equals("png")) {
+			return false;
+		}
+		
+		System.out.println("Extension is valid, checking with apache tika...");
+		//Assert file type with apache tika
+		String fileType ="";
+		String fileSubType ="";
+		try {
+			TikaConfig tika = new TikaConfig();
+			InputStream iStream = filePart.getInputStream();
+			MediaType mimetype = tika.getDetector().detect(iStream, new Metadata());
+			
+			fileType = mimetype.getType();
+			fileSubType = mimetype.getSubtype();
+		}
+		catch(IOException | TikaException e) {
+			e.printStackTrace();
+			System.out.println("Exception caught in InputSanitizer using apache tika");
+			return false;
+		}
+		if(!fileType.equals("image")) {
+			return false;
+		}
+		else if(!fileSubType.equals("jpg") && !fileSubType.equals("jpeg") && !fileSubType.equals("webp") && !fileSubType.equals("png")) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
 }
+
+
+
+
+
