@@ -26,6 +26,42 @@ private Connection con;
 	
 	
 	//QUERIES
+	public boolean albumExists(int albumId) throws SQLException{
+		String query ="SELECT id FROM Album WHERE id = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				if(qres.isBeforeFirst()) {
+					//If isBeforeFirst() = true, result set is not empty
+					//and album exists
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	public int getAmountOfPicturesByAlbum(int albumId) throws SQLException{
+		String query = "SELECT COUNT(DISTINCT pictureId) FROM Album_Picture WHERE albumId = ?";
+		int amount = -1;
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()){
+					amount = qres.getInt("COUNT(DISTINCT pictureId)");
+				}
+			}
+		}
+		
+		return amount;
+	}
+	
+	
 	public List<Album> getAlbumsByUser(int userId) throws SQLException{
 		List<Album> albums = new ArrayList<Album>();
 		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id = ? ORDER BY creationDate DESC;";
