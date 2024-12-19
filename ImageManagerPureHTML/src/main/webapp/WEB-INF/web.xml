@@ -22,7 +22,8 @@
 	</context-param>
 	<context-param>
 		<param-name>uploadPath</param-name>
-		<param-value>../../../../var/ImageManagerPureHTML/uploads/images/</param-value>
+		<!--Path to reach images folder from request.getServletContext().getRealPath("/")-->
+		<param-value>../../var/ImageManager/uploads/images/</param-value>
 	</context-param>
 
 
