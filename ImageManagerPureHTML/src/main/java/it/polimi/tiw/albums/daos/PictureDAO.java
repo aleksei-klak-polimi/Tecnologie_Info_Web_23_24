@@ -114,6 +114,21 @@ private Connection con;
 		
 		return pictureId;
 	}
+	
+	
+	
+	public void addExistingPicturesToAlbum(List<Integer> pictureIds, int albumId) throws SQLException {
+		String query ="INSERT INTO Album_Picture (pictureId, albumId) VALUES (?, ?)";
+		try (PreparedStatement pstat = con.prepareStatement(query)){
+			
+			for(int pictureId:pictureIds) {
+				pstat.setInt(1, pictureId);
+				pstat.setInt(2, albumId);
+				pstat.addBatch();
+			}
+			pstat.executeBatch();
+		}
+	}
 }
 
 
