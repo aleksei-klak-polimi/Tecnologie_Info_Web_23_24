@@ -52,6 +52,30 @@ private Connection con;
 	}
 	
 	
+	public List<Picture> getPicturesNotInAlbum(int albumId, int uploader) throws SQLException{
+		List<Picture> pictures = new ArrayList<Picture>();
+		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P WHERE P.uploader = ? AND P.id NOT IN (SELECT pictureId FROM Album_Picture WHERE albumId = ?);";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, uploader);
+			pstat.setInt(2, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()) {
+					Picture picture = new Picture();
+					picture.setId(qres.getInt("id"));
+					picture.setPath(qres.getString("path"));
+					picture.setThumbnailPath(qres.getString("thumbnailPath"));
+					picture.setTitle(qres.getString("title"));
+					
+					pictures.add(picture);
+				}
+			}
+		}
+		return pictures;
+	}
+	
+	
 	
 	public int createPicture(int albumId, int uploader, String path, String thumbnailPath, String title, String description, Date date)throws SQLException{
 		int pictureId = -1;
