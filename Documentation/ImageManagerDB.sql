@@ -37,6 +37,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`Picture` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(512) NOT NULL,
+  `thumbnailPath` VARCHAR(512) NOT NULL,
   `title` VARCHAR(128) NOT NULL,
   `description` VARCHAR(1024) NULL,
   `uploadDate` DATE NOT NULL,
@@ -44,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`Picture` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `path_UNIQUE` (`path` ASC) VISIBLE,
   INDEX `fk_Pictures_owner_idx` (`uploader` ASC) VISIBLE,
+  UNIQUE INDEX `thumbnailPath_UNIQUE` (`thumbnailPath` ASC) VISIBLE,
   CONSTRAINT `fk_Pictures_owner`
     FOREIGN KEY (`uploader`)
     REFERENCES `ImageManagerDB`.`User` (`id`)
