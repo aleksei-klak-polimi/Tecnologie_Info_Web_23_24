@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
 public class PostComment extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
-private Connection conn;
+	private Connection conn;
 
 	
 	// CONSTRUCTOR
@@ -60,7 +60,6 @@ private Connection conn;
 		try {
 			HttpSession session = request.getSession();
 			User user = (User) session.getAttribute("user");
-			int author = user.getId();
 			
 			int albumId = validateAndRetrieveAlbumId(request, response);
 			if(albumId == -1) return;
