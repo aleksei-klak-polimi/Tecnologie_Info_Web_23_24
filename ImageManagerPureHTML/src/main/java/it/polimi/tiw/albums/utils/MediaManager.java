@@ -40,12 +40,6 @@ public class MediaManager{
 			//Re-write image to png extension and write to disk
 			BufferedImage originalImage = ImageIO.read(image.getInputStream());
 			ImageIO.write(originalImage, "png", f);
-			
-			//Create Image thumbnail
-			Thumbnails.of(f)
-				.size(256, 256)
-				.toFile(uploadPath+"/thumbnails/"+fileName);
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,6 +48,22 @@ public class MediaManager{
 		
 		return fileName;
 	}
+
+	public static boolean generateThumbnailFromFile(File file, String thumbnailName, String thumbnailPath) {
+		try {
+			Thumbnails.of(file)
+				.size(256, 256)
+				.toFile(thumbnailPath+thumbnailName);
+			
+			return true;
+		} catch (IOException e) {
+			System.out.println("Exception while generating thumbnail for file: "+file);
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
 }
 
 
