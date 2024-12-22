@@ -276,6 +276,29 @@ public final class InputSanitizer {
 	}
 	
 	
+	public static boolean isValidCommentBody(String commentBody) {
+		if (commentBody == null || commentBody.isEmpty()) {
+			//Images can be without descriptions
+            return false;
+        }
+		
+		if (commentBody.length() > 1023) {
+            return false;
+        }
+		
+		//Image description can contain alpha numerics, spaces and select special characters
+		String albumTitleRegex = "^[a-zA-Z0-9\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
+		Pattern pattern = Pattern.compile(albumTitleRegex);
+
+		// Check if the album Title matches the regex
+		if (!pattern.matcher(commentBody).matches()) {
+			// Contains invalid characters
+			return false;
+		}
+
+		// albumTitle is valid
+		return true;
+	}
 }
 
 
