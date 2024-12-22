@@ -25,6 +25,30 @@ private Connection con;
 	
 	
 	//QUERIES
+	public Picture getPictureById(int pictureId) throws SQLException {
+		Picture picture = null;
+		String query ="SELECT * FROM Picture WHERE id = ?;";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, pictureId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()) {
+					picture = new Picture();
+					picture.setId(qres.getInt("id"));
+					picture.setPath(qres.getString("path"));
+					picture.setThumbnailPath(qres.getString("thumbnailPath"));
+					picture.setTitle(qres.getString("title"));
+					picture.setDescription(qres.getString("description"));
+					picture.setUploadDate(qres.getDate("uploadDate"));
+					picture.setUploaderId(qres.getInt("uploader"));
+				}
+			}
+		}
+		
+		return picture;
+	}
+	
 	public List<Picture> getPicturesFromAlbumByPage(int albumId, int albumPage, int pageSize) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
 		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC LIMIT ? OFFSET ?;";
@@ -50,6 +74,44 @@ private Connection con;
 		}
 		return pictures;
 	}
+	
+	
+	public boolean pictureExists(int pictureId) throws SQLException{
+		String query ="SELECT id FROM Picture WHERE id = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, pictureId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				if(qres.isBeforeFirst()) {
+					//If isBeforeFirst() = true, result set is not empty
+					//and album exists
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	public boolean pictureBelongsToAlbum(int pictureId, int albumId) throws SQLException{
+		String query ="SELECT pictureid FROM Album_Picture WHERE pictureid = ? AND albumId = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, pictureId);
+			pstat.setInt(2, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				if(qres.isBeforeFirst()) {
+					//If isBeforeFirst() = true, result set is not empty
+					//and album-owner combo exists
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	
 	public List<Picture> getPicturesNotInAlbum(int albumId, int uploader) throws SQLException{
