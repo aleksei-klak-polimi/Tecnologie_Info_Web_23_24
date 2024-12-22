@@ -75,6 +75,10 @@
 		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/UploadImage</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/AddToAlbum</url-pattern>
+	</filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>AlreadyLoggedInFilter</filter-name>
