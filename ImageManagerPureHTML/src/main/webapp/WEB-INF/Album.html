@@ -17,8 +17,10 @@
 				<tbody>
 					<tr>
 						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}">
-							<img 	th:if="${colIndex < pictures.size()}"
-									th:src="@{${imageHost} + ${pictures[colIndex].thumbnailPath}}">
+							<a 	th:if="${colIndex < pictures.size()}"
+								th:href="@{/Image(albumId=${album.id},pictureId=${pictures[colIndex].id})}">
+								<img th:src="@{${imageHost} + ${pictures[colIndex].thumbnailPath}}">
+							</a>
 							<p  th:if="${colIndex < pictures.size()}" 
 								th:text="${pictures[colIndex].title}"></p>
 							<p  th:if="${colIndex >= pictures.size()}" 
