@@ -47,7 +47,8 @@
 			<div class="commentBody">Example of a comment body.</div>
 		</div>
 	</div>
-	<form id="commentForm">
+	<form id="commentForm" action="#" th:action="@{/PostComment(albumId=${album.id},pictureId=${picture.id})}" method="post">
+		<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 		<input type="text" name="comment">
 		<input type="submit" value="Post comment">
 	</form>
