@@ -95,7 +95,6 @@ public class AddExistingImage extends HttpServlet{
 			int userId = user.getId();
 			int albumId = validateAndRetrieveAlbumId(request, response, userId);
 			if(albumId == -1) {
-				returnHome(request, response);
 				return;
 			}
 		
