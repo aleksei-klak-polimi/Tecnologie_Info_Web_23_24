@@ -16,8 +16,8 @@
 		<img 	src="../static/ImagePlaceholder.png"
 				th:src="@{${imageHost} + ${picture.path}}">
 		<div id="imageDetails">
-			<p id="imageTitle">Image Title</p>
-			<p id="imageDescription">Image Description</p>
+			<p id="imageTitle" th:text="${picture.title}">Image Title</p>
+			<p id="imageDescription" th:text="${picture.description}">Image Description</p>
 			<div th:if="${isOwner}" class="buttons">
 				<a href="#"  class="btn">Edit image details</a>
 				<a href="#"  class="btn">Delete Image</a>
