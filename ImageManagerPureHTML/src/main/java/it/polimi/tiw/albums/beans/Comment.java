@@ -1,11 +1,14 @@
 package it.polimi.tiw.albums.beans;
 
+import java.util.Date;
+
 public class Comment{
 	//ATTRIBUTES
 	private int id;
 	private String body;
 	private int pictureId;
-	private int authorId;
+	private String author;
+	private Date postDate;
 	
 	
 	
@@ -19,8 +22,11 @@ public class Comment{
 	public int getPictureId() {
 		return pictureId;
 	}
-	public int getAuthorId() {
-		return authorId;
+	public String getAuthor() {
+		return author;
+	}
+	public Date getPostDate() {
+		return postDate;
 	}
 	
 	
@@ -35,8 +41,11 @@ public class Comment{
 	public void setPictureId(int pictureId) {
 		this.pictureId = pictureId;
 	}
-	public void setAuthorId(int authorId) {
-		this.authorId = authorId;
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public void setPostDate(Date postDate) {
+		this.postDate = postDate;
 	}
 	
 }
