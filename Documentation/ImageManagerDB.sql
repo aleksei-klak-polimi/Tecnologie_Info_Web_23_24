@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`Comment` (
   `body` VARCHAR(1024) NOT NULL,
   `pictureId` INT NOT NULL,
   `author` INT NOT NULL,
+  `postDate` DATE NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Comments_Picture_idx` (`pictureId` ASC) VISIBLE,
   INDEX `fk_Comments_Author_idx` (`author` ASC) VISIBLE,
