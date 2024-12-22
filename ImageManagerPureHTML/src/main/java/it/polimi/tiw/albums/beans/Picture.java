@@ -6,6 +6,7 @@ public class Picture{
 	//ATTRIBUTES
 	private int id;
 	private String path;
+	private String thumbnailPath;
 	private String title;
 	private String description;
 	private Date uploadDate;
@@ -19,6 +20,9 @@ public class Picture{
 	}
 	public String getPath() {
 		return path;
+	}
+	public String getThumbnailPath() {
+		return thumbnailPath;
 	}
 	public String getTitle() {
 		return title;
@@ -41,6 +45,9 @@ public class Picture{
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public void setThumbnailPath(String path) {
+		this.thumbnailPath = path;
 	}
 	public void setTitle(String title) {
 		this.title = title;
