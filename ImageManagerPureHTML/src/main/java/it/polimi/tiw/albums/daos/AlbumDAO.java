@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 import it.polimi.tiw.albums.beans.Album;
-import it.polimi.tiw.albums.beans.Picture;
 
 public class AlbumDAO{
 private Connection con;
@@ -44,6 +43,25 @@ private Connection con;
 	}
 	
 	
+	public boolean albumBelongsToUser(int albumId, int userId) throws SQLException{
+		String query ="SELECT id FROM Album WHERE id = ? AND owner = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, albumId);
+			pstat.setInt(2, userId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				if(qres.isBeforeFirst()) {
+					//If isBeforeFirst() = true, result set is not empty
+					//and album-owner combo exists
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	
 	public int getAmountOfPicturesByAlbum(int albumId) throws SQLException{
 		String query = "SELECT COUNT(DISTINCT pictureId) FROM Album_Picture WHERE albumId = ?";
 		int amount = -1;
@@ -59,6 +77,28 @@ private Connection con;
 		}
 		
 		return amount;
+	}
+	
+	
+	public Album getAlbumById(int albumId) throws SQLException{
+		Album album = null;
+		String query = "SELECT id, title, owner, creationDate FROM Album WHERE id = ? ;";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()) {
+					album = new Album();
+					album.setId(qres.getInt("id"));
+					album.setOwner(qres.getString("owner"));
+					album.setTitle(qres.getString("title"));
+					album.setCreationDate(qres.getDate("creationDate"));
+				}
+			}
+		}
+		
+		return album;
 	}
 	
 	
