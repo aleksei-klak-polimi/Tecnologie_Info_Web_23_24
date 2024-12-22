@@ -12,7 +12,8 @@
 		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
 	</ul>
 	<div class="main">
-		<form>
+		<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
+		<form action="#" th:action="@{/AddToAlbum(albumId=${albumId})}" method="post">
 			<div th:if="${false}">
 				<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
  				<label for="vehicle1"> I have a bike</label><br>
