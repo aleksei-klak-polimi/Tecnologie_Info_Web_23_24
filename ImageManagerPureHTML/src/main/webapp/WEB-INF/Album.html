@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Album</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
+</head>
+<body>
+	<ul id="navbar">
+		<li><a href="#" th:href="@{/Home}">Home</a></li>
+		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
+	</ul>
+	<div id="albumContainer">
+		<div class="bigSection" id="imageBrowser">
+			<table>
+				<tbody>
+					<tr>
+						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}">
+							<img 	th:if="${colIndex < pictures.size()}"
+									th:src="@{${imageHost} + ${pictures[colIndex].thumbnailPath}}">
+							<p  th:if="${colIndex < pictures.size()}" 
+								th:text="${pictures[colIndex].title}"></p>
+							<p  th:if="${colIndex >= pictures.size()}" 
+								th:text="EmptyCell"></p>
+						</td>
+					</tr>
+				</tbody>
+				<tbody th:if="${false}">
+					<tr>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="imageNavigator">
+				<a th:if="${hasPrevPictures}" href="#" th:href="@{${prevPicturesPath}}">Previous</a>
+				<a th:if="${hasNextPictures}" href="#" th:href="@{${nextPicturesPath}}">Next</a>
+			</div>
+		</div>
+		<div th:if="${isOwner}" class="bigSection" id="imageUploader">
+			<form action="#" th:action="@{/UploadImage(albumId=${album.id})}" method="post" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
+				<input type="text" name="title" placeholder="Image Title">
+				<label for="file">Upload Image</label>
+				<input type="file" id="file" name="image" multiple>
+				<input type="text" name="description" placeholder="Image Description">
+				<input type="submit" value="Upload Image" class="btn">
+			</form>
+		</div>
+	</div>
+</body>
