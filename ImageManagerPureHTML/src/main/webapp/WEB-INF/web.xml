@@ -32,12 +32,12 @@
 	<context-param>
 		<param-name>ImagePath</param-name>
 		<!--Path from ImageHost to reach images folder-->
-		<param-value>/uploads/images</param-value>
+		<param-value>/uploads/images/</param-value>
 	</context-param>
 	<context-param>
 		<param-name>ThumbnailPath</param-name>
 		<!--Path from ImageHost to reach thumbnails folder-->
-		<param-value>/uploads/images/thumbnails</param-value>
+		<param-value>/uploads/images/thumbnails/</param-value>
 	</context-param>
 
 
@@ -56,12 +56,21 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/Album</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/LogOut</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/CreateAlbum</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/UploadImage</url-pattern>
+	</filter-mapping>
+	
 	<filter-mapping>
 		<filter-name>AlreadyLoggedInFilter</filter-name>
 		<url-pattern>/SignUp</url-pattern>
