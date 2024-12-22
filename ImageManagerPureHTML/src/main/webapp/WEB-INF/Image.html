@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Image</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
+</head>
+<body>
+	<ul id="navbar">
+		<li><a href="#" th:href="@{/Home}">Home</a></li>
+		<li><a href="#" th:href="@{/Album(albumId=${album.id})}">Album</a></li>
+		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
+	</ul>
+	<div id="imageDisplay">
+		<img 	src="../static/ImagePlaceholder.png"
+				th:src="@{${imageHost} + ${picture.path}}">
+		<div id="imageDetails">
+			<p id="imageTitle">Image Title</p>
+			<p id="imageDescription">Image Description</p>
+			<div th:if="${isOwner}" class="buttons">
+				<a href="#"  class="btn">Edit image details</a>
+				<a href="#"  class="btn">Delete Image</a>
+			</div>
+		</div>
+	</div>
+	<div 	th:id="commentSection"
+			th:each="comment, commentIndex: ${comments}">
+			<div th:class="commentAuthor" th:text="${comment.author}"></div>
+			<div th:class="commentDate" th:text="${comment.postDate}"></div>
+			<div th:class="commentBody" th:text="${comment.body}"></div>
+	</div>
+	<div th:if="${false}" id="commentSection">
+		<div class="comment">
+			<div class="commentAuthor">Author1</div>
+			<div class="commentDate">22-12-24</div>
+			<div class="commentBody">Example of a comment body.</div>
+		</div>
+		<div class="comment">
+			<div class="commentAuthor">Author1</div>
+			<div class="commentDate">22-12-24</div>
+			<div class="commentBody">Example of a comment body.</div>
+		</div>
+		<div class="comment">
+			<div class="commentAuthor">Author1</div>
+			<div class="commentDate">22-12-24</div>
+			<div class="commentBody">Example of a comment body.</div>
+		</div>
+	</div>
+	<form id="commentForm">
+		<input type="text" name="comment">
+		<input type="submit" value="Post comment">
+	</form>
+</body>

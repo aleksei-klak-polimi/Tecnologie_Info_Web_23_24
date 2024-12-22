@@ -65,6 +65,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/Image</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/LogOut</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
