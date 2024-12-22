@@ -184,7 +184,37 @@ public final class InputSanitizer {
 		}
 		
 		try {
-			int testIntParsing = Integer.valueOf(id);
+			Integer.valueOf(id);
+		}
+		catch(NumberFormatException e){
+			//string can't be converted to int so is not a valid id
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	public static boolean isValidAlbumPage(String page) {
+		if (page == null || page.isEmpty()) {
+            return false;
+        }
+		
+		if (page.length() > 10) {
+            return false;
+        }
+		
+		// Id can only contain numeric chars
+		String idRegex = "^[0-9]+$";
+		Pattern pattern = Pattern.compile(idRegex);
+
+		if (!pattern.matcher(page).matches()) {
+			// Contains invalid characters
+			return false;
+		}
+		
+		try {
+			Integer.valueOf(page);
 		}
 		catch(NumberFormatException e){
 			//string can't be converted to int so is not a valid id
@@ -230,14 +260,17 @@ public final class InputSanitizer {
 			return false;
 		}
 		
-		if(!extension.equals("."+fileSubType)) {
+		if(!extension.equals(fileSubType)) {
+			//jpeg and jpg different writings but still the same extension
+			if((extension.equals("jpeg") && fileSubType.equals("jpg")) || (extension.equals("jpg") && fileSubType.equals("jpeg")))
+				return true;
+			
 			return false;
 		}
-		
-		
 		//Check for viruses in the file
-		if(VirusScanner.containsVirus(filePart))
+		if(VirusScanner.containsVirus(filePart)) {
 			return false;
+		}
 		
 		return true;
 	}
