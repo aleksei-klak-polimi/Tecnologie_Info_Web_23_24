@@ -19,7 +19,7 @@
 			<p id="imageTitle" th:text="${picture.title}">Image Title</p>
 			<p id="imageDescription" th:text="${picture.description}">Image Description</p>
 			<div th:if="${isOwner}" class="buttons">
-				<a href="#" class="btn">Edit image details</a>
+				<a href="#" th:href="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" class="btn">Edit image details</a>
 				<a href="#" th:href="@{/DeleteImage(albumId=${album.id}, pictureId=${picture.id})}"  class="btn">Delete Image</a>
 			</div>
 		</div>
