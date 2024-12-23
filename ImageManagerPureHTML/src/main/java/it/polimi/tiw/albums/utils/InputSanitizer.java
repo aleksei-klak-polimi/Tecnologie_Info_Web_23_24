@@ -2,6 +2,8 @@ package it.polimi.tiw.albums.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 import org.apache.tika.config.TikaConfig;
@@ -162,6 +164,27 @@ public final class InputSanitizer {
 		return true;
 	}
 	
+	
+	public static boolean isValidDate(String date) {
+		// Check if the input is null or empty
+        if (date == null || date.trim().isEmpty()) {
+            return false;
+        }
+        
+        // Define the expected date format (YYYY-MM-DD)
+        String datePattern = "yyyy-MM-dd";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+        dateFormat.setLenient(false); // Strict validation
+        
+        try {
+            // Parse the input string into a Date object
+            dateFormat.parse(date);
+            return true;
+        } catch (ParseException e) {
+            // If parsing fails, the date is not valid
+            return false;
+        }
+	}
 	
 	
 	public static boolean isValidId(String id) {
