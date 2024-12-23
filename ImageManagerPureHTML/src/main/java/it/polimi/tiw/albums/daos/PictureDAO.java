@@ -58,6 +58,20 @@ private Connection con;
 		}
 	}
 	
+	public void updatePicture(int pictureId, String title, String description, Date date) throws SQLException {
+		String query ="UPDATE Picture SET title = ?, description = ?,  uploadDate = ? WHERE id = ?;";
+		
+		//Add picture to database
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setString(1, title);
+			pstat.setString(2, description);
+			pstat.setObject(3, date.toInstant().atZone(ZoneId.of("Europe/Rome")).toLocalDate());
+			pstat.setInt(4, pictureId);
+			pstat.executeUpdate();
+		}
+	}
+	
+	
 	public List<Picture> getPicturesFromAlbumByPage(int albumId, int albumPage, int pageSize) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
 		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC LIMIT ? OFFSET ?;";
