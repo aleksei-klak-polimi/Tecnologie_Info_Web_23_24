@@ -106,6 +106,7 @@ public class PostComment extends HttpServlet{
         return pictureId;
     }
 	
+	
 	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
 		 String albumIdString = request.getParameter("albumId");
 	        if (!InputSanitizer.isValidId(albumIdString)) {
@@ -125,6 +126,7 @@ public class PostComment extends HttpServlet{
 	        return albumId;
 	}
 	
+	
 	private String validateComment(HttpServletRequest request, HttpServletResponse response, String comment){
 		if(!InputSanitizer.isValidCommentBody(comment)) {
 			return "Missing or malformed comment body.";
@@ -133,10 +135,12 @@ public class PostComment extends HttpServlet{
 		return null;
 	}
 	
+	
 	private void createComment(int pictureId, int authorId, String comment) throws SQLException {
 		CommentDAO commentDao = new CommentDAO(conn);
 		commentDao.createComment(pictureId, authorId, new Date(), comment);
 	}
+	
 	
 	private void redirectToImageWithError(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId, String error) throws IOException {
         String paramString = String.format("?error=%s&albumId=%d&pictureId=%d",
@@ -145,12 +149,14 @@ public class PostComment extends HttpServlet{
         response.sendRedirect(path);
     }
 	
+	
 	private void redirectToImage(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId) throws IOException {
 		String paramString = String.format("?albumId=%d&pictureId=%d",
                albumId, pictureId);
 		String path = request.getServletContext().getContextPath() + "/Image" + paramString;
 		response.sendRedirect(path);
 	}
+	
 	
 	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String homePath = request.getServletContext().getContextPath() + "/Home";
