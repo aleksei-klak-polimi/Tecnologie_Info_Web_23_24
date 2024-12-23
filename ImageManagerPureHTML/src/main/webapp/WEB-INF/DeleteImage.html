@@ -15,7 +15,8 @@
 			all comments associated with it and permanently delete it from the server.</p>
 		<form id="buttons" action="#" th:action="@{/DeleteImage(albumId=${album.id}, pictureId=${picture.id})}" method="post">
 			<input class="btn" type="submit" name="Delete" value="Yes">
-			<input class="btnSecondary" type="submit" name="NotDelete" value="No">
+			<a 	th:href="@{/Image(albumId=${album.id}, pictureId=${picture.id})}"
+				href="#" class="btn">No</a>
 		</form>
 	</div>
 </body>
