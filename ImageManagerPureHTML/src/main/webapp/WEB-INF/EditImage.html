@@ -17,7 +17,7 @@
 		<form action="#" th:action="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" method="post" id="editImageForm" autocomplete="off">
 			<input type="text" name="title" placeholder="Image Title" th:value="${picture.title}">
 			<input type="text" name="description" placeholder="Image Description" th:value="${picture.description}">
-			<input name="date" type="date">
+			<input name="date" type="date" th:value="${picture.uploadDate}">
 			<input type="submit" name="Edit" value="Confirm changes" class="btn">
 			<input type="submit" name="NotEdit" value="Cancel" class="btn">
 		</form>
