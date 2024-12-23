@@ -112,7 +112,7 @@ public class DisplayAlbum extends HttpServlet {
             int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
 
             if (albumPage > maxAlbumPage) {
-                albumPage = 1;
+                albumPage = maxAlbumPage;
             }
 
             Album album = albumDao.getAlbumById(albumId);
@@ -166,6 +166,7 @@ public class DisplayAlbum extends HttpServlet {
 		ctx.setVariable("isOwner", isOwner);
 		ctx.setVariable("pictures", pictures);
 		ctx.setVariable("album", album);
+		ctx.setVariable("albumPage", albumPage);
 		ctx.setVariable("imageHost", imageHost);
 		ctx.setVariable("hasNextPictures", hasNextPictures);
 		ctx.setVariable("hasPrevPictures", hasPrevPictures);
