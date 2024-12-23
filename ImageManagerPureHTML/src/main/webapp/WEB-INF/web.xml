@@ -93,6 +93,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/RemoveFromAlbum</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/PostComment</url-pattern>
 	</filter-mapping>
 	
