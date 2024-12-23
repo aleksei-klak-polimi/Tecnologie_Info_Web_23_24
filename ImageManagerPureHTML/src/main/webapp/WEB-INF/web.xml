@@ -85,6 +85,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/EditImage</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/AddToAlbum</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
