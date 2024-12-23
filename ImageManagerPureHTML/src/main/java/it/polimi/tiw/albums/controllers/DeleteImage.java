@@ -86,6 +86,7 @@ public class DeleteImage extends HttpServlet{
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		try {
+			String path = "/WEB-INF/DeleteImage.html";
 			HttpSession session = request.getSession();
 			User user = (User) session.getAttribute("user");
 			int userId = user.getId();
@@ -99,9 +100,12 @@ public class DeleteImage extends HttpServlet{
             if(pictureId == -1) return;
             Picture picture = getPictureById(pictureId);
             
+            int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
+            if(albumPage == -1) return;
+            
             String imageHost = buildImageHost(request);
 
-            prepareContextAndRender(request, response, picture, album, imageHost);
+            prepareContextAndRender(request, response, path, picture, album, albumPage, imageHost);
 		}
 		catch (SQLException e) {
 			e.printStackTrace(); // for debugging
@@ -121,14 +125,16 @@ public class DeleteImage extends HttpServlet{
 			//PARSE INPUTS
 			int albumId = validateAndRetrieveAlbumId(request, response, userId);
 			if(albumId == -1) return;
-			Album album = getAlbumById(albumId);
 			
 			int pictureId = validateAndRetrievePictureId(request, response, albumId);
             if(pictureId == -1) return;
             Picture picture = getPictureById(pictureId);
             
+            int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
+            if(albumPage == -1) return;
+            
             deleteImage(request, picture);
-            redirectToAlbum(request, response, album.getId());
+            redirectToAlbum(request, response, albumId, albumPage);
             
 		}
 		catch (SQLException e) {
@@ -179,12 +185,16 @@ public class DeleteImage extends HttpServlet{
 	}
 	
 	private int validateAndRetrieveAlbumPage(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
-		 String albumPageString = request.getParameter("albumPage");
-	     if (!InputSanitizer.isValidAlbumPage(albumPageString)) {
+	     HttpSession s = request.getSession();
+	     //Checking for null pointer
+	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
+	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
+	    	 returnHome(request, response);
 	         return -1;
 	     }
-
-	     int albumPage = Integer.parseInt(albumPageString);
+	     
+	     int albumPage = albumPageInteger;
+	     
 	     AlbumDAO albumDao = new AlbumDAO(conn);
 	        
 	     //Check if album page is valid page
@@ -242,15 +252,8 @@ public class DeleteImage extends HttpServlet{
 		}
 	}
 	
-	private void redirectToAlbum(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
-		String paramString;
-		
-		int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
-		if(albumPage == -1) 
-			paramString = String.format("?albumId=%d", albumId);
-		else
-			paramString = String.format("?albumId=%d&albumPage=%d", albumId, albumPage);
-		
+	private void redirectToAlbum(HttpServletRequest request, HttpServletResponse response, int albumId, int albumPage) throws IOException, SQLException {
+		String paramString = String.format("?albumId=%d&albumPage=%d", albumId, albumPage);
 		String path = request.getServletContext().getContextPath() + "/Album" + paramString;
 		response.sendRedirect(path);
 	}
@@ -261,28 +264,15 @@ public class DeleteImage extends HttpServlet{
 	}
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
-			Picture picture, Album album,
+			String path, Picture picture, Album album, int albumPage,
 			String imageHost) throws IOException, SQLException {
 		
 		IWebExchange webExchange = this.application.buildExchange(request, response);
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
 		ctx.setVariable("picture", picture);
 		ctx.setVariable("album", album);
+		ctx.setVariable("albumPage", albumPage);
 		ctx.setVariable("imageHost", imageHost);
-		
-		String path= "";
-		if(request.getParameter("returnToAlbum") != null) {
-			path = "/WEB-INF/RemoveFromLastAlbum.html";
-			
-			int albumPage = validateAndRetrieveAlbumPage(request, response, album.getId());
-			if(albumPage == -1) {
-				returnHome(request, response);
-				return;
-			}
-			ctx.setVariable("albumPage", albumPage);
-		}
-		else
-			path = "/WEB-INF/DeleteImage.html";
 
 		templateEngine.process(path, ctx, response.getWriter());
 	}

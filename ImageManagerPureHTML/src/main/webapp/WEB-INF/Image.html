@@ -9,7 +9,7 @@
 <body>
 	<ul id="navbar">
 		<li><a href="#" th:href="@{/Home}">Home</a></li>
-		<li><a href="#" th:href="@{/Album(albumId=${album.id})}">Album</a></li>
+		<li><a href="#" th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}">Album</a></li>
 		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
 	</ul>
 	<div id="imageDisplay">

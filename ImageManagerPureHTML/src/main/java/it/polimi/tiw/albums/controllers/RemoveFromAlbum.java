@@ -66,13 +66,12 @@ public class RemoveFromAlbum extends HttpServlet{
 			int pictureId = validateAndRetrievePictureId(request, response, albumId);
 			if(pictureId == -1) return;
 			
-			int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
-			if(albumPage == -1) return;
-			
 			//Picture is in no other albums, redirect to delete picture
 			if(lastPictureInstance(request, response, pictureId))
-				redirectToDelete(request, response, albumId, albumPage, pictureId);
+				redirectToDelete(request, response, albumId, pictureId);
 			else {
+				int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
+				if(albumPage == -1) return;
 				//If picture is present in more than one album then simply remove from current one
 				removePicture(albumId, pictureId);
 				redirectToAlbum(request, response, albumId, albumPage);
@@ -126,25 +125,25 @@ public class RemoveFromAlbum extends HttpServlet{
 	}
 	
 	private int validateAndRetrieveAlbumPage(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
-		 String albumPageString = request.getParameter("albumPage");
-	        if (!InputSanitizer.isValidAlbumPage(albumPageString)) {
-	            returnHome(request, response);
-	            return -1;
-	        }
-
-	        int albumPage = Integer.parseInt(albumPageString);
-	        AlbumDAO albumDao = new AlbumDAO(conn);
+		HttpSession s = request.getSession();
+	     //Checking for null pointer
+	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
+	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
+	    	 returnHome(request, response);
+	         return -1;
+	     }
+	     
+	     int albumPage = albumPageInteger;
+	     
+	     AlbumDAO albumDao = new AlbumDAO(conn);
 	        
-	        //Check if album page is valid page
-            int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-            int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+	     //Check if album page is valid page
+	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
 
-            if (albumPage > maxAlbumPage) {
-            	redirectToAlbum(request, response, albumId, maxAlbumPage);
-                return -1;
-            }
+	     if (albumPage > maxAlbumPage) return maxAlbumPage;
 
-	        return albumPage;
+	     return albumPage;
 	}
 	
 	private boolean lastPictureInstance(HttpServletRequest request, HttpServletResponse response, int pictureId) throws SQLException {
@@ -165,9 +164,9 @@ public class RemoveFromAlbum extends HttpServlet{
 		response.sendRedirect(homePath);
 	}
 
-	private void redirectToDelete(HttpServletRequest request, HttpServletResponse response, int albumId, int albumPage, int pictureId) throws IOException {
-		String paramString = String.format("?albumId=%d&albumPage=%d&pictureId=%d&returnToAlbum=true", albumId, albumPage, pictureId);
-		String path = request.getServletContext().getContextPath() + "/DeleteImage" + paramString;
+	private void redirectToDelete(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId) throws IOException {
+		String paramString = String.format("?albumId=%d&pictureId=%d", albumId, pictureId);
+		String path = request.getServletContext().getContextPath() + "/RemoveFromLastAlbum" + paramString;
 		response.sendRedirect(path);
 	}
 	

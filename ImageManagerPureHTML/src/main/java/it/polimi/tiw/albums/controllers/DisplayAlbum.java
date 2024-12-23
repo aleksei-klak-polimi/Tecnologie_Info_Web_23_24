@@ -114,6 +114,10 @@ public class DisplayAlbum extends HttpServlet {
             if (albumPage > maxAlbumPage) {
                 albumPage = maxAlbumPage;
             }
+            
+            //Add albumPage to session
+            HttpSession s = request.getSession();
+			s.setAttribute("albumPage", albumPage);
 
             Album album = albumDao.getAlbumById(albumId);
             boolean isOwner = albumDao.albumBelongsToUser(albumId, user.getId());
@@ -166,7 +170,6 @@ public class DisplayAlbum extends HttpServlet {
 		ctx.setVariable("isOwner", isOwner);
 		ctx.setVariable("pictures", pictures);
 		ctx.setVariable("album", album);
-		ctx.setVariable("albumPage", albumPage);
 		ctx.setVariable("imageHost", imageHost);
 		ctx.setVariable("hasNextPictures", hasNextPictures);
 		ctx.setVariable("hasPrevPictures", hasPrevPictures);
