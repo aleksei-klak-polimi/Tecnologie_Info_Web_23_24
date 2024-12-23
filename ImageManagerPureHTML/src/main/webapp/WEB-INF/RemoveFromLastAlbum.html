@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete Image</title>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
+</head>
+<body>
+	<div class="binaryChoiceContainer">
+		<p>Are you sure you want to remove this picture from the album?</p>
+		<img 	src="../static/ImagePlaceholder.png"
+				th:src="@{${imageHost} + ${picture.thumbnailPath}}"></img>
+		<p>This is the last instance of the picture in any album,
+			deleting this picture from the last album will delete
+			all comments associated with it and permanently delete it from the server.</p>
+		<form id="buttons" action="#" th:action="@{/DeleteImage(albumId=${album.id}, pictureId=${picture.id}, albumPage=${albumPage})}" method="post">
+			<input class="btn" type="submit" name="Delete" value="Yes">
+			<a 	th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}"
+				href="#" class="btn">No</a>
+		</form>
+	</div>
+</body>
+</html>
