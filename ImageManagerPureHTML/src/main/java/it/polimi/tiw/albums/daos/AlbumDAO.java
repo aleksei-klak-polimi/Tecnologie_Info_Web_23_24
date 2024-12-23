@@ -174,6 +174,15 @@ private Connection con;
 		//TODO check if is necessary to manually delete entries from Album_Picture table
 	}
 	
+	public void removePictureFromAlbum(int albumId, int pictureId) throws SQLException {
+		String query = "DELETE FROM Album_Picture WHERE albumId = ? AND pictureId = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, albumId);
+			pstat.setInt(2, pictureId);
+			pstat.executeUpdate();
+		}
+	}
+	
 	public int getLatestAlbumByUser(int userId) throws SQLException{
 		int albumId = -1;
 		
