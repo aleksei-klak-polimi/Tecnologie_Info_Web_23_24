@@ -136,6 +136,22 @@ private Connection con;
 	}
 	
 	
+	public int countPictureInstances(int pictureId) throws SQLException {
+		String query ="SELECT DISTINCT COUNT(albumId) AS totalCount FROM Album_Picture WHERE pictureId = ?;";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, pictureId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()) {
+					return qres.getInt("totalCount");
+				}
+			}
+		}
+		
+		return -1;
+	}
+	
 	
 	public List<Picture> getPicturesNotInAlbum(int albumId, int uploader) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
