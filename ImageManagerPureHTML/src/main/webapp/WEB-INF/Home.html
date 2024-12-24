@@ -7,169 +7,334 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-	<ul id="navbar">
-		<li><a href="#" th:href="@{/Home}">Home</a></li>
-		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
-	</ul>
+	<div class="navbar">
+        <a href="#" th:href="@{/Home}">Home</a>
+        <a href="#" th:href="@{/LogOut}">Log out</a>
+    </div>
 	<div id="homeContainer">
-		<div class="bigSection">
-			<p class="tableTitle">My Albums</p>
-			<table>
-				<thead>
-					<tr>
-						<th>Album Title</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr
-					th:each="album, iStat: ${myAlbums}"
-					th:class="${iStat.odd}?'odd':'even'">
-						<td><a th:text="${album.title}" th:href="@{/Album(albumId=${album.id})}"></a></td>
-					</tr>
-				</tbody>
-				<tbody th:if="${false}">
-					<tr class="odd">
-						<td>Album 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="bigSection" id="middleDiv">
-			<p class="tableTitle">Other Albums</p>
-			<table>
-				<thead>
-					<tr>
-						<th>Title</th>
-						<th>Author</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr
-					th:each="album, iStat: ${otherAlbums}"
-					th:class="${iStat.odd}?'odd':'even'">
-						<td><a th:text="${album.title}" th:href="@{/Album(albumId=${album.id})}"></a></td>
-						<td><a th:text="${album.owner}"></a></td>
-					</tr>
-				</tbody>
-				<tbody th:if="${false}">
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 1</td>
-						<td>Author 1</td>
-					</tr>
-					<tr class="even">
-						<td>Album 2</td>
-						<td>Author 2</td>
-					</tr>
-					<tr class="odd">
-						<td>Album 3</td>
-						<td>Author 3</td>
-					</tr>
-					<tr class="even">
-						<td>Album 4</td>
-						<td>Author 4</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div class="bigSection" id="rightDiv">
-			<p>Create new Album</p>
-			<form action="#" th:action="@{/CreateAlbum}" method="post" id="createAlbumForm" autocomplete="off">
+		<div class="homeColumn">
+			<div class="tableWrapper">
+				<div class="tableTitle">My Albums</div>
+				<div class="homeTable">
+					<table>
+						<thead>
+							<tr>
+								<th>Album Title</th>
+								<th>Creation Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="album, iStat: ${myAlbums}"
+								th:class="${iStat.odd}?'odd':'even'" class="odd">
+								<td><a href="#" th:text="${album.title}"
+									th:href="@{/Album(albumId=${album.id})}">Fallback</a></td>
+								<td><a th:text="${album.creationDate}">2024-12-10</a></td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 2</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="even">
+								<td><a href="#">Album 3</a></td>
+								<td>2024-12-10</td>
+							</tr>
+							<tr th:if="${false}" class="odd">
+								<td><a href="#">Album 4</a></td>
+								<td>2024-12-10</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<form action="#" th:action="@{/CreateAlbum}" method="post"
+				autocomplete="off">
+				<p>Create new Album</p>
 				<input type="text" name="albumTitle" placeholder="Album Title">
-				<label for="file">Upload Pictures</label>
-				<input type="file" id="file" name="file" multiple>
 				<input type="submit" value="Create Album" class="btn">
+				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder
+					error text</div>
 			</form>
-			<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 		</div>
-	</div>
+		<div class="homeColumn">
+            <div class="tableWrapper">
+                <div class="tableTitle">Other Albums</div>
+                <div class="homeTable">
+                    <table>
+					<thead>
+						<tr>
+							<th>Title</th>
+							<th>Author</th>
+							<th>Creation Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="album, iStat: ${otherAlbums}"
+							th:class="${iStat.odd}?'odd':'even'" class="odd">
+							<td><a href="#" th:text="${album.title}"
+								th:href="@{/Album(albumId=${album.id})}">FallBack</a></td>
+							<td><a th:text="${album.owner}">FallBack</a></td>
+							<td><a th:text="${album.creationDate}">2024-12-10</a></td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 1</a></td>
+							<td>Author 1</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 2</a></td>
+							<td>Author 2</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="odd">
+							<td><a href="#">Album 3</a></td>
+							<td>Author 3</td>
+							<td>2024-12-10</td>
+						</tr>
+						<tr th:if="${false}" class="even">
+							<td><a href="#">Album 4</a></td>
+							<td>Author 4</td>
+							<td>2024-12-10</td>
+						</tr>
+					</tbody>
+				</table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
