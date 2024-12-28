@@ -21,7 +21,7 @@
 						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}"
 								class="thumbnailSlot">
 							<div class="imageHeader">
-								<form th:if="${colIndex < pictures.size()}" action="#" th:action="@{/RemoveFromAlbum(albumId=${album.id}, pictureId=${pictures[colIndex].id})}" method="post">
+								<form th:if="${colIndex < pictures.size() and isOwner}" action="#" th:action="@{/RemoveFromAlbum(albumId=${album.id}, pictureId=${pictures[colIndex].id})}" method="post">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
