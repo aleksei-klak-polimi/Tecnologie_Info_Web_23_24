@@ -19,6 +19,7 @@
 				<tbody>
 					<tr>
 						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}"
+							th:class = "${colIndex < pictures.size()} ? thumbnailSlot : emptySlot"
 								class="thumbnailSlot">
 							<div class="imageHeader">
 								<form th:if="${colIndex < pictures.size() and isOwner}" action="#" th:action="@{/RemoveFromAlbum(albumId=${album.id}, pictureId=${pictures[colIndex].id})}" method="post">
@@ -66,7 +67,7 @@
 								<p class="imageTitle">ImagePlaceholder Title</p>
 							</div>
 						</td>
-						<td th:if="${false}" class="thumbnailSlot">
+						<td th:if="${false}" class="emptySlot">
 							<div class="imageHeader">
 							</div>
 							<div class="imageFrame">
@@ -75,7 +76,7 @@
 							<div class="imageFooter">
 							</div>
 						</td>
-						<td th:if="${false}" class="thumbnailSlot">
+						<td th:if="${false}" class="emptySlot">
 							<div class="imageHeader">
 							</div>
 							<div class="imageFrame">
