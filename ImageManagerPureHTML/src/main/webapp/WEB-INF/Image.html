@@ -7,49 +7,70 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-	<ul id="navbar">
-		<li><a href="#" th:href="@{/Home}">Home</a></li>
-		<li><a href="#" th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}">Album</a></li>
-		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
-	</ul>
-	<div id="imageDisplay">
-		<img 	src="../static/ImagePlaceholder.png"
-				th:src="@{${imageHost} + ${picture.path}}">
-		<div id="imageDetails">
-			<p id="imageTitle" th:text="${picture.title}">Image Title</p>
-			<p id="imageDescription" th:text="${picture.description}">Image Description</p>
-			<div th:if="${isOwner}" class="buttons">
-				<a href="#" th:href="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" class="btn">Edit image details</a>
-				<a href="#" th:href="@{/DeleteImage(albumId=${album.id}, pictureId=${picture.id})}"  class="btn">Delete Image</a>
+	<div class="navbar">
+		<a href="#" th:href="@{/Home}">Home</a> <a href="#"
+			th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}">Album</a>
+		<a href="#" th:href="@{/LogOut}">Log out</a>
+	</div>
+	<div>
+		<div class="imageContainer">
+			<div id="imageDisplay">
+				<div id="imageHeader">
+					<p id="imageTitle" th:text="${picture.title}">Image Title</p>
+					<div id="imageDate" th:text="${picture.uploadDate}">22-12-24</div>
+				</div>
+				<div id="imageWrapper">
+					<img src="../static/ImagePlaceholder.png"
+						th:src="@{${imageHost} + ${picture.path}}">
+				</div>
+				<p id="imageDescription" th:text="${picture.description}">Image
+					Description</p>
+				<div th:if="${isOwner}" class="buttons">
+					<a href="#"
+						th:href="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}"
+						class="btn">Edit image details</a> <a href="#"
+						th:href="@{/DeleteImage(albumId=${album.id}, pictureId=${picture.id})}"
+						class="btn">Delete Image</a>
+				</div>
+			</div>
+			<form id="commentForm" action="#"
+				th:action="@{/PostComment(albumId=${album.id},pictureId=${picture.id})}"
+				method="post">
+				<div class="formTitle">New Comment</div>
+				<div id="inputs">
+					<textarea name="comment" placeholder="Write your comment here..."></textarea>
+					<input type="submit" class="btn" value="Post">
+				</div>
+				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder
+					error text</div>
+			</form>
+			<div id="commentSection">
+				<div id="commentSectionHeader">
+					<div id="commentsTotlaNumber" th:text="${comments.size()}">9</div>
+					<div th:text="${comments.size() != 1 ? 'Comments' : 'Comment'}">Comments</div>
+				</div>
+				<div th:each="comment, commentIndex: ${comments}" class="comment">
+					<div class="commentAuthor" th:text="${comment.author}">Author1</div>
+					<div class="commentBody" th:text="${comment.body}">Example of
+						a comment body.</div>
+					<div class="commentDate" th:text="${comment.postDate}">22-12-24</div>
+				</div>
+				<div th:if="${false}" class="comment">
+					<div class="commentAuthor">Author1</div>
+					<div class="commentBody">Example of a comment body.</div>
+					<div class="commentDate">22-12-24</div>
+				</div>
+				<div th:if="${false}" class="comment">
+					<div class="commentAuthor">Author1</div>
+					<div class="commentBody">Example of a comment body.</div>
+					<div class="commentDate">22-12-24</div>
+				</div>
+				<div th:if="${false}" class="comment">
+					<div class="commentAuthor">Author1</div>
+					<div class="commentBody">Example of a comment body.</div>
+					<div class="commentDate">22-12-24</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div 	th:id="commentSection"
-			th:each="comment, commentIndex: ${comments}">
-			<div th:class="commentAuthor" th:text="${comment.author}"></div>
-			<div th:class="commentDate" th:text="${comment.postDate}"></div>
-			<div th:class="commentBody" th:text="${comment.body}"></div>
-	</div>
-	<div th:if="${false}" id="commentSection">
-		<div class="comment">
-			<div class="commentAuthor">Author1</div>
-			<div class="commentDate">22-12-24</div>
-			<div class="commentBody">Example of a comment body.</div>
-		</div>
-		<div class="comment">
-			<div class="commentAuthor">Author1</div>
-			<div class="commentDate">22-12-24</div>
-			<div class="commentBody">Example of a comment body.</div>
-		</div>
-		<div class="comment">
-			<div class="commentAuthor">Author1</div>
-			<div class="commentDate">22-12-24</div>
-			<div class="commentBody">Example of a comment body.</div>
-		</div>
-	</div>
-	<form id="commentForm" action="#" th:action="@{/PostComment(albumId=${album.id},pictureId=${picture.id})}" method="post">
-		<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
-		<input type="text" name="comment">
-		<input type="submit" value="Post comment">
-	</form>
 </body>

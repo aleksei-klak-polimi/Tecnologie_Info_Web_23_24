@@ -7,7 +7,7 @@
 
 body {
     background-color: #f4f6f8;
-    font-family: Arial, sans-serif;
+    font-family: Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -81,7 +81,6 @@ body {
 
 .errorText{
 	color: red;
-	font-weight: thin;
 	font-size: 0.85em;
 }
 
@@ -394,6 +393,156 @@ textarea{
 	flex-grow: 1;
 	margin: 15px 0;
 }
+
+
+/*IMAGE SPECIFIC CSS*/
+.imageContainer{
+	width: 80vw;
+	margin: 40px auto;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	align-items: center;
+	padding: 20px;
+	
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.imageContainer #imageDisplay{
+	display: flex;
+	flex-direction: column;
+	
+	width: 80%;
+	margin: 25px;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.imageContainer #imageHeader{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	
+	margin-bottom: 5px;
+}
+
+.imageContainer #imageDate{
+	font-weight: thin;
+	color: gray;
+}
+
+.imageContainer #imageWrapper{
+	display:flex;
+	justify-content: center;
+	
+	padding: 5px 0;
+	
+  	border-width: 0px;
+  	border-top-width: 1px;
+  	border-bottom-width: 1px;
+    border-style: solid;
+    border-color: gray;
+}
+
+.imageContainer img{
+	max-width:100%;
+}
+
+.imageContainer #imageTitle{
+	font-size: 2em;
+}
+
+.imageContainer #imageDescription{
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+.imageContainer #commentForm{
+	width: 80%;
+	padding: 25px 0;
+	margin-left: auto;
+    margin-right: auto;
+    
+	align-items: flex-start;
+	row-gap: 10px;
+	
+  	border-width: 0px;
+  	border-top-width: 1px;
+    border-style: solid;
+    border-color: gray;
+	
+    min-height: 50%;
+}
+
+.imageContainer #commentForm .formTitle{
+	font-size: 1.4em;
+}
+
+.imageContainer #commentForm #inputs{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	width: 100%;
+	height: 100%;
+	column-gap:75px;
+}
+
+.imageContainer #commentForm #inputs textarea{
+	flex-grow: 1;
+	height: 25vh;
+}
+
+.imageContainer #commentForm #inputs input{
+	width: auto;
+	padding: 5px 10px;
+}
+
+.imageContainer #commentSection{
+    padding: 10px 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.imageContainer #commentSectionHeader{
+	display: flex;
+	flex-direction: row;
+	column-gap:5px;
+	color: gray;
+	font-size: 1.4em;
+}
+
+.imageContainer .comment{
+	padding: 10px;
+	border-width: 0px;
+	border-top-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+.imageContainer .comment .commentAuthor{
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.imageContainer .comment .commentDate{
+	font-weight: thin;
+	color: gray;
+	font-size: 0.8em;
+}
+.imageContainer .comment .commentBody{
+	padding: 10px 0;
+}
+
 
 /* Span for Sign In */
 span {
