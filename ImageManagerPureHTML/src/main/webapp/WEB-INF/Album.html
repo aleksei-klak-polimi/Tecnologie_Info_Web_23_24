@@ -11,50 +11,106 @@
         <a href="#" th:href="@{/Home}">Home</a>
         <a href="#" th:href="@{/LogOut}">Log out</a>
     </div>
-	<div id="albumContainer">
-		<div class="bigSection" id="imageBrowser">
-			<table>
+    <div>
+	<div class="albumContainer">
+		<div class="albumRow" id="imageBrowser">
+			<p id="albumTitle" th:text="${album.title}">Album Title goes here</p>
+			<div id="albumTable"><table>
 				<tbody>
 					<tr>
-						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}">
-							<a 	th:if="${colIndex < pictures.size()}"
-								th:href="@{/Image(albumId=${album.id},pictureId=${pictures[colIndex].id})}">
-								<img th:src="@{${imageHost} + ${pictures[colIndex].thumbnailPath}}">
-							</a>
-							<p  th:if="${colIndex < pictures.size()}" 
-								th:text="${pictures[colIndex].title}"></p>
-							<p  th:if="${colIndex >= pictures.size()}" 
-								th:text="EmptyCell"></p>
-							<form th:if="${colIndex < pictures.size()}" id="buttons" action="#" th:action="@{/RemoveFromAlbum(albumId=${album.id}, pictureId=${pictures[colIndex].id})}" method="post">
-								<input class="btn" type="submit" name="Remove" value="Remove">
-							</form>
+						<td th:each="colIndex : ${#numbers.sequence(0, pageSize - 1)}"
+								class="thumbnailSlot">
+							<div class="imageHeader">
+								<form th:if="${colIndex < pictures.size()}" action="#" th:action="@{/RemoveFromAlbum(albumId=${album.id}, pictureId=${pictures[colIndex].id})}" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<div th:if="${colIndex >= pictures.size()}" th:text="'Empty'"></div>
+								<a 	th:if="${colIndex < pictures.size()}"
+									th:href="@{/Image(albumId=${album.id},pictureId=${pictures[colIndex].id})}"
+									href="#">
+									<img th:src="@{${imageHost} + ${pictures[colIndex].thumbnailPath}}"
+										src="../static/ImagePlaceholder.png">
+								</a>
+							</div>
+							<div class="imageFooter">
+								<p  th:if="${colIndex < pictures.size()}" 
+									th:text="${pictures[colIndex].title}"
+									class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td th:if="${false}" class="thumbnailSlot">
+							<div class="imageHeader">
+								<form action="#" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<a href="#"><img src="../static/ImagePlaceholder.png"></a>
+							</div>
+							<div class="imageFooter">
+								<p class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td th:if="${false}" class="thumbnailSlot">
+							<div class="imageHeader">
+								<form action="#" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<a href="#"><img src="../static/ImagePlaceholder.png"></a>
+							</div>
+							<div class="imageFooter">
+								<p class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td th:if="${false}" class="thumbnailSlot">
+							<div class="imageHeader">
+							</div>
+							<div class="imageFrame">
+								<div>Empty</div>
+							</div>
+							<div class="imageFooter">
+							</div>
+						</td>
+						<td th:if="${false}" class="thumbnailSlot">
+							<div class="imageHeader">
+							</div>
+							<div class="imageFrame">
+								<div>Empty</div>
+							</div>
+							<div class="imageFooter">
+							</div>
 						</td>
 					</tr>
 				</tbody>
-				<tbody th:if="${false}">
-					<tr>
-						<td><img src="../static/ImagePlaceholder.png"></td>
-						<td><img src="../static/ImagePlaceholder.png"></td>
-						<td><img src="../static/ImagePlaceholder.png"></td>
-						<td><img src="../static/ImagePlaceholder.png"></td>
-						<td><img src="../static/ImagePlaceholder.png"></td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="imageNavigator">
-				<a th:if="${hasPrevPictures}" href="#" th:href="@{${prevPicturesPath}}">Previous</a>
-				<a th:if="${hasNextPictures}" href="#" th:href="@{${nextPicturesPath}}">Next</a>
-			</div>
+			</table></div>
 		</div>
-		<div th:if="${isOwner}" class="bigSection" id="imageUploader">
+		<div class="albumRow" id ="albumNavigator">
+			<a th:if="${hasPrevPictures}" href="#" th:href="@{${prevPicturesPath}}" class="btnSecondary" id="previousBtn">Previous</a>
+			<a th:if="${hasNextPictures}" href="#" th:href="@{${nextPicturesPath}}" class="btnSecondary" id="nextBtn">Next</a>
+		</div>
+	</div>
+	<div class="albumContainer" th:if="${isOwner}">
+		<div class="albumRow" id="imageUploader">
 			<form action="#" th:action="@{/UploadImage(albumId=${album.id})}" method="post" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
-				<input type="text" name="title" placeholder="Image Title">
-				<label for="file">Upload Image</label>
-				<input type="file" id="file" name="image" multiple>
-				<input type="text" name="description" placeholder="Image Description">
-				<input type="submit" value="Upload Image" class="btn">
+				<div>
+					<label for="file">Upload Image</label>
+					<input type="file" id="file" name="image" multiple>
+				</div>
+				<div>
+					<input type="text" name="title" placeholder="Image Title">
+					<textarea id="uploadDescription" name="description" placeholder="Image Description"></textarea>
+				</div>
+				<div>
+					<input type="submit" value="Upload Image" class="btn">
+					<p>-OR-</p>
+					<a href="#" th:href="@{/AddToAlbum(albumId=${album.id})}" class="btn">Add existing Image</a>
+				</div>
 			</form>
-			<a href="#" th:href="@{/AddToAlbum(albumId=${album.id})}" class="btn">Add existing Image</a>
 		</div>
+	</div>
 	</div>
 </body>
