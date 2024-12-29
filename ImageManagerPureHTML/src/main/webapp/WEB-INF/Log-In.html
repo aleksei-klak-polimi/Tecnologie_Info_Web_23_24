@@ -7,6 +7,7 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
+	<div id="authContainer">
 	<span> Don't have an account?
 		<a href="#" th:href="@{/SignUp}" class="btn">Sign up</a>
 	</span>
@@ -28,8 +29,9 @@
 				</div>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 			</div>
-			<input type="submit" value="Log In">
+			<input type="submit" class="btn" value="Log In">
 		</form>
+	</div>
 	</div>
 </body>
 </html>

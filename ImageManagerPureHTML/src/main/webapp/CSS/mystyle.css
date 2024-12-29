@@ -111,6 +111,22 @@ input[type="text"]{
     border-radius: 4px;
 }
 
+input[type="password"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
+input[type="email"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
 input[type="date"]{
 	padding:10px;
 	border-width: 1px;
@@ -723,17 +739,18 @@ textarea{
 
 
 
-/* Span for Sign In */
-span {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 10px;
+/*AUTHETICATION SPECIFIC CSS*/
+#authContainer{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	row-gap: 20px;
+	
+	padding: 30px;
 }
 
-/* Form container styling */
-#formContainer {
-    background-color: #ffffff;
+#authContainer #formContainer{
+	background-color: #ffffff;
     border: 1px solid lightgray;
     border-radius: 8px;
     padding: 40px;
@@ -742,11 +759,37 @@ span {
     max-width: 350px; /* Ensure form container does not become too wide */
 	margin-left:auto;
 	margin-right:auto;
-	margin-top: 85px;
 }
 
+#authContainer h1 {
+	text-align: left;
+    margin-bottom: 40px;
+    max-width: fit-content; /* Allow h1 to control its width */
+    margin-left: 0;
+    margin-top : 0;
+}
 
+#authContainer form{
+	row-gap: 60px;
+}
 
+#authContainer #textInputsContainer{
+	width: 100%;
+}
+
+#authContainer #textContainer{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: 20px;
+}
+
+#authContainer .errorText{
+	text-align:left;
+	font-size: 0.75em;
+	padding-top: 10px;
+	padding-left: 5px;
+}
 
 
 #createAlbumForm label{
@@ -767,65 +810,4 @@ span {
 
 #createAlbumForm input[type=file]::file-selector-button{
 	display:none;
-}
-
-
-
-/* Form styling */
-#formContainer form {
-    width: 100%; /* Ensure the form width matches its content */
-    /*max-width: fit-content;*/ /* Match the width of the h1 */
-    margin: 0 auto; /* Center form within the container */
-}
-
-#formContainer .errorText{
-	text-align:left;
-	font-size: 0.75em;
-	padding-top: 10px;
-	padding-left: 5px;
-}
-
-/* Form inputs container */
-#textInputsContainer {
-    margin-bottom: 60px; /* Space between inputs and the submit button */
-}
-
-#textInputsContainer input {
-    display: block;
-    width: 100%; /* Make inputs fill the full width */
-    margin-top: 25px; /* Vertical spacing between inputs */
-    padding: 10px;
-    border: 1px solid lightgray;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-/* Submit button */
-#formContainer input[type="submit"] {
-    display: block;
-    width: 100%; /* Make submit button fill the full width */
-    padding: 15px;
-    border: none;
-    border-radius: 4px;
-    background-color: black; /* Changed to black */
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px; /* Vertical spacing */
-    box-sizing: border-box;
-}
-
-#formContainer input[type="submit"]:hover {
-    background-color: #333333; /* Slightly lighter black for hover effect */
-}
-
-
-
-/* Heading styling to match form width */
-#formContainer h1 {
-	text-align: left;
-    margin-bottom: 40px;
-    max-width: fit-content; /* Allow h1 to control its width */
-    margin-left: 0;
-    margin-top : 0;
 }
