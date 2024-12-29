@@ -7,35 +7,109 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-	<ul id="navbar">
-		<li><a href="#" th:href="@{/Home}">Home</a></li>
-		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
-	</ul>
-	<div class="main">
-		<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
+	<div class="navbar">
+		<a href="#" th:href="@{/Home}">Home</a>
+		<a href="#" th:href="@{/LogOut}">Log out</a>
+	</div>
+	<div class="albumEditContainer">
 		<form action="#" th:action="@{/AddToAlbum(albumId=${albumId})}" method="post">
-			<div th:if="${false}">
-				<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
- 				<label for="vehicle1"> I have a bike</label><br>
-  				<input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-  				<label for="vehicle2"> I have a car</label><br>
-  				<input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-  				<label for="vehicle3"> I have a boat</label>
-			</div>
+			<div class="homeTable">
 			<table>
 				<tbody>
-					<tr 
+					<tr class = "odd"
 					th:each="picture, iteration:${pictures}"
 					th:class="${iteration.odd}?'odd':'even'">
 						<td><input type="checkbox" name="newPictures" th:value="${picture.id}"></td>
-						<td><img th:src="@{${imageHost} + ${picture.thumbnailPath}}"></td>
-						<td><p th:text="${picture.title}"></p></td>
+						<td><img th:src="@{${imageHost} + ${picture.thumbnailPath}}" src="../static/ImagePlaceholder.png"></td>
+						<td><p th:text="${picture.title}">Image Title</p></td>
+						<td><p th:text="${picture.uploadDate}">22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "odd">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
+					</tr>
+					<tr th:if="${false}" class = "even">
+						<td><input type="checkbox" name="newPictures"></td>
+						<td><img src="../static/ImagePlaceholder.png"></td>
+						<td><p>Image Title</p></td>
+						<td><p>22-12-24</p></td>
 					</tr>
 				</tbody>
 			</table>
-			<input class="btn" type="submit" name="AddPictures" value="Add">
-			<a href="#" th:href="@{/Album(albumId=${albumId})}" class="btn">Back</a>
+			</div>
+			<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
+			<div class="inlineButtons">
+				<input class="btn" type="submit" name="AddPictures" value="Add">
+				<a href="#" th:href="@{/Album(albumId=${albumId})}" class="btnSecondary">Cancel</a>
+			</div>
 		</form>
-		
 	</div>
 </body>

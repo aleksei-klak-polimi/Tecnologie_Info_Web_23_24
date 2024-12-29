@@ -598,6 +598,74 @@ textarea{
 	margin-top: 10px;
 }
 
+/*EDIT ALBUM SPECIFIC CSS*/
+
+.albumEditContainer{
+	max-height: calc(100vh - 40px - 10px - 20px);
+	width: auto;
+	margin: 40px auto;
+	padding:20px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	overflow: hidden;
+
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.albumEditContainer table{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.albumEditContainer table .odd{
+	background-color: lightgray;
+}
+
+.albumEditContainer table td{
+	padding: 5px;
+}
+
+.albumEditContainer table p{
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+.albumEditContainer img{
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+	display:block
+}
+
+.albumEditContainer form{
+	overflow: hidden;
+}
+
+.albumEditContainer .inlineButtons{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+	
+	column-gap: 10px;
+}
+
+.albumEditContainer .btn{
+	width: 50%;
+}
+
+.albumEditContainer .btnSecondary{
+	width: 50%;
+	vertical-align: middle;
+	padding: 15px;
+}
+
 
 /* Span for Sign In */
 span {
