@@ -17,7 +17,7 @@
 		<form id="buttons" action="#" th:action="@{/RemoveFromLastAlbum(albumId=${album.id}, pictureId=${picture.id})}" method="post">
 			<input class="btn" type="submit" name="Delete" value="Yes">
 			<a 	th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}"
-				href="#" class="btn">No</a>
+				href="#" class="btnSecondary">No</a>
 		</form>
 	</div>
 </body>
