@@ -634,6 +634,10 @@ textarea{
 	margin-top: 10px;
 }
 
+#imageEditor .errorText{
+	margin-top: 5px;
+}
+
 /*EDIT ALBUM SPECIFIC CSS*/
 
 .albumEditContainer{

@@ -36,6 +36,7 @@
 						<input type="submit" name="NotEdit" value="Cancel" class="btnSecondary">
 					</div>
 				</form>
+				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 			</div>
 		</div>
 	</div>
