@@ -168,6 +168,7 @@ private Connection con;
 					picture.setPath(qres.getString("path"));
 					picture.setThumbnailPath(qres.getString("thumbnailPath"));
 					picture.setTitle(qres.getString("title"));
+					picture.setUploadDate(qres.getDate("uploadDate"));
 					
 					pictures.add(picture);
 				}
