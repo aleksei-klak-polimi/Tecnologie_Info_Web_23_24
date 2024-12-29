@@ -84,6 +84,7 @@ public class EditImage extends HttpServlet{
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String path = "/WEB-INF/EditImage.html";
+			String error = request.getParameter("error");
 
 			HttpSession session = request.getSession();
 			User user = (User) session.getAttribute("user");
@@ -105,7 +106,7 @@ public class EditImage extends HttpServlet{
 
 			String imageHost = buildImageHost(request);
 
-			prepareContextAndRender(request, response, path, picture, album, albumPage, imageHost);
+			prepareContextAndRender(request, response, path, picture, album, albumPage, imageHost, error);
 		} catch (SQLException e) {
 			e.printStackTrace(); // for debugging
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
@@ -295,11 +296,12 @@ public class EditImage extends HttpServlet{
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
 			String path, Picture picture, Album album, int albumPage,
-			String imageHost) throws IOException {
+			String imageHost, String error) throws IOException {
 		
 		IWebExchange webExchange = this.application.buildExchange(request, response);
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
 		ctx.setVariable("picture", picture);
+		ctx.setVariable("error", error);
 		ctx.setVariable("album", album);
 		ctx.setVariable("albumPage", albumPage);
 		ctx.setVariable("imageHost", imageHost);
