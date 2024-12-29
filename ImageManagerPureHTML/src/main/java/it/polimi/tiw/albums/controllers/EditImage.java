@@ -36,6 +36,7 @@ import jakarta.servlet.http.HttpSession;
 public class EditImage extends HttpServlet{
 	// ATTRIBUTES
 	private static final long serialVersionUID = 1L;
+	private static final int DEFAULT_PAGE_SIZE = 5;
 	private Connection conn;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
@@ -98,10 +99,13 @@ public class EditImage extends HttpServlet{
 			if (pictureId == -1)
 				return;
 			Picture picture = getPictureById(pictureId);
+			
+			int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
+            if(albumPage == -1) return;
 
 			String imageHost = buildImageHost(request);
 
-			prepareContextAndRender(request, response, path, picture, album, imageHost);
+			prepareContextAndRender(request, response, path, picture, album, albumPage, imageHost);
 		} catch (SQLException e) {
 			e.printStackTrace(); // for debugging
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
@@ -176,6 +180,28 @@ public class EditImage extends HttpServlet{
 		}
 
 		return albumId;
+	}
+	
+	private int validateAndRetrieveAlbumPage(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
+	     HttpSession s = request.getSession();
+	     //Checking for null pointer
+	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
+	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
+	    	 returnHome(request, response);
+	         return -1;
+	     }
+	     
+	     int albumPage = albumPageInteger;
+	     
+	     AlbumDAO albumDao = new AlbumDAO(conn);
+	        
+	     //Check if album page is valid page
+	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+
+	     if (albumPage > maxAlbumPage) return maxAlbumPage;
+
+	     return albumPage;
 	}
 
 	private int validateAndRetrievePictureId(HttpServletRequest request, HttpServletResponse response, int albumId)
@@ -268,13 +294,14 @@ public class EditImage extends HttpServlet{
 	}
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
-			String path, Picture picture, Album album,
+			String path, Picture picture, Album album, int albumPage,
 			String imageHost) throws IOException {
 		
 		IWebExchange webExchange = this.application.buildExchange(request, response);
 		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
 		ctx.setVariable("picture", picture);
 		ctx.setVariable("album", album);
+		ctx.setVariable("albumPage", albumPage);
 		ctx.setVariable("imageHost", imageHost);
 
 		templateEngine.process(path, ctx, response.getWriter());
