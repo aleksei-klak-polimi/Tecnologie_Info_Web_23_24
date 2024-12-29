@@ -23,8 +23,10 @@
 					<img src="../static/ImagePlaceholder.png"
 						th:src="@{${imageHost} + ${picture.path}}">
 				</div>
-				<p id="imageDescription" th:text="${picture.description}">Image
+				<div id="imageDescription">
+				<p th:each="line : ${#strings.arraySplit(picture.description, '\n')}" th:text="${line}">Image
 					Description</p>
+				</div>
 				<div th:if="${isOwner}" class="buttons">
 					<a href="#"
 						th:href="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}"
@@ -51,8 +53,9 @@
 				</div>
 				<div th:each="comment, commentIndex: ${comments}" class="comment">
 					<div class="commentAuthor" th:text="${comment.author}">Author1</div>
-					<div class="commentBody" th:text="${comment.body}">Example of
-						a comment body.</div>
+					<div class="commentBody">
+						<p th:each="line : ${#strings.arraySplit(comment.body, '\n')}" th:text="${line}">Example of a comment body.</p>
+					</div>
 					<div class="commentDate" th:text="${comment.postDate}">22-12-24</div>
 				</div>
 				<div th:if="${false}" class="comment">
