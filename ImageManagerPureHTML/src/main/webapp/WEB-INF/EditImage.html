@@ -26,10 +26,13 @@
 				<form action="#" th:action="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" method="post" id="editImageForm" autocomplete="off">
 					<div>
 						<div id="inlineTextInputs">
-							<input type="text" name="title" id="imageTitle" placeholder="Image Title" th:value="${picture.title}">
-							<input name="date" type="date" th:value="${picture.uploadDate}">
+							<input 	type="text" name="title" id="imageTitle" placeholder="Image Title" th:value="${picture.title}"
+									required maxlength="127" minlength="3"
+									pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
+							<input 	name="date" type="date" th:value="${picture.uploadDate}"
+									required>
 						</div>
-						<textarea name="description" placeholder="Image Description" th:text="${picture.description}"></textarea>
+						<textarea maxlength="1023" name="description" placeholder="Image Description" th:text="${picture.description}"></textarea>
 					</div>
 					<div>
 						<input type="submit" name="Edit" value="Confirm changes" class="btn">

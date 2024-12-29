@@ -96,14 +96,18 @@
 	</div>
 	<div class="albumContainer" th:if="${isOwner}">
 		<div class="albumRow" id="imageUploader">
+			<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>
 			<form action="#" th:action="@{/UploadImage(albumId=${album.id})}" method="post" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
 				<div>
 					<label for="file">Upload Image</label>
-					<input type="file" id="file" name="image" multiple>
+					<input type="file" id="file" name="image" accept=".png, .jpg, .jpeg" required>
 				</div>
 				<div>
-					<input type="text" name="title" placeholder="Image Title">
-					<textarea id="uploadDescription" name="description" placeholder="Image Description"></textarea>
+					<input 	type="text" name="title" placeholder="Image Title" required
+							maxlength="127" minlength="3"
+							pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
+					<textarea 	id="uploadDescription" name="description" placeholder="Image Description"
+								maxlength="1023"></textarea>
 				</div>
 				<div>
 					<input type="submit" value="Upload Image" class="btn">

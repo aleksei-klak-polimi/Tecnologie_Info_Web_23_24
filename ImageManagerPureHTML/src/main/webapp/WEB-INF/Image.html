@@ -40,7 +40,7 @@
 				method="post">
 				<div class="formTitle">New Comment</div>
 				<div id="inputs">
-					<textarea name="comment" placeholder="Write your comment here..."></textarea>
+					<textarea name="comment" placeholder="Write your comment here..." required maxlength="1023"></textarea>
 					<input type="submit" class="btn" value="Post">
 				</div>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder
