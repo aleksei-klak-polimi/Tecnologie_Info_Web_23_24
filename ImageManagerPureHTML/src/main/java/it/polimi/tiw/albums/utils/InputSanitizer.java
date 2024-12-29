@@ -150,8 +150,9 @@ public final class InputSanitizer {
             return false;
         }
 		
-		//Image description can contain alpha numerics, spaces and select special characters
-		String albumTitleRegex = "^[a-zA-Z0-9\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
+		//Image description can contain alpha numerics, spaces, newline and select special characters
+		//(?:\r\n|\r|\n) is the regex for newlines
+		String albumTitleRegex = "^[a-zA-Z0-9(?:\\r\\n|\\r|\\n)\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
 		Pattern pattern = Pattern.compile(albumTitleRegex);
 
 		// Check if the album Title matches the regex
@@ -310,7 +311,7 @@ public final class InputSanitizer {
         }
 		
 		//Image description can contain alpha numerics, spaces and select special characters
-		String albumTitleRegex = "^[a-zA-Z0-9\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
+		String albumTitleRegex = "^[a-zA-Z0-9(?:\\r\\n|\\r|\\n)\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$";
 		Pattern pattern = Pattern.compile(albumTitleRegex);
 
 		// Check if the album Title matches the regex
