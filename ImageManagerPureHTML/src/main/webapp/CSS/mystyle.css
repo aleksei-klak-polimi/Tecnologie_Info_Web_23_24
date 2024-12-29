@@ -413,6 +413,26 @@ textarea{
     color: gray;
 }
 
+.albumContainer #imageUploader form label{
+	display: flex;
+    align-items: center;
+    justify-content: space-around;
+	box-sizing: border-box;
+	width: 100%;
+	padding:0;
+	
+	height: 200px;
+	background-color: #f4f6f8;
+	border: 1px solid lightgray;
+    border-radius: 4px;
+    
+    color:gray;
+}
+
+.albumContainer #imageUploader form input[type=file]::file-selector-button{
+	display:none;
+}
+
 .albumContainer #imageUploader #uploadDescription{
 	flex-grow: 1;
 	margin: 15px 0;
@@ -792,22 +812,7 @@ textarea{
 }
 
 
-#createAlbumForm label{
-	display: flex;
-    align-items: center;
-    justify-content: space-around;
-	box-sizing: border-box;
-	width: 100%;
-	padding:0;
-	
-	height: 200px;
-	background-color: #f4f6f8;
-	border: 1px solid lightgray;
-    border-radius: 4px;
-    
-    color:gray;
-}
 
-#createAlbumForm input[type=file]::file-selector-button{
-	display:none;
-}
+
+
+
