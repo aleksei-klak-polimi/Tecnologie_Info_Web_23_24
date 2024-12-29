@@ -111,6 +111,14 @@ input[type="text"]{
     border-radius: 4px;
 }
 
+input[type="date"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
 textarea{
 	padding:10px;
 	border-width: 1px;
@@ -430,11 +438,14 @@ textarea{
 	align-items: flex-end;
 	
 	margin-bottom: 5px;
+	
+	font-size: 2em;
 }
 
 .imageContainer #imageDate{
 	font-weight: thin;
 	color: gray;
+	font-size: 0.5em;
 }
 
 .imageContainer #imageWrapper{
@@ -452,10 +463,6 @@ textarea{
 
 .imageContainer img{
 	max-width:100%;
-}
-
-.imageContainer #imageTitle{
-	font-size: 2em;
 }
 
 .imageContainer #imageDescription{
@@ -541,6 +548,54 @@ textarea{
 }
 .imageContainer .comment .commentBody{
 	padding: 10px 0;
+}
+
+
+/*EDIT IMAGE SPECIFIC CSS*/
+#imageEditor form{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	column-gap: 20px;
+	width: 100%;
+	height: 100%;
+	
+	margin-top: 25px;
+}
+
+#imageEditor form div{
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: auto;
+	height: 35vh;
+}
+
+#imageEditor form #inlineTextInputs{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	height: auto;
+}
+
+#imageEditor form div:nth-child(1){
+	flex-grow: 1;
+}
+
+#imageEditor form input{
+	width: auto;
+}
+
+#imageEditor form #imageTitle{
+	flex-grow: 1;
+	margin-right: 10px;
+}
+
+#imageEditor form textarea{
+	flex-grow: 1;
+	width: 100%;
+	height: 30vh;
+	margin-top: 10px;
 }
 
 

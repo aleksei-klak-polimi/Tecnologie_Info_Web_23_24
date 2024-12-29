@@ -7,19 +7,36 @@
 	href="../CSS/mystyle.css" th:href="@{/CSS/mystyle.css}" />
 </head>
 <body>
-	<ul id="navbar">
-		<li><a href="#" th:href="@{/Home}">Home</a></li>
-		<li><a href="#" th:href="@{/LogOut}">Log out</a></li>
-	</ul>
-	<div class="bigSection" id="imageEditor">
-		<img 	src="../static/ImagePlaceholder.png"
-				th:src="@{${imageHost} + ${picture.path}}"></img>
-		<form action="#" th:action="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" method="post" id="editImageForm" autocomplete="off">
-			<input type="text" name="title" placeholder="Image Title" th:value="${picture.title}">
-			<input type="text" name="description" placeholder="Image Description" th:value="${picture.description}">
-			<input name="date" type="date" th:value="${picture.uploadDate}">
-			<input type="submit" name="Edit" value="Confirm changes" class="btn">
-			<input type="submit" name="NotEdit" value="Cancel" class="btn">
-		</form>
+	<div class="navbar">
+		<a href="#" th:href="@{/Home}">Home</a>
+		<a 	href="#"
+			th:href="@{/Album(albumId=${album.id}, albumPage=${albumPage})}">Album</a>
+		<a href="#" th:href="@{/LogOut}">Log out</a>
+	</div>
+	<div>
+		<div class="imageContainer" id="imageEditor">
+			<div id="imageDisplay">
+				<div id="imageHeader">
+					Edit Image details
+				</div>
+				<div id="imageWrapper">
+					<img 	src="../static/ImagePlaceholder.png"
+							th:src="@{${imageHost} + ${picture.path}}"></img>
+				</div>
+				<form action="#" th:action="@{/EditImage(albumId=${album.id}, pictureId=${picture.id})}" method="post" id="editImageForm" autocomplete="off">
+					<div>
+						<div id="inlineTextInputs">
+							<input type="text" name="title" id="imageTitle" placeholder="Image Title" th:value="${picture.title}">
+							<input name="date" type="date" th:value="${picture.uploadDate}">
+						</div>
+						<textarea name="description" placeholder="Image Description" th:text="${picture.description}"></textarea>
+					</div>
+					<div>
+						<input type="submit" name="Edit" value="Confirm changes" class="btn">
+						<input type="submit" name="NotEdit" value="Cancel" class="btnSecondary">
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 </body>
