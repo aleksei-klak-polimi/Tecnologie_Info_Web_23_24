@@ -36,7 +36,7 @@
 					</div>
 					<div>
 						<input type="submit" name="Edit" value="Confirm changes" class="btn">
-						<input type="submit" name="NotEdit" value="Cancel" class="btnSecondary">
+						<a href="#" th:href="@{/Image(albumId=${album.id}, pictureId=${picture.id})}" class="btnSecondary">Cancel</a>
 					</div>
 				</form>
 				<div th:if="${error}" th:text="${error}" class="errorText">PlaceHolder error text</div>

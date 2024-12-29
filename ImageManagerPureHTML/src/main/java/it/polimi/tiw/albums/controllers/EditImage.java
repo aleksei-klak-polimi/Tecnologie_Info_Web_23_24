@@ -126,13 +126,7 @@ public class EditImage extends HttpServlet{
 				return;
 
 			int pictureId = validateAndRetrievePictureId(request, response, albumId);
-			if (pictureId == -1)
-				return;
-			
-			if(request.getParameter("NotEdit") != null) {
-				redirectToImage(request, response, albumId, pictureId);
-				return;
-			}
+			if (pictureId == -1) return;
 			
 			String title = request.getParameter("title").trim();
 			String description = request.getParameter("description").trim();
@@ -140,19 +134,15 @@ public class EditImage extends HttpServlet{
 
 			String error = validateInputs(title, description, dateString);
 			if (error != null) {
-				redirectToPageWithError(request, response, albumId, pictureId, error, title, description);
+				redirectToPageWithError(request, response, albumId, pictureId, error);
 				return;
 			}
 			
-			Date date = parseDate(request, response, dateString, albumId, pictureId, title, description);
+			Date date = parseDate(request, response, dateString, albumId, pictureId);
 			if(date == null) return;
-			
 
-			if (request.getParameter("Edit") != null) {
-				// User confirmed they want to edit image
-				// Update the database
-				editImage(pictureId, title, description, date);
-			}
+			// Update the database
+			editImage(pictureId, title, description, date);
 			redirectToImage(request, response, albumId, pictureId);
 		} catch (SQLException e) {
 			e.printStackTrace(); // for debugging
@@ -251,7 +241,7 @@ public class EditImage extends HttpServlet{
 		return pictureDao.getPictureById(pictureId);
 	}
 
-	private Date parseDate(HttpServletRequest request, HttpServletResponse response, String dateString, int albumId, int pictureId, String title, String description) throws IOException {
+	private Date parseDate(HttpServletRequest request, HttpServletResponse response, String dateString, int albumId, int pictureId) throws IOException {
 		String datePattern = "yyyy-MM-dd";
         SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
         dateFormat.setLenient(false);
@@ -260,7 +250,7 @@ public class EditImage extends HttpServlet{
 			return dateFormat.parse(dateString);
 		} catch (ParseException e) {
 			String error ="Malformed Image date.";
-			redirectToPageWithError(request, response, albumId, pictureId, error, title, description);
+			redirectToPageWithError(request, response, albumId, pictureId, error);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -282,9 +272,9 @@ public class EditImage extends HttpServlet{
 		return "http://" + serverDomain + context.getInitParameter("ImageHost");
 	}
 	
- 	private void redirectToPageWithError(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId, String error, String title, String description) throws IOException {
-        String paramString = String.format("?error=%s&title=%s&description=%s&albumId=%d&pictureId=%d",
-                                           error, title, description, albumId, pictureId);
+ 	private void redirectToPageWithError(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId, String error) throws IOException {
+        String paramString = String.format("?error=%s&albumId=%d&pictureId=%d",
+                                           error, albumId, pictureId);
         String albumPath = request.getServletContext().getContextPath() + "/EditImage" + paramString;
         response.sendRedirect(albumPath);
     }

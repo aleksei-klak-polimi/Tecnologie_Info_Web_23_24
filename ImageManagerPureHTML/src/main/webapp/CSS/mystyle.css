@@ -630,6 +630,10 @@ textarea{
 	width: auto;
 }
 
+#imageEditor form a{
+	padding: 15px;
+}
+
 #imageEditor form #imageTitle{
 	flex-grow: 1;
 	margin-right: 10px;
