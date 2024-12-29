@@ -74,14 +74,9 @@ public class UploadImage extends HttpServlet {
 
 			String title = request.getParameter("title").trim();
 			String description = request.getParameter("description").trim();
-
 			Part filePart = request.getPart("image");
 
-			String error = validateInputs(title, description, filePart);
-			if (error != null) {
-				redirectToAlbumWithError(request, response, albumId, error, title, description);
-				return;
-			}
+			if(!validateInputs(request, response, albumId, title, description, filePart)) return;
         
 			//Inputs were valid, proceed to save image to the filesystem
 			ServletContext context = getServletContext();
@@ -132,25 +127,48 @@ public class UploadImage extends HttpServlet {
         return albumId;
     }
 	
-	private String validateInputs(String title, String description, Part filePart) {
+	private boolean validateInputs(HttpServletRequest request, HttpServletResponse response, int albumId, String title, String description, Part filePart) throws IOException, SQLException {
+		String error = "";
+		
         if (!InputSanitizer.isValidTitle(title)) {
-            return "Missing or malformed Image Title.";
+            error = "Missing or malformed Image Title.";
+            redirectToAlbumWithError(request, response, albumId, error, "", "");
+            return false;
         }
 
         if (!InputSanitizer.isValidImageDescription(description)) {
-            return "Malformed Image description.";
+            error = "Malformed Image description.";
+            redirectToAlbumWithError(request, response, albumId, error, title, "");
+            return false;
         }
 
         if (!InputSanitizer.isValidImageFile(filePart)) {
-            return "Malformed Image file.";
+            error = "Malformed Image file.";
+            redirectToAlbumWithError(request, response, albumId, error, title, description);
+            return false;
         }
 
-        return null;
+        return true;
     }
 	
+	private int validateAndRetrieveAlbumPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	     HttpSession s = request.getSession();
+	     //Checking for null pointer
+	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
+	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
+	    	 returnHome(request, response);
+	         return -1;
+	     }
+	     
+	     int albumPage = albumPageInteger;
+	     return albumPage;
+	}
+	
 	private void redirectToAlbumWithError(HttpServletRequest request, HttpServletResponse response, int albumId, String error, String title, String description) throws IOException {
-        String paramString = String.format("?error=%s&title=%s&description=%s&albumId=%d",
-                                           error, title, description, albumId);
+        
+		int albumPage = validateAndRetrieveAlbumPage(request, response);
+		String paramString = String.format("?error=%s&title=%s&description=%s&albumId=%d&albumPage=%d",
+                                           error, title, description, albumId, albumPage);
         String albumPath = request.getServletContext().getContextPath() + "/Album" + paramString;
         response.sendRedirect(albumPath);
     }
