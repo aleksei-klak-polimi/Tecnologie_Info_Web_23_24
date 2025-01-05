@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
-import org.thymeleaf.web.IWebApplication;
 import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
+import it.polimi.tiw.albums.controllers.helpers.TemplateEngineBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -38,18 +35,7 @@ public class LogOut extends HttpServlet{
 	@Override
 	public void init() throws ServletException {
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
-		this.templateEngine = buildTemplateEngine(this.application);
-	}
-
-	// HELPER METHOD
-	private ITemplateEngine buildTemplateEngine(final IWebApplication application) {
-		final WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		templateResolver.setSuffix(".html");
-		final TemplateEngine templateEngine = new TemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver);
-
-		return templateEngine;
+		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
 	}
 	
 	

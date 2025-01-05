@@ -2,14 +2,13 @@ package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import it.polimi.tiw.albums.beans.User;
+import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.daos.PictureDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,15 +34,9 @@ public class RemoveFromAlbum extends HttpServlet{
 	
 	// SERVLET METHODS
 	@Override
-	public void init() throws ServletException {		
+	public void init() throws ServletException {
 		try {
-			ServletContext context = getServletContext();
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
-			String password = context.getInitParameter("dbPassword");
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, user, password);
+			conn = DBConnector.getConnection(getServletContext());
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");

@@ -2,7 +2,6 @@ package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
@@ -10,16 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
-import org.thymeleaf.web.IWebApplication;
 import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import it.polimi.tiw.albums.beans.Picture;
 import it.polimi.tiw.albums.beans.User;
+import it.polimi.tiw.albums.controllers.helpers.DBConnector;
+import it.polimi.tiw.albums.controllers.helpers.TemplateEngineBuilder;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.daos.PictureDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
@@ -54,16 +51,10 @@ public class AddExistingImage extends HttpServlet{
 	@Override
 	public void init() throws ServletException {
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
-		this.templateEngine = buildTemplateEngine(this.application);
+		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
 
 		try {
-			ServletContext context = getServletContext();
-			String driver = context.getInitParameter("dbDriver");
-			String url = context.getInitParameter("dbUrl");
-			String user = context.getInitParameter("dbUser");
-			String password = context.getInitParameter("dbPassword");
-			Class.forName(driver);
-			conn = DriverManager.getConnection(url, user, password);
+			conn = DBConnector.getConnection(getServletContext());
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
@@ -72,18 +63,6 @@ public class AddExistingImage extends HttpServlet{
 		}
 
 	}
-
-	// HELPER METHOD
-	private ITemplateEngine buildTemplateEngine(final IWebApplication application) {
-		final WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
-		templateResolver.setTemplateMode(TemplateMode.HTML);
-		templateResolver.setSuffix(".html");
-		final TemplateEngine templateEngine = new TemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver);
-
-		return templateEngine;
-	}
-	
 	
 	
 	
