@@ -118,10 +118,10 @@ public class AddExistingImage extends HttpServlet{
 	
 	
 	//HELPER METHODS
-	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int uploader) throws IOException, SQLException {
+	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, SQLException {
         String albumIdString = request.getParameter("albumId");
         if (!InputSanitizer.isValidId(albumIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
             return -1;
         }
 
@@ -129,8 +129,12 @@ public class AddExistingImage extends HttpServlet{
         AlbumDAO albumDao = new AlbumDAO(conn);
         
         //Check if album exists and if user is the owner
-        if (!albumDao.albumExists(albumId) || !albumDao.albumBelongsToUser(albumId, uploader)) {
-            returnHome(request, response);
+        if(!albumDao.albumExists(albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+        	return -1;
+        }
+        if (!albumDao.albumBelongsToUser(albumId, userId)) {
+        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Album does not belong to user.");
             return -1;
         }
 
@@ -149,16 +153,15 @@ public class AddExistingImage extends HttpServlet{
 		
 		//Validate that each entry is a valid id
 		for(String id:pictureIdStrings) {
-			if(!InputSanitizer.isValidId(id)) {
-				returnHome(request, response);
-				return null;
-			}
+			if (!InputSanitizer.isValidId(id)) {
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid value for pictureId in newPictures");
+	            return null;
+	        }
 			//Check if id is duplicate
-			if(pictureIds.contains(Integer.valueOf(id))) {
-				returnHome(request, response);
-				return null;
-			}
-				
+			if (pictureIds.contains(Integer.valueOf(id))) {
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Duplicate pictureId value");
+	            return null;
+	        }
 			pictureIds.add(Integer.valueOf(id));
 		}
 		
@@ -170,10 +173,10 @@ public class AddExistingImage extends HttpServlet{
 				.collect(Collectors.toCollection(HashSet::new));
 		
 		for(int pictureId:pictureIds) {
-			if(!allowedPictureIds.contains(pictureId)) {
-				returnHome(request, response);
-				return null;
-			}
+			if (!allowedPictureIds.contains(pictureId)) {
+	        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "One or more pictures do not belong to user.");
+	            return null;
+	        }
 		}
 		
 		return pictureIds.stream().toList();
@@ -221,11 +224,6 @@ public class AddExistingImage extends HttpServlet{
         response.sendRedirect(path);
 	}
 	
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
-	}
-
 	private void redirectToAlbum(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException {
         String albumPath = request.getServletContext().getContextPath() + "/Album?albumId=" + albumId;
         response.sendRedirect(albumPath);
