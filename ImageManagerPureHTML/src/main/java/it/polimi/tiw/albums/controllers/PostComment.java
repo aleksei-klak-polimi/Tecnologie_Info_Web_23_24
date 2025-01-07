@@ -83,7 +83,7 @@ public class PostComment extends HttpServlet{
 	private int validateAndRetrievePictureId(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
         String pictureIdString = request.getParameter("pictureId");
         if (!InputSanitizer.isValidId(pictureIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter pictureId");
             return -1;
         }
 
@@ -91,9 +91,13 @@ public class PostComment extends HttpServlet{
         PictureDAO pictureDao = new PictureDAO(conn);
         
         //Check if picture exists and if picture belongs to album
-        if (!pictureDao.pictureExists(pictureId) || !pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
-            returnHome(request, response);
-            return -1;
+        if(!pictureDao.pictureExists(pictureId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No picture found with provided id. pictureId");
+        	return -1;
+        }
+        if(!pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Picture does not belong to album");
+        	return -1;
         }
 
         return pictureId;
@@ -103,7 +107,7 @@ public class PostComment extends HttpServlet{
 	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
 		 String albumIdString = request.getParameter("albumId");
 	        if (!InputSanitizer.isValidId(albumIdString)) {
-	            returnHome(request, response);
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
 	            return -1;
 	        }
 
@@ -112,8 +116,8 @@ public class PostComment extends HttpServlet{
 	        
 	        //Check if album exists
 	        if (!albumDao.albumExists(albumId)) {
-	            returnHome(request, response);
-	            return -1;
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+	        	return -1;
 	        }
 
 	        return albumId;
@@ -148,12 +152,6 @@ public class PostComment extends HttpServlet{
                albumId, pictureId);
 		String path = request.getServletContext().getContextPath() + "/Image" + paramString;
 		response.sendRedirect(path);
-	}
-	
-	
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
 	}
 }
 
