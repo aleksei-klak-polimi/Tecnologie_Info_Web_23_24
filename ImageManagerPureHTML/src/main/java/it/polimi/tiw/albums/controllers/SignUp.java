@@ -84,9 +84,6 @@ public class SignUp extends HttpServlet{
 		boolean validCredentials = true;
 		String paramString = "";
 		
-		final IWebExchange webExchange = this.application.buildExchange(request, response);
-		WebContext ctx = new WebContext(webExchange, webExchange.getLocale());
-		
 		//Retrieve inputs
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
