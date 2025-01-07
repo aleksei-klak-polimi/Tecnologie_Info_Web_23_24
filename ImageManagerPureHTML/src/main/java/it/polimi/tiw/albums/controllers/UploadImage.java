@@ -58,6 +58,7 @@ public class UploadImage extends HttpServlet {
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String imageName = "";
 		try {
 			HttpSession session = request.getSession();
 			User user = (User) session.getAttribute("user");
@@ -78,7 +79,7 @@ public class UploadImage extends HttpServlet {
 			String uploadThumbnailPath = context.getInitParameter("uploadThumbnailPath");
 			
 			//Save image
-			String imageName = MediaManager.saveImageToSystem(filePart, request.getServletContext().getRealPath("/").concat(uploadImagePath));
+			imageName = MediaManager.saveImageToSystem(filePart, request.getServletContext().getRealPath("/").concat(uploadImagePath));
 			//Generate thumbnail
 			File f = new File(request.getServletContext().getRealPath("/").concat(uploadImagePath).concat(imageName));
 			MediaManager.generateThumbnailFromFile(f, imageName, request.getServletContext().getRealPath("/").concat(uploadThumbnailPath));
@@ -92,7 +93,7 @@ public class UploadImage extends HttpServlet {
         
 		}
 		catch (SQLException e) {
-			//TODO If picture was not inserted into database then remove it from file system
+			deleteImageFiles(request, response, imageName);
 			e.printStackTrace(); // for debugging
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
 		}
@@ -154,8 +155,7 @@ public class UploadImage extends HttpServlet {
 	     //Checking for null pointer
 	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
 	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
-	    	 returnHome(request, response);
-	         return -1;
+	         return 1;
 	     }
 	     
 	     int albumPage = albumPageInteger;
@@ -171,6 +171,24 @@ public class UploadImage extends HttpServlet {
         response.sendRedirect(albumPath);
     }
 	
+	private void deleteImageFiles(HttpServletRequest request, HttpServletResponse response, String imageName) {
+		ServletContext context = getServletContext();
+		String uploadImagePath = context.getInitParameter("uploadImagePath");
+		String uploadThumbnailPath = context.getInitParameter("uploadThumbnailPath");
+		
+		File pictureFile = new File(request.getServletContext().getRealPath("/").concat(uploadImagePath).concat(imageName));
+		File thumbNailFile = new File(request.getServletContext().getRealPath("/").concat(uploadThumbnailPath).concat(imageName));
+		
+		if(!pictureFile.delete()) {
+			System.out.println("Couldn't deleted the image: " + pictureFile.getName());
+			System.out.println("Full file path: " + request.getServletContext().getRealPath("/").concat(uploadImagePath).concat(imageName));
+		}
+		if(!thumbNailFile.delete()) {
+			System.out.println("Couldn't deleted the thumbnail: " + pictureFile.getName());
+			System.out.println("Full file path: " + request.getServletContext().getRealPath("/").concat(uploadThumbnailPath).concat(imageName));
+		}
+	}
+	
 	private void saveImageToDatabase(int albumId, int uploader, String imagePath, String thumbnailPath, String title, String description, Date uploadDate) throws SQLException {
         PictureDAO pictureDao = new PictureDAO(conn);
         pictureDao.createPicture(albumId, uploader, imagePath, thumbnailPath, title, description, uploadDate);
@@ -180,11 +198,6 @@ public class UploadImage extends HttpServlet {
         String albumPath = request.getServletContext().getContextPath() + "/Album?albumId=" + albumId;
         response.sendRedirect(albumPath);
     }
-	
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
-	}
 }
 
 
