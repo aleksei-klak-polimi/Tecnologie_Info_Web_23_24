@@ -75,8 +75,7 @@ public class CreateAlbum extends HttpServlet{
 				albumDao.createAlbum(user.getId(), albumTitle, creationDate);
 				int albumId = albumDao.getLatestAlbumByUser(user.getId());
 				
-				//TODO change redirect from home to album page
-				String homePath = request.getServletContext().getContextPath() + "/Home";
+				String homePath = request.getServletContext().getContextPath() + "/Album";
 				homePath = homePath.concat("?albumId=").concat(String.valueOf(albumId));
 				response.sendRedirect(homePath);	
 			}
