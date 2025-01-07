@@ -1,9 +1,11 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -31,8 +33,7 @@ import jakarta.servlet.http.HttpSession;
 public class DisplayAlbum extends HttpServlet {
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private static final int DEFAULT_PAGE_SIZE = 5;
-	
+	private int defaultPageSize;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
 	private Connection conn;
@@ -50,14 +51,21 @@ public class DisplayAlbum extends HttpServlet {
 	public void init() throws ServletException {
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
-
+		
+		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
+		Properties props = new Properties();
 		try {
 			conn = DBConnector.getConnection(getServletContext());
+			
+			props.load(input);
+			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
+		} catch(IOException e) {
+			throw new UnavailableException("Couldn't read config file");
 		}
 	}
 	
@@ -88,7 +96,7 @@ public class DisplayAlbum extends HttpServlet {
             boolean isOwner = albumDao.albumBelongsToUser(albumId, user.getId());
 
             PictureDAO pictureDao = new PictureDAO(conn);
-            List<Picture> pictures = pictureDao.getPicturesFromAlbumByPage(albumId, albumPage, DEFAULT_PAGE_SIZE);
+            List<Picture> pictures = pictureDao.getPicturesFromAlbumByPage(albumId, albumPage, defaultPageSize);
 
             String imageHost = buildImageHost(request);
 
@@ -140,7 +148,7 @@ public class DisplayAlbum extends HttpServlet {
 	        
 	     //Check if album page is valid page
 	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / defaultPageSize));
 
 	     if (albumPage > maxAlbumPage) return maxAlbumPage;
 
@@ -160,7 +168,7 @@ public class DisplayAlbum extends HttpServlet {
 	private boolean hasMorePages(int albumId, int albumPage) throws SQLException {
 		AlbumDAO albumDao = new AlbumDAO(conn);
 		int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-		int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+		int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / defaultPageSize));
 		
 		return albumPage < maxAlbumPage;
 	}
@@ -183,7 +191,7 @@ public class DisplayAlbum extends HttpServlet {
 		ctx.setVariable("imageHost", imageHost);
 		ctx.setVariable("hasNextPictures", hasNextPictures);
 		ctx.setVariable("hasPrevPictures", hasPrevPictures);
-		ctx.setVariable("pageSize", DEFAULT_PAGE_SIZE);
+		ctx.setVariable("pageSize", defaultPageSize);
 		ctx.setVariable("nextPicturesPath", nextPicturesPath);
 		ctx.setVariable("prevPicturesPath", prevPicturesPath);
 

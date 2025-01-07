@@ -1,11 +1,13 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -33,7 +35,7 @@ import jakarta.servlet.http.HttpSession;
 public class EditImage extends HttpServlet{
 	// ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private static final int DEFAULT_PAGE_SIZE = 5;
+	private int defaultPageSize;
 	private Connection conn;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
@@ -48,14 +50,21 @@ public class EditImage extends HttpServlet{
 	public void init() throws ServletException {
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
-
+		
+		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
+		Properties props = new Properties();
 		try {
 			conn = DBConnector.getConnection(getServletContext());
-
+			
+			props.load(input);
+			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
+			
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
+		} catch(IOException e) {
+			throw new UnavailableException("Couldn't read config file");
 		}
 	}
 
@@ -171,7 +180,7 @@ public class EditImage extends HttpServlet{
 	        
 	     //Check if album page is valid page
 	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / defaultPageSize));
 
 	     if (albumPage > maxAlbumPage) return maxAlbumPage;
 

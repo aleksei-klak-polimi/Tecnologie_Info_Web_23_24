@@ -1,8 +1,10 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
@@ -21,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 public class RemoveFromAlbum extends HttpServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private static final int DEFAULT_PAGE_SIZE = 5;
+	private int defaultPageSize;
 	private Connection conn;
 
 	
@@ -35,13 +37,21 @@ public class RemoveFromAlbum extends HttpServlet{
 	// SERVLET METHODS
 	@Override
 	public void init() throws ServletException {
+		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
+		Properties props = new Properties();
+		
 		try {
 			conn = DBConnector.getConnection(getServletContext());
+			
+			props.load(input);
+			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
+		} catch(IOException e) {
+			throw new UnavailableException("Couldn't read config file");
 		}
 	}
 	
@@ -138,7 +148,7 @@ public class RemoveFromAlbum extends HttpServlet{
 	        
 	     //Check if album page is valid page
 	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / defaultPageSize));
 
 	     if (albumPage > maxAlbumPage) return maxAlbumPage;
 
