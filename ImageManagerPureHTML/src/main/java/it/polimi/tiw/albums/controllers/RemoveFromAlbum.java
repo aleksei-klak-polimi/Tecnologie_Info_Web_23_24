@@ -64,7 +64,6 @@ public class RemoveFromAlbum extends HttpServlet{
 				redirectToDelete(request, response, albumId, pictureId);
 			else {
 				int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
-				if(albumPage == -1) return;
 				//If picture is present in more than one album then simply remove from current one
 				removePicture(albumId, pictureId);
 				redirectToAlbum(request, response, albumId, albumPage);
@@ -82,7 +81,7 @@ public class RemoveFromAlbum extends HttpServlet{
 	private int validateAndRetrievePictureId(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
         String pictureIdString = request.getParameter("pictureId");
         if (!InputSanitizer.isValidId(pictureIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter pictureId");
             return -1;
         }
 
@@ -90,9 +89,13 @@ public class RemoveFromAlbum extends HttpServlet{
         PictureDAO pictureDao = new PictureDAO(conn);
         
         //Check if picture exists and if picture belongs to album
-        if (!pictureDao.pictureExists(pictureId) || !pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
-            returnHome(request, response);
-            return -1;
+        if(!pictureDao.pictureExists(pictureId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No picture found with provided id. pictureId");
+        	return -1;
+        }
+        if(!pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Picture does not belong to album");
+        	return -1;
         }
 
         return pictureId;
@@ -101,16 +104,20 @@ public class RemoveFromAlbum extends HttpServlet{
 	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, SQLException {
 		 String albumIdString = request.getParameter("albumId");
 	        if (!InputSanitizer.isValidId(albumIdString)) {
-	            returnHome(request, response);
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
 	            return -1;
 	        }
 
 	        int albumId = Integer.parseInt(albumIdString);
 	        AlbumDAO albumDao = new AlbumDAO(conn);
 	        
-	        //Check if album exists
-	        if (!albumDao.albumExists(albumId) || !albumDao.albumBelongsToUser(albumId, userId)) {
-	            returnHome(request, response);
+	      //Check if album exists and if user is the owner
+	        if(!albumDao.albumExists(albumId)) {
+	        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+	        	return -1;
+	        }
+	        if (!albumDao.albumBelongsToUser(albumId, userId)) {
+	        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Album does not belong to user.");
 	            return -1;
 	        }
 
@@ -122,8 +129,7 @@ public class RemoveFromAlbum extends HttpServlet{
 	     //Checking for null pointer
 	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
 	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
-	    	 returnHome(request, response);
-	         return -1;
+	         return 1;
 	     }
 	     
 	     int albumPage = albumPageInteger;
@@ -150,11 +156,6 @@ public class RemoveFromAlbum extends HttpServlet{
 	private void removePicture(int albumId, int pictureId) throws SQLException {
 		AlbumDAO albumDao = new AlbumDAO(conn);
 		albumDao.removePictureFromAlbum(albumId, pictureId);
-	}
-	
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
 	}
 
 	private void redirectToDelete(HttpServletRequest request, HttpServletResponse response, int albumId, int pictureId) throws IOException {
