@@ -73,31 +73,17 @@ public class DisplayAlbum extends HttpServlet {
             String error = request.getParameter("error");
             
             //PARSE INPUTS
-            int albumId = parseInt(request.getParameter("albumId"), -1);
-            if (albumId == -1) {
-                returnHome(request, response);
-                return;
-            }
+            int albumId = validateAndRetrieveAlbumId(request, response);
+            if (albumId == -1) return;
 
-            AlbumDAO albumDao = new AlbumDAO(conn);
-            if (!albumDao.albumExists(albumId)) {
-                returnHome(request, response);
-                return;
-            }
-
-            int albumPage = parseInt(request.getParameter("albumPage"), 1);
-            int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
-            //Checks if provided page actually exists in the album
-            int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
-
-            if (albumPage > maxAlbumPage) {
-                albumPage = maxAlbumPage;
-            }
+            int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
+            if(albumPage == -1) return;
             
             //Add albumPage to session
             HttpSession s = request.getSession();
 			s.setAttribute("albumPage", albumPage);
-
+			
+			AlbumDAO albumDao = new AlbumDAO(conn);
             Album album = albumDao.getAlbumById(albumId);
             boolean isOwner = albumDao.albumBelongsToUser(albumId, user.getId());
 
@@ -107,7 +93,7 @@ public class DisplayAlbum extends HttpServlet {
             String imageHost = buildImageHost(request);
 
             prepareContextAndRender(request, response, path, error, isOwner, pictures, album, imageHost, 
-                                     albumPage, maxAlbumPage, albumId);
+                                     albumPage, albumId);
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
@@ -118,10 +104,48 @@ public class DisplayAlbum extends HttpServlet {
 	
 	
 	//HELPER METHODS
-	private int parseInt(String param, int defaultValue) {
-        return InputSanitizer.isValidId(param) ? Integer.parseInt(param) : defaultValue;
-    }
+	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+		String albumIdString = request.getParameter("albumId");
+        if (!InputSanitizer.isValidId(albumIdString)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
+            return -1;
+        }
+
+        int albumId = Integer.parseInt(albumIdString);
+        AlbumDAO albumDao = new AlbumDAO(conn);
+        
+        //Check if album exists and belongs to user
+        if(!albumDao.albumExists(albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+        	return -1;
+        }
+        return albumId;
+	}
 	
+	private int validateAndRetrieveAlbumPage(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
+	     String albumPageString = request.getParameter("albumPage");
+	     
+	     if(albumPageString == null) {
+	    	 //If no page is provided then default to first page
+	    	 return 1;
+	     }    
+	     else if (!InputSanitizer.isValidId(albumPageString)) {
+	        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid parameter albumPage");
+	        return -1;
+	     }
+	     
+	     int albumPage = Integer.parseInt(albumPageString);
+	     
+	     AlbumDAO albumDao = new AlbumDAO(conn);
+	        
+	     //Check if album page is valid page
+	     int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
+	     int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+
+	     if (albumPage > maxAlbumPage) return maxAlbumPage;
+
+	     return albumPage;
+	}
 	
 	private String buildImageHost(HttpServletRequest request) {
         String serverDomain = request.getServerName();
@@ -133,11 +157,18 @@ public class DisplayAlbum extends HttpServlet {
         return "http://" + serverDomain + context.getInitParameter("ImageHost");
     }
 	
+	private boolean hasMorePages(int albumId, int albumPage) throws SQLException {
+		AlbumDAO albumDao = new AlbumDAO(conn);
+		int pictureCount = albumDao.getAmountOfPicturesByAlbum(albumId);
+		int maxAlbumPage = Math.max(1, (int) Math.ceil((double) pictureCount / DEFAULT_PAGE_SIZE));
+		
+		return albumPage < maxAlbumPage;
+	}
 	
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response, String path,
 			String error, boolean isOwner, List<Picture> pictures, Album album, String imageHost, int albumPage,
-			int maxAlbumPage, int albumId) throws IOException {
-		boolean hasNextPictures = albumPage < maxAlbumPage;
+			int albumId) throws IOException, SQLException {
+		boolean hasNextPictures = hasMorePages(albumId, albumPage);
 		boolean hasPrevPictures = albumPage > 1;
 
 		String nextPicturesPath = hasNextPictures ? albumPagePath(albumId, albumPage + 1) : "";
@@ -163,11 +194,6 @@ public class DisplayAlbum extends HttpServlet {
         return "/Album?albumId=" + albumId + "&albumPage=" + page;
     }
 	
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
-	}
-
 }
 
 

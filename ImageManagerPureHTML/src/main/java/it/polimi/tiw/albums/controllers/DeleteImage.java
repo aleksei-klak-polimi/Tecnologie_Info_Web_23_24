@@ -114,7 +114,7 @@ public class DeleteImage extends HttpServlet{
             if(albumPage == -1) return;
             
             deleteImage(request, picture);
-            redirectToAlbum(request, response, albumId, albumPage);
+            redirect(request, response, albumId, albumPage);
             
 		}
 		catch (SQLException e) {
@@ -129,7 +129,7 @@ public class DeleteImage extends HttpServlet{
 	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, SQLException {
 		String albumIdString = request.getParameter("albumId");
         if (!InputSanitizer.isValidId(albumIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
             return -1;
         }
 
@@ -137,8 +137,12 @@ public class DeleteImage extends HttpServlet{
         AlbumDAO albumDao = new AlbumDAO(conn);
         
         //Check if album exists and belongs to user
-        if (!albumDao.albumExists(albumId) || !albumDao.albumBelongsToUser(albumId, userId)) {
-            returnHome(request, response);
+        if(!albumDao.albumExists(albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+        	return -1;
+        }
+        if (!albumDao.albumBelongsToUser(albumId, userId)) {
+        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Album does not belong to user.");
             return -1;
         }
 
@@ -148,7 +152,7 @@ public class DeleteImage extends HttpServlet{
 	private int validateAndRetrievePictureId(HttpServletRequest request, HttpServletResponse response, int albumId) throws IOException, SQLException {
 		String pictureIdString = request.getParameter("pictureId");
         if (!InputSanitizer.isValidId(pictureIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter pictureId");
             return -1;
         }
 
@@ -156,8 +160,12 @@ public class DeleteImage extends HttpServlet{
         PictureDAO pictureDao = new PictureDAO(conn);
         
         //Check if picture exists and belongs to current album
-        if (!pictureDao.pictureExists(pictureId) || !pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
-            returnHome(request, response);
+        if(!pictureDao.pictureExists(pictureId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No image found with provided id.");
+        	return -1;
+        }
+        if (!pictureDao.pictureBelongsToAlbum(pictureId, albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Provided picture id does not belong to Album.");
             return -1;
         }
 
@@ -169,8 +177,7 @@ public class DeleteImage extends HttpServlet{
 	     //Checking for null pointer
 	     Integer albumPageInteger = (Integer) s.getAttribute("albumPage");
 	     if(albumPageInteger == null || albumPageInteger.intValue() <= 0) {
-	    	 returnHome(request, response);
-	         return -1;
+	    	 albumPageInteger = 1;
 	     }
 	     
 	     int albumPage = albumPageInteger;
@@ -232,15 +239,17 @@ public class DeleteImage extends HttpServlet{
 		}
 	}
 	
-	private void redirectToAlbum(HttpServletRequest request, HttpServletResponse response, int albumId, int albumPage) throws IOException, SQLException {
-		String paramString = String.format("?albumId=%d&albumPage=%d", albumId, albumPage);
-		String path = request.getServletContext().getContextPath() + "/Album" + paramString;
-		response.sendRedirect(path);
-	}
-		
-	private void returnHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String homePath = request.getServletContext().getContextPath() + "/Home";
-		response.sendRedirect(homePath);
+	private void redirect(HttpServletRequest request, HttpServletResponse response, int albumId, int albumPage) throws IOException, SQLException {
+		AlbumDAO albumDao = new AlbumDAO(conn);
+		if(albumDao.albumExists(albumId)) {
+			String paramString = String.format("?albumId=%d&albumPage=%d", albumId, albumPage);
+			String path = request.getServletContext().getContextPath() + "/Album" + paramString;
+			response.sendRedirect(path);
+		}
+		else {
+			String path = request.getServletContext().getContextPath() + "/Home";
+			response.sendRedirect(path);
+		}
 	}
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
