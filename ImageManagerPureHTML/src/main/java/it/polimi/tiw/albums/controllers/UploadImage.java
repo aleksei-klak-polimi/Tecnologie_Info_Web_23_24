@@ -102,10 +102,10 @@ public class UploadImage extends HttpServlet {
 	
 	
 	//HELPER METHODS
-	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int uploader) throws IOException, SQLException {
+	private int validateAndRetrieveAlbumId(HttpServletRequest request, HttpServletResponse response, int userId) throws IOException, SQLException {
         String albumIdString = request.getParameter("albumId");
         if (!InputSanitizer.isValidId(albumIdString)) {
-            returnHome(request, response);
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing or invalid parameter albumId");
             return -1;
         }
 
@@ -113,8 +113,12 @@ public class UploadImage extends HttpServlet {
         AlbumDAO albumDao = new AlbumDAO(conn);
         
         //Check if album exists and if user is the owner
-        if (!albumDao.albumExists(albumId) || !albumDao.albumBelongsToUser(albumId, uploader)) {
-            returnHome(request, response);
+        if(!albumDao.albumExists(albumId)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No album found with provided id.");
+        	return -1;
+        }
+        if (!albumDao.albumBelongsToUser(albumId, userId)) {
+        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Album does not belong to user.");
             return -1;
         }
 
