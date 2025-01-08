@@ -1,0 +1,834 @@
+/* General page styling */
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+    background-color: #f4f6f8;
+    font-family: Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 100%;
+}
+
+.navbar{
+	position: sticky;
+  	top: 0;
+  	background-color: black;
+  	display: flex;
+  	align-items: center;
+  	padding:0 10vw;
+}
+
+.navbar a{
+	display: block;
+	color: white;
+  	text-decoration: none;
+  	
+  	border-radius: 4px;
+  	border-style: solid;
+  	border-color: gray;
+  	border-width: 0 1px;
+  	
+  	margin: 10px 20px 10px 	0px;
+  	padding: 8px 16px;
+}
+
+.navbar a:hover{
+	background-color: #333333;
+}
+
+.btn {
+	border-radius: 4px;
+    background-color: black;
+    color: white;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #333333;
+}
+
+.btnSecondary{
+	border-radius: 4px;
+    background-color: #f4f6f8;
+    color: black;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btnSecondary:hover {
+    background-color: lightgray;
+}
+
+.errorText{
+	color: red;
+	font-size: 0.85em;
+}
+
+form{
+	display:flex;
+	flex-direction: column;
+  	justify-content: space-evenly;
+  	align-items:center;
+  	row-gap: 20px;
+}
+
+input{
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding:0;
+}
+
+input[type="submit"]{
+	padding:15px;
+}
+
+input[type="text"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
+input[type="password"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
+input[type="email"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
+input[type="date"]{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+}
+
+textarea{
+	padding:10px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+    
+    font-family: Arial, sans-serif;
+}
+
+/*HOMEPAGE SPECIFIC CSS*/
+#homeContainer{
+	width: 80vw;
+	margin: 40px auto;
+	display: flex;
+	flex-grow: 1;
+  	height: calc(100vh - 40px - 10px - 20px); /* Adjust height to account for navbar and vertical margin */
+  	overflow: hidden; /* Prevent content from overflowing outside the container */
+  	
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.homeColumn{
+	display: flex;
+    flex-direction: column;
+	flex-grow: 1;
+	height: 100%;
+    justify-content: space-between;
+	padding: 20px;
+}
+
+.tableWrapper{
+	display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.homeColumn:nth-child(2){
+	border-right-width: 0px;
+	border-left-width: 1px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+.homeTable{
+	overflow-y: auto;
+	
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 8px;
+}
+
+#homeContainer table{
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+#homeContainer table .odd{
+	background-color:lightgray;
+}
+
+#homeContainer table a{
+	text-decoration: none;
+	color: black;
+}
+
+#homeContainer table td, th{
+	padding: 3px;
+}
+
+#homeContainer form{
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 8px;
+	
+	max-width: 50%;
+	margin-top: 25px;
+	padding: 10px;
+  	
+  	align-items: flex-start;
+}
+
+#homeContainer form input{
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding:10px;
+}
+
+#homeContainer form input[type="text"]{
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+	
+}
+
+
+/*ALBUM SPECIFIC CSS*/
+.albumContainer{
+	width: 80vw;
+	margin: 40px auto;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.albumContainer:nth-child(1){
+	margin-bottom: 20px;
+}
+
+.albumContainer:nth-child(2){
+	margin-top: 20px;
+}
+
+.albumContainer .albumRow{
+	display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    width: 100%;
+    overflow: hidden;
+	padding: 20px;
+}
+
+.albumContainer #imageUploader{
+	flex-direction: column;
+}
+
+.albumContainer .errorText{
+	margin-bottom: 5px;
+}
+
+.albumContainer #imageBrowser{
+	flex-direction: column;
+}
+
+.albumContainer #albumTitle{
+	font-size: 1.5em;
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+
+.albumContainer #albumTable{
+	overflow-x: auto;
+}
+
+.albumContainer #albumTable td:not(:hover) form{
+	opacity: 0;
+}
+
+.albumContainer td{
+	padding: 0 20px;
+	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.albumContainer .thumbnailSlot:hover{
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.albumContainer .imageFrame{
+	min-width: 256px;
+	height: 256px;
+	
+	display:flex;
+	align-items: center;
+    justify-content: center;
+	
+	background-color: lightgray;
+	color: white;
+	font-size: 1.2em;
+}
+
+.albumContainer .imageFrame a{
+	height:256px;
+}
+
+.albumContainer .imageHeader{
+	height: 40px;
+	display:flex;
+	align-items: center;
+    justify-content: flex-end
+}
+
+.albumContainer .removeImageButton{
+	padding: 0 4px;
+	width: auto;
+	border-width: 0;
+	border-radius: 4px;
+	background-color: #bf3f3f;
+	color: white;
+	cursor: pointer;
+}
+
+.albumContainer .removeImageButton:hover{
+	background-color: red;
+}
+
+.albumContainer .imageFooter{
+	height: 60px;
+	display:flex;
+	align-items: center;
+    justify-content: center;
+    font-size: 1.15em;
+}
+
+.albumContainer #albumNavigator{
+	justify-content: space-between;
+	padding: 0 20px;
+	padding-bottom: 20px;
+}
+
+.albumContainer #albumNavigator a{
+	height: 100%;
+	padding: 5px 10px;
+	border-color: lightgray;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.albumContainer #albumNavigator a:hover{
+	border-color: gray;
+}
+
+.albumContainer #albumNavigator #previousBtn{
+	margin-right: auto;
+}
+.albumContainer #albumNavigator #nextBtn{
+	margin-left: auto;
+}
+
+.albumContainer img{
+	height: 256px;
+}
+
+.albumContainer #imageUploader form{
+	display: flex;
+    flex-direction: row;
+    width:100%;
+}
+
+.albumContainer #imageUploader form div{
+    width:100%;
+    height: 210px;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.albumContainer #imageUploader form div:nth-child(2){
+    padding:0 20px;
+}
+
+.albumContainer #imageUploader form div:nth-child(3){
+    justify-content: space-between;
+    text-align: center;;
+}
+
+.albumContainer #imageUploader form a{
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+.albumContainer #imageUploader form p{
+    color: gray;
+}
+
+.albumContainer #imageUploader form label{
+	display: flex;
+    align-items: center;
+    justify-content: space-around;
+	box-sizing: border-box;
+	width: 100%;
+	padding:0;
+	
+	height: 200px;
+	background-color: #f4f6f8;
+	border: 1px solid lightgray;
+    border-radius: 4px;
+    
+    color:gray;
+}
+
+.albumContainer #imageUploader form input[type=file]::file-selector-button{
+	display:none;
+}
+
+.albumContainer #imageUploader #uploadDescription{
+	flex-grow: 1;
+	margin: 15px 0;
+}
+
+
+/*IMAGE SPECIFIC CSS*/
+.imageContainer{
+	width: 80vw;
+	margin: 40px auto;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	align-items: center;
+	padding: 20px;
+	
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.imageContainer #imageDisplay{
+	display: flex;
+	flex-direction: column;
+	
+	width: 80%;
+	margin: 25px;
+	margin-left: auto;
+    margin-right: auto;
+}
+
+.imageContainer #imageHeader{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	
+	margin-bottom: 5px;
+	
+	font-size: 2em;
+}
+
+.imageContainer #imageDate{
+	font-weight: thin;
+	color: gray;
+	font-size: 0.5em;
+}
+
+.imageContainer #imageWrapper{
+	display:flex;
+	justify-content: center;
+	
+	padding: 5px 0;
+	
+  	border-width: 0px;
+  	border-top-width: 1px;
+  	border-bottom-width: 1px;
+    border-style: solid;
+    border-color: gray;
+}
+
+.imageContainer img{
+	max-width:100%;
+}
+
+.imageContainer #imageDescription{
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+.imageContainer #commentForm{
+	width: 80%;
+	padding: 25px 0;
+	margin-left: auto;
+    margin-right: auto;
+    
+	align-items: flex-start;
+	row-gap: 10px;
+	
+  	border-width: 0px;
+  	border-top-width: 1px;
+    border-style: solid;
+    border-color: gray;
+	
+    min-height: 50%;
+}
+
+.imageContainer #commentForm .formTitle{
+	font-size: 1.4em;
+}
+
+.imageContainer #commentForm #inputs{
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	width: 100%;
+	height: 100%;
+	column-gap:75px;
+}
+
+.imageContainer #commentForm #inputs textarea{
+	flex-grow: 1;
+	height: 25vh;
+}
+
+.imageContainer #commentForm #inputs input{
+	width: auto;
+	padding: 5px 10px;
+}
+
+.imageContainer #commentSection{
+    padding: 10px 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.imageContainer #commentSectionHeader{
+	display: flex;
+	flex-direction: row;
+	column-gap:5px;
+	color: gray;
+	font-size: 1.4em;
+}
+
+.imageContainer .comment{
+	padding: 10px;
+	border-width: 0px;
+	border-top-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+.imageContainer .comment .commentAuthor{
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.imageContainer .comment .commentDate{
+	font-weight: thin;
+	color: gray;
+	font-size: 0.8em;
+}
+.imageContainer .comment .commentBody{
+	padding: 10px 0;
+}
+
+
+/*EDIT IMAGE SPECIFIC CSS*/
+#imageEditor form{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	column-gap: 20px;
+	width: 100%;
+	height: 100%;
+	
+	margin-top: 25px;
+}
+
+#imageEditor form div{
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: auto;
+	height: 35vh;
+}
+
+#imageEditor form #inlineTextInputs{
+	display:flex;
+	flex-direction: row;
+	justify-content: space-between;
+	height: auto;
+}
+
+#imageEditor form div:nth-child(1){
+	flex-grow: 1;
+}
+
+#imageEditor form input{
+	width: auto;
+}
+
+#imageEditor form a{
+	padding: 15px;
+}
+
+#imageEditor form #imageTitle{
+	flex-grow: 1;
+	margin-right: 10px;
+}
+
+#imageEditor form textarea{
+	flex-grow: 1;
+	width: 100%;
+	height: 30vh;
+	margin-top: 10px;
+}
+
+#imageEditor .errorText{
+	margin-top: 5px;
+}
+
+/*EDIT ALBUM SPECIFIC CSS*/
+
+.albumEditContainer{
+	max-height: calc(100vh - 40px - 10px - 20px);
+	width: auto;
+	margin: 40px auto;
+	padding:20px;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	overflow: hidden;
+
+  	background-color: white;
+  	border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.albumEditContainer table{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.albumEditContainer table .odd{
+	background-color: lightgray;
+}
+
+.albumEditContainer table td{
+	padding: 5px;
+}
+
+.albumEditContainer table p{
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+.albumEditContainer img{
+	width: 50px;
+	height: 50px;
+	object-fit: cover;
+	display:block
+}
+
+.albumEditContainer form{
+	overflow: hidden;
+}
+
+.albumEditContainer .inlineButtons{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+	
+	column-gap: 10px;
+}
+
+.albumEditContainer .btn{
+	width: 50%;
+}
+
+.albumEditContainer .btnSecondary{
+	width: 50%;
+	vertical-align: middle;
+	padding: 15px;
+}
+
+
+
+/*DELETE IMAGE AND LOGOUT SPECIFIC CSS*/
+.binaryChoiceContainer{
+	background-color: #ffffff;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 390px; /* Ensure form container does not become too wide */
+	margin:auto;
+	
+	display:flex;
+	flex-direction:column;
+	align-items: center
+}
+
+.binaryChoiceContainer img{
+	margin: 40px 20px;	
+	max-height: 256px;
+	max-width: calc(390px - 20px - 20px); /*Max width within container's padding*/
+}
+
+.binaryChoiceContainer p{
+	text-align: center;
+}
+
+.binaryChoiceContainer #buttons{
+	display: flex;
+	flex-direction: row;
+  	justify-content: flex-end;
+  	column-gap: 5px;
+  	margin-top: 40px;
+}
+
+.binaryChoiceContainer form{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+	
+	column-gap: 10px;
+}
+
+.binaryChoiceContainer .btn{
+	width: 50%;
+}
+
+.binaryChoiceContainer .btnSecondary{
+	width: 50%;
+	vertical-align: middle;
+	padding: 15px;
+}
+
+
+
+/*AUTHETICATION SPECIFIC CSS*/
+#authContainer{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	row-gap: 20px;
+	
+	padding: 30px;
+}
+
+#authContainer #formContainer{
+	background-color: #ffffff;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px; /* Ensure form container does not become too wide */
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#authContainer h1 {
+	text-align: left;
+    margin-bottom: 40px;
+    max-width: fit-content; /* Allow h1 to control its width */
+    margin-left: 0;
+    margin-top : 0;
+}
+
+#authContainer form{
+	row-gap: 60px;
+}
+
+#authContainer #textInputsContainer{
+	width: 100%;
+}
+
+#authContainer #textContainer{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	row-gap: 20px;
+}
+
+#authContainer .errorText{
+	text-align:left;
+	font-size: 0.75em;
+	padding-top: 10px;
+	padding-left: 5px;
+}
+
+
+
+
+
+
