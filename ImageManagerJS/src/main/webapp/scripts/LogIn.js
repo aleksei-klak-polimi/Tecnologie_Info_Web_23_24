@@ -9,8 +9,14 @@
 	errorParent.removeChild(errorDiv);
 	
 	document.getElementById("logInBtn").addEventListener("click", (e) => logIn(e))
+	document.getElementById("signUpBtn").addEventListener("click", (e) => redirectToSignUp(e));
 	
 	//Onclick function
+	function redirectToSignUp(e) {
+		e.preventDefault();
+		window.location.href = "/ImageManagerJS/SignUp";
+	}
+	
 	function logIn(e) {
 		e.preventDefault();
 		var form = e.target.closest("form");

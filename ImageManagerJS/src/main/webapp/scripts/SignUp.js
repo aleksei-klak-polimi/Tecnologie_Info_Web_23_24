@@ -1,4 +1,4 @@
-/**
+ /**
  * SignUp logic management
  */
 (function (){
@@ -7,9 +7,15 @@
 	var errorParent = errorDiv.parentNode;
 	errorParent.removeChild(errorDiv);
 	
-	document.getElementById("signUpBtn").addEventListener("click", (e) => signUp(e))
+	document.getElementById("signUpBtn").addEventListener("click", (e) => signUp(e));
+	document.getElementById("logInBtn").addEventListener("click", (e) => redirectToLogIn(e));
 	
 	//Onclick function
+	function redirectToLogIn(e){
+		e.preventDefault();
+		window.location.href = "/ImageManagerJS/LogIn";
+	}
+	
 	function signUp(e) {
 		e.preventDefault();
 		var form = e.target.closest("form");
@@ -20,6 +26,8 @@
 			form.reportValidity();
 		}
 	}
+	
+	
 	
 	function matchingPasswords(){
 		var pwd = document.getElementById("password").textContent;
