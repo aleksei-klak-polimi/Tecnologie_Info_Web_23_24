@@ -58,61 +58,23 @@
 	<filter-mapping>
 		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/Home</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/Album</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/Image</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/LogOut</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/CreateAlbum</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/UploadImage</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/DeleteImage</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/EditImage</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/AddToAlbum</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/RemoveFromAlbum</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
-		<url-pattern>/RemoveFromLastAlbum</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/PostComment</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>AlreadyLoggedInFilter</filter-name>
 		<url-pattern>/SignUp</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>AlreadyLoggedInFilter</filter-name>
 		<url-pattern>/LogIn</url-pattern>
 	</filter-mapping>
-
 
 	<welcome-file-list>
 		<welcome-file>Home</welcome-file>
