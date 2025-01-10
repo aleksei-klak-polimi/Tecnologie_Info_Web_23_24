@@ -35,8 +35,8 @@
 	 * Fetches albums from the server and populates the tables.
 	 */
 	function refreshAlbums() {
-		postForm('GetUserAlbums', x => (refreshAlbumsCallback(myAlbums, x, false)));
-		postForm('GetOtherAlbums', x => (refreshAlbumsCallback(otherAlbums, x, true)));
+		getRequest('GetUserAlbums', x => (refreshAlbumsCallback(myAlbums, x, false)));
+		getRequest('GetOtherAlbums', x => (refreshAlbumsCallback(otherAlbums, x, true)));
 	}
 	
 	
