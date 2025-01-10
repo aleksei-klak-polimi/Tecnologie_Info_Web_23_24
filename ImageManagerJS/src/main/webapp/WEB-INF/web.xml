@@ -68,6 +68,7 @@
 		<url-pattern>/CreateAlbum</url-pattern>
 		<url-pattern>/GetOtherAlbums</url-pattern>
 		<url-pattern>/GetUserAlbums</url-pattern>
+		<url-pattern>/LogOut</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>
