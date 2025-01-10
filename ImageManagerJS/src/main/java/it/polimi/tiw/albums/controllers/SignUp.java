@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
@@ -14,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-
+import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.UserDAO;
@@ -88,39 +90,32 @@ public class SignUp extends HttpServlet{
 			UserDAO userDao = new UserDAO(conn);
 			// Sanitize Inputs
 			if (!InputSanitizer.isValidUsername(username)) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("Missing or wrong username.");
+				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Missing or wrong username.");
 				return;
 			}
 			else if (!InputSanitizer.isVaildEmail(email)) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("Missing or wrong email.");
+				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Missing or wrong email.");
 				return;
 			}
 			else if (!InputSanitizer.isValidPassword(password)) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("Missing or malformed password.");
+				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Missing or malformed password.");
 				return;
 			}
 			else if (repeatPassword == null || repeatPassword.isBlank() || repeatPassword.isEmpty()) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("Missing repeat password.");
+				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Missing repeat password.");
 				return;
 			}
 			else if (!password.equals(repeatPassword)) {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("Passwords don't match.");
+				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Passwords don't match.");
 				return;
 			}
 			else {
 				// Check if database already contains provided username or email
 				if (!userDao.isUsernameAvailable(username)) {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					response.getWriter().write("Username is not available.");
+					sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Username is not available.");
 					return;
 				} else if (!userDao.isEmailAvailable(email)) {
-					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-					response.getWriter().write("Email is not available.");
+					sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Email is not available.");
 					return;
 				}
 
@@ -134,15 +129,38 @@ public class SignUp extends HttpServlet{
 			s.setAttribute("user", user);
 
 			String homePath = request.getServletContext().getContextPath() + "/Home";
-			response.sendRedirect(homePath);
+			sendResponse(response, HttpServletResponse.SC_OK, homePath);
+			
 		} catch (SQLException e) {
 			e.printStackTrace(); // for debugging
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
+			sendResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed.");
 		}
 
 		return;
 	}
-
+	
+	
+	//HELPER METHODS
+		private void sendResponse(HttpServletResponse response, int status, String content) throws IOException {
+			response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    ApiResponse responseObj = new ApiResponse();
+			
+			response.setStatus(status);
+			switch(status) {
+				case 200 : 
+					responseObj.setRedirect(content);
+					break;
+				
+				//Following cases share same logic
+				case 500:
+				case 400:
+					responseObj.setError(content);
+					break;
+				
+			}
+			response.getWriter().write(new Gson().toJson(responseObj));
+		}
 	
 	
 }
