@@ -85,7 +85,62 @@
 		overlay.classList.remove('active');
 		overlay.classList.add('hidden');
 		
-		//TODO call to LogOut servlet
+		postRequest("LogOut", null, handleLogOutCallback);
+	}
+	
+	
+	/**
+	 * Callback to logOut from site.
+	 * @param {XMLHttpRequest} x - The XMLHttpRequest object.
+	 */
+	function handleLogOutCallback(x){
+		if (x.readyState === XMLHttpRequest.DONE) {
+			try{
+				const response = JSON.parse(x.responseText);
+				
+				if (x.status === 200) {
+					if(response.redirect)
+						window.location.href = response.redirect;
+					else{
+						console.warn("Server responded 200 to LogOut but provided no redirect.");
+					}
+				}
+				else if (x.status === 401) {
+					handleUnauthorized(response);
+				}
+				else {
+					handleError(response, x.status);
+				}	
+			}
+			catch(e){
+				console.error("Error parsing JSON response:", e.message);
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * Handles unauthorized responses.
+	 * @param {Object} response - The server response.
+	 */
+	function handleUnauthorized(response) {
+		if (response.redirect) {
+			window.location.href = response.redirect;
+		} else {
+			console.warn("Server responded 401 but provided no redirect.");
+		}
+	}
+
+
+	/**
+	 * Handles generic errors from server responses.
+	 * @param {Object} response - The server response.
+	 * @param {number} status - The HTTP status code.
+	 */
+	function handleError(response, status) {
+		console.error(`Status: ${status}\nMessage: ${response.error}`);
+		alert(`Status: ${status}\nMessage: ${response.error}`);
 	}
 })();
 
