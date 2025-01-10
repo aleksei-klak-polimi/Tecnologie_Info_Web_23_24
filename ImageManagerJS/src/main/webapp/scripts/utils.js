@@ -7,8 +7,12 @@ function postRequest(url, formElement, callBack, reset){
 	req.onreadystatechange = function(){callBack(req)};
 	req.open('POST', url);
 	
-	var formData = new FormData(formElement);	
-	req.send(formData);
+	if(formElement){
+		var formData = new FormData(formElement);	
+		req.send(formData);
+	}
+	else
+		req.send();
 
 	if (formElement !== null && reset === true) {
 		formElement.reset();
