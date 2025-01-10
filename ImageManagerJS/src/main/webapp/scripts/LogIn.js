@@ -35,7 +35,7 @@
 		const form = e.target.closest("form");
 		
 		if (form.checkValidity()) {
-			postForm('LogIn', e.target.closest("form"), handleLogInCallback);
+			postRequest('LogIn', e.target.closest("form"), handleLogInCallback);
 		}
 		else {
 			form.reportValidity();

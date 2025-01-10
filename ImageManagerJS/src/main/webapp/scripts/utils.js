@@ -2,7 +2,7 @@
  * Script to handle sending of xmlhttp form post requests to the server
  */
 
-function postForm(url, formElement, callBack, reset){
+function postRequest(url, formElement, callBack, reset){
 	let req = new XMLHttpRequest();
 	req.onreadystatechange = function(){callBack(req)};
 	req.open('POST', url);

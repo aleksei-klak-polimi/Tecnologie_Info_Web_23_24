@@ -118,7 +118,7 @@
 		const form = e.target.closest("form");
 
 		if (form.checkValidity()) {
-			postForm("CreateAlbum", form, handleCreateAlbumCallback, true);
+			postRequest("CreateAlbum", form, handleCreateAlbumCallback, true);
 		} else {
 			form.reportValidity();
 		}

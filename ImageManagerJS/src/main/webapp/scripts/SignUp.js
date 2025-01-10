@@ -34,7 +34,7 @@
 		
 		if(form.checkValidity()){
 			if(matchingPasswords()){
-				postForm('SignUp', e.target.closest("form"), handleSignUpCallback);
+				postRequest('SignUp', e.target.closest("form"), handleSignUpCallback);
 			}
 			else{
 				displayError("Passwords don't match.");
