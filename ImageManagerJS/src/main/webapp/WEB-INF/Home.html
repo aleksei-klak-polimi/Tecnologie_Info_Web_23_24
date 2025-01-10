@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+<link rel="stylesheet" type="text/css" media="all" href="../CSS/mystyle.css"/>
+<link rel="stylesheet" type="text/css" media="all" href="/ImageManagerJS/CSS/mystyle.css"/>
+<script src="/ImageManagerJS/scripts/utils.js" charset="utf-8" defer></script>
+<script src="/ImageManagerJS/scripts/Home.js" charset="utf-8" defer></script>
+</head>
+<body>
+	<div class="navbar">
+        <a href="#">Home</a>
+        <a id="logOut">Log out</a>
+    </div>
+    <div id="logoutOverlay" class="overlay hidden">
+		<div class="binaryChoiceContainer">
+			<p>Are you sure you want to Log out?</p>
+			<form id="buttons">
+				<input id="confirmLogOut" class="btn" type="submit" name="LogOut" value="Yes">
+				<input id="cancelLogOut" class="btnSecondary" type="submit" name="NotLogOut" value="No">
+			</form>
+		</div>
+	</div>
+</body>
+</html>
