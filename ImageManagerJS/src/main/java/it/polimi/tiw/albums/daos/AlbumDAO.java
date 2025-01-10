@@ -104,7 +104,7 @@ private Connection con;
 	
 	public List<Album> getAlbumsByUser(int userId) throws SQLException{
 		List<Album> albums = new ArrayList<Album>();
-		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id = ? ORDER BY creationDate DESC;";
+		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id = ? ORDER BY creationDate DESC, id DESC;";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, userId);
@@ -129,7 +129,7 @@ private Connection con;
 	
 	public List<Album> getAlbumsByOthers(int userIdToExclude) throws SQLException{
 		List<Album> albums = new ArrayList<Album>();
-		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id != ? ORDER BY creationDate DESC;";
+		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id != ? ORDER BY creationDate DESC, id DESC;";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, userIdToExclude);
