@@ -44,6 +44,38 @@
 		<!--Path from ImageHost to reach thumbnails folder-->
 		<param-value>/uploads/images/thumbnails/</param-value>
 	</context-param>
+	
+	<filter>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>NotLoggedInFilterAPI</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilterAPI</filter-class>
+	</filter>
+	<filter>
+		<filter-name>AlreadyLoggedInFilter</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.AlreadyLoggedInFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<url-pattern>/Home</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>NotLoggedInFilterAPI</filter-name>
+		<url-pattern>/CreateAlbum</url-pattern>
+		<url-pattern>/GetOtherAlbums</url-pattern>
+		<url-pattern>/GetUserAlbums</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>AlreadyLoggedInFilter</filter-name>
+		<url-pattern>/SignUp</url-pattern>
+		<url-pattern>/LogIn</url-pattern>
+	</filter-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>LogIn</welcome-file>
 	</welcome-file-list>
