@@ -87,9 +87,12 @@
 			tr.className = index % 2 === 0 ? "odd" : "even";
 
 			const albumName = document.createElement("td");
+			
 			const linkToAlbum = document.createElement("a");
-			linkToAlbum.href = `/Album?albumid=${album.id}`;
+			linkToAlbum.setAttribute("data-albumId", album.id);
+			linkToAlbum.addEventListener("click", e => (handleViewAlbum(e)));
 			linkToAlbum.innerText = album.title;
+			
 			albumName.appendChild(linkToAlbum);
 			tr.appendChild(albumName);
 
@@ -147,6 +150,21 @@
 		}
 	}
 	
+	
+	/**
+	 * Handles the event of user clicking on one of the albums on the page.
+	 * Initializes the context switch for the Album View.
+	 */
+	function handleViewAlbum(e){
+		e.preventDefault();
+		
+		//Load into session storge the albumId for access by other scripts
+		let albumId = e.target.getAttribute("data-albumId");
+		
+		sessionStorage.setItem("albumId", albumId);
+		
+		replaceHtml('static/pages/Album.html');
+	}
 	
 	
 	/**
