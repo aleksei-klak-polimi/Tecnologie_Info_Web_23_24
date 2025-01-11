@@ -1,0 +1,98 @@
+<div id="albumOuterContainer">
+    <script src="/ImageManagerJS/scripts/Album.js" charset="utf-8" defer></script>
+	<div class="albumContainer">
+		<div class="albumRow" id="imageBrowser">
+			<p id="albumTitle">Album Title goes here</p>
+			<div id="albumTable"><table>
+				<tbody>
+					<tr>
+						<td class="thumbnailSlot">
+							<div class="imageHeader">
+								<form action="#" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<a href="#"><img src="../static/ImagePlaceholder.png"></a>
+							</div>
+							<div class="imageFooter">
+								<p class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td class="thumbnailSlot">
+							<div class="imageHeader">
+								<form action="#" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<a href="#"><img src="../static/ImagePlaceholder.png"></a>
+							</div>
+							<div class="imageFooter">
+								<p class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td class="thumbnailSlot">
+							<div class="imageHeader">
+								<form action="#" method="post">
+									<input class="removeImageButton" type="submit" name="Remove" value="X">
+								</form>
+							</div>
+							<div class="imageFrame">
+								<a href="#"><img src="../static/ImagePlaceholder.png"></a>
+							</div>
+							<div class="imageFooter">
+								<p class="imageTitle">ImagePlaceholder Title</p>
+							</div>
+						</td>
+						<td class="emptySlot">
+							<div class="imageHeader">
+							</div>
+							<div class="imageFrame">
+								<div>Empty</div>
+							</div>
+							<div class="imageFooter">
+							</div>
+						</td>
+						<td class="emptySlot">
+							<div class="imageHeader">
+							</div>
+							<div class="imageFrame">
+								<div>Empty</div>
+							</div>
+							<div class="imageFooter">
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table></div>
+		</div>
+		<div class="albumRow" id ="albumNavigator">
+			<a href="#" class="btnSecondary" id="previousBtn">Previous</a>
+			<a href="#" class="btnSecondary" id="nextBtn">Next</a>
+		</div>
+	</div>
+	<div class="albumContainer hidden" th:if="${isOwner}">
+		<div class="albumRow" id="imageUploader">
+			<div class="errorText">PlaceHolder error text</div>
+			<form action="#" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
+				<div>
+					<label for="file">Upload Image</label>
+					<input type="file" id="file" name="image" accept=".png, .jpg, .jpeg" required>
+				</div>
+				<div>
+					<input 	type="text" name="title" placeholder="Image Title" required
+							maxlength="127" minlength="3"
+							pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
+					<textarea 	id="uploadDescription" name="description" placeholder="Image Description"
+								maxlength="1023"></textarea>
+				</div>
+				<div>
+					<input type="submit" value="Upload Image" class="btn">
+					<p>-OR-</p>
+					<a href="#" class="btn">Add existing Image</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
