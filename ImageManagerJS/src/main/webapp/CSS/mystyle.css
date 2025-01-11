@@ -35,8 +35,6 @@ body {
   	
   	margin: 10px 20px 10px 	0px;
   	padding: 8px 16px;
-  	
-  	cursor: pointer;
 }
 
 .navbar a:hover{
@@ -168,7 +166,7 @@ textarea{
     opacity: 1;
 }
 
-.hidden {
+.overlay.hidden {
     opacity: 0;
 }
 
@@ -852,6 +850,14 @@ textarea{
 	font-size: 0.75em;
 	padding-top: 10px;
 	padding-left: 5px;
+}
+
+.hidden:not(.overlay){
+	display:none;
+}
+
+a{
+	cursor: pointer;
 }
 
 
