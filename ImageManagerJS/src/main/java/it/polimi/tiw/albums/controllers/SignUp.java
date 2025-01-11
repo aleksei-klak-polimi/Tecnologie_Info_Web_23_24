@@ -140,27 +140,27 @@ public class SignUp extends HttpServlet{
 	}
 	
 	
-	//HELPER METHODS
-		private void sendResponse(HttpServletResponse response, int status, String content) throws IOException {
-			response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    ApiResponse responseObj = new ApiResponse();
-			
-			response.setStatus(status);
-			switch(status) {
-				case 200 : 
-					responseObj.setRedirect(content);
-					break;
-				
-				//Following cases share same logic
-				case 500:
-				case 400:
-					responseObj.setError(content);
-					break;
-				
-			}
-			response.getWriter().write(new Gson().toJson(responseObj));
+	// HELPER METHODS
+	private void sendResponse(HttpServletResponse response, int status, String content) throws IOException {
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		ApiResponse responseObj = new ApiResponse();
+
+		response.setStatus(status);
+		switch (status) {
+		case 200:
+			responseObj.setRedirect(content);
+			break;
+
+		// Following cases share same logic
+		case 500:
+		case 400:
+			responseObj.setError(content);
+			break;
+
 		}
+		response.getWriter().write(new Gson().toJson(responseObj));
+	}
 	
 	
 }
