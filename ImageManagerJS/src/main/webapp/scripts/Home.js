@@ -2,9 +2,23 @@
  * Contains logic for loading the default html and for logout
  */
 
+//Exposing function to external scripts
+function replaceHtml(){}
+
 (function (){
 	const root = document.getElementsByTagName("body")[0];
 	const overlay = document.getElementById('logoutOverlay');
+	
+	/**
+	 * Replaces the current HTML content with the content from the specified source.
+	 * @param {string} source - The URL of the HTML source.
+	 */
+	replaceHtml = (source) => {
+		getPage(source, (x) => {replaceHtmlCallback(x)});
+	}
+	
+	// Load the default HTML content
+	replaceHtml('static/pages/Albums.html');
 	
 	// Event listeners for logout
 	overlay.addEventListener("click", (e) => {
@@ -21,41 +35,77 @@
 	document.getElementById("confirmLogOut").addEventListener("click", (e) => handleLogOut(e));
 	document.getElementById("logOut").addEventListener("click", (e) => showLogOut(e));
 	
-	// Load the default HTML (Albums.html)
-	getPage('static/pages/Albums.html', loadHtml);
 	
 	/**
-	 * Callback to load HTML into the page.
-	 * @param {XMLHttpRequest} x - The XMLHttpRequest object.
+	 * Removes from the html document all the elements of the "external" class
 	 */
-	function loadHtml(x) {
+	function clearHtml(){
+		const toRemove = Array.from(document.getElementsByClassName("external"));
+		
+		for(let i = 0; i < toRemove.length; i++){
+			toRemove[i].parentNode.removeChild(toRemove[i]);
+		}
+	}
+	
+	/**
+	 * Extracts the HTML body content from the server response.
+	 * @param {XMLHttpRequest} x - The XMLHttpRequest object.
+	 * @returns {HTMLElement|null} - The extracted HTML body or null on failure.
+	 */
+	function getHtmlFromResponse(x){
 		if (x.readyState === XMLHttpRequest.DONE) {
 			try {
-				const html = x.response.getElementsByTagName("body")[0];
-				const externalScripts = [];
-
-				// Extract scripts from the loaded HTML
-				const rawScripts = html.getElementsByTagName("script");
-				for (const rawScript of rawScripts) {
-					const newScript = document.createElement("script");
-					newScript.src = rawScript.src;
-					newScript.className = "external";
-					externalScripts.push(newScript);
-				}
-
-				// Remove the scripts from the new HTML
-				Array.from(rawScripts).forEach((script) => script.remove());
-
-				// Append the new HTML content to the root
-				Array.from(html.childNodes).forEach((node) => root.appendChild(node));
-
-				// Append the extracted scripts to the document head
-				externalScripts.forEach((script) => document.head.appendChild(script));
-			} catch (error) {
+				return x.response.getElementsByTagName("body")[0];
+			}
+			catch (error) {
 				console.error("Error loading HTML:", error);
 			}
 		}
 	}
+	
+	
+	/**
+	 * Populates the current document with the provided HTML.
+	 * All the new html content is of the "external" class.
+	 * @param {HTMLElement} html - The HTML content to load.
+	 */
+	function drawHtml(html){
+		const externalScripts = [];
+
+		// Extract scripts from the loaded HTML
+		const rawScripts = html.getElementsByTagName("script");
+		for (const rawScript of rawScripts) {
+			const newScript = document.createElement("script");
+			newScript.src = rawScript.src;
+			newScript.className = "external";
+			externalScripts.push(newScript);
+		}
+
+		// Remove the scripts from the new HTML
+		Array.from(rawScripts).forEach((script) => script.remove());
+
+		// Append the new HTML content to the root
+		Array.from(html.childNodes).forEach((node) => {
+			node.classList.add('external');
+			root.appendChild(node);
+		});
+
+		// Append the extracted scripts to the document head
+		externalScripts.forEach((script) => document.head.appendChild(script));
+	}
+	
+	/**
+	 * Callback function for replacing the HTML content.
+	 * @param {XMLHttpRequest} x - The XMLHttpRequest object.
+	 */
+	function replaceHtmlCallback(x){
+		if (x.readyState === XMLHttpRequest.DONE) {
+			clearHtml();
+			drawHtml(getHtmlFromResponse(x));
+		}
+	}
+	
+	
 	
 	/**
 	 * Displays the logout overlay.
