@@ -157,17 +157,7 @@ textarea{
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Ensure it's above everything else */
-    pointer-events: none; /* Prevent interaction when hidden */
     transition: opacity 0.3s ease; /* Smooth fade-in effect */
-}
-
-.overlay.active {
-    pointer-events: auto;
-    opacity: 1;
-}
-
-.overlay.hidden {
-    opacity: 0;
 }
 
 /*HOMEPAGE SPECIFIC CSS*/
@@ -852,16 +842,20 @@ textarea{
 	padding-left: 5px;
 }
 
-.hidden:not(.overlay){
-	display:none;
-}
-
 a{
 	cursor: pointer;
 }
 
 
+.active {
+    pointer-events: auto;
+    opacity: 1;
+}
 
+.hidden {
+	pointer-events: none;
+    opacity: 0;
+}
 
 
 

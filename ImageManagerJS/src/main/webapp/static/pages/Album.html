@@ -5,10 +5,10 @@
 			<p id="albumTitle">Album Title goes here</p>
 			<div id="albumTable"><table>
 				<tbody>
-					<tr>
+					<tr id="imagesRow">
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post">
+								<form action="#" method="post" class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -21,7 +21,7 @@
 						</td>
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post">
+								<form action="#" method="post" class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -34,7 +34,7 @@
 						</td>
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post">
+								<form action="#" method="post" class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -68,11 +68,11 @@
 			</table></div>
 		</div>
 		<div class="albumRow" id ="albumNavigator">
-			<a href="#" class="btnSecondary" id="previousBtn">Previous</a>
-			<a href="#" class="btnSecondary" id="nextBtn">Next</a>
+			<a class="btnSecondary" id="previousImgs">Previous</a>
+			<a class="btnSecondary" id="nextImgs">Next</a>
 		</div>
 	</div>
-	<div class="albumContainer hidden" th:if="${isOwner}">
+	<div class="albumContainer forOwner">
 		<div class="albumRow" id="imageUploader">
 			<div class="errorText">PlaceHolder error text</div>
 			<form action="#" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
@@ -88,9 +88,9 @@
 								maxlength="1023"></textarea>
 				</div>
 				<div>
-					<input type="submit" value="Upload Image" class="btn">
+					<input type="submit" id="uploadImage" value="Upload Image" class="btn">
 					<p>-OR-</p>
-					<a href="#" class="btn">Add existing Image</a>
+					<a id="addExistingImage" class="btn">Add existing Image</a>
 				</div>
 			</form>
 		</div>
