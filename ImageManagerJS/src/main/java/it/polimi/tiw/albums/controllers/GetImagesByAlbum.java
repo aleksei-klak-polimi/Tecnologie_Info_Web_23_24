@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.polimi.tiw.albums.beans.Picture;
+import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import it.polimi.tiw.albums.beans.Comment;
@@ -23,6 +24,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/GetImagesByAlbum")
 public class GetImagesByAlbum extends HttpServlet {
@@ -55,6 +57,9 @@ public class GetImagesByAlbum extends HttpServlet {
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			HttpSession s = request.getSession();
+			User user = (User) s.getAttribute("user");
+			
             //PARSE INPUTS
             int albumId = validateAndRetrieveAlbumId(request, response);
             if (albumId == -1) return;
@@ -63,6 +68,7 @@ public class GetImagesByAlbum extends HttpServlet {
             CommentDAO commentDao = new CommentDAO(conn);
             
             List<Picture> pictures = pictureDao.getPicturesFromAlbum(albumId);
+            List<Picture> otherPictures = pictureDao.getPicturesNotInAlbum(albumId, user.getId());
             List<Comment> comments = new ArrayList<>();
             
             for(Picture picture : pictures) {
@@ -71,10 +77,12 @@ public class GetImagesByAlbum extends HttpServlet {
             
             Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").create();
             String pitcuresJson = gson.toJson(pictures);
+            String otherPicturesJson = gson.toJson(otherPictures);
             String commentsJson = gson.toJson(comments);
             List<String> jsonList = new ArrayList<>();
             
             jsonList.add(pitcuresJson);
+            jsonList.add(otherPicturesJson);
             jsonList.add(commentsJson);
             
             sendResponse(response, HttpServletResponse.SC_OK, gson.toJson(jsonList));
