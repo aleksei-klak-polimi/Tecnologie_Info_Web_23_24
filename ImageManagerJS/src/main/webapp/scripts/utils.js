@@ -34,6 +34,10 @@ function getPage(url, callback){
 	req.send();
 }
 
+function getImageHost(){
+	return "http://localhost:8080/ImageManager";
+}
+
 
 
 
