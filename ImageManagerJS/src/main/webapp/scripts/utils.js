@@ -39,6 +39,30 @@ function getImageHost(){
 }
 
 
+/**
+ * Handles unauthorized responses.
+ * @param {Object} response - The server response.
+ */
+function handleUnauthorized(response) {
+	if (response.redirect) {
+		window.location.href = response.redirect;
+	} else {
+		console.warn("Server responded 401 but provided no redirect.");
+	}
+}
+
+
+/**
+ * Handles generic errors from server responses.
+ * @param {Object} response - The server response.
+ * @param {number} status - The HTTP status code.
+ */
+function handleError(response, status) {
+	console.error(`Status: ${status}\nMessage: ${response.error}`);
+	alert(`Status: ${status}\nMessage: ${response.error}`);
+}
+
+
 
 
 
