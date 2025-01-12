@@ -1,6 +1,6 @@
 <div id="albumOuterContainer">
     <script src="/ImageManagerJS/scripts/Album.js" charset="utf-8" defer></script>
-	<div class="albumContainer">
+	<div id="imageDisplayContainer" class="albumContainer">
 		<div class="albumRow" id="imageBrowser">
 			<p id="albumTitle">Album Title goes here</p>
 			<div id="albumTable"><table>
@@ -8,7 +8,7 @@
 					<tr id="imagesRow">
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post" class="forOwner">
+								<form class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -21,7 +21,7 @@
 						</td>
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post" class="forOwner">
+								<form  class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -34,7 +34,7 @@
 						</td>
 						<td class="thumbnailSlot">
 							<div class="imageHeader">
-								<form action="#" method="post" class="forOwner">
+								<form class="forOwner">
 									<input class="removeImageButton" type="submit" name="Remove" value="X">
 								</form>
 							</div>
@@ -72,7 +72,7 @@
 			<a class="btnSecondary" id="nextImgs">Next</a>
 		</div>
 	</div>
-	<div class="albumContainer forOwner">
+	<div id="imageUploaderContainer" class="albumContainer forOwner">
 		<div class="albumRow" id="imageUploader">
 			<div class="errorText">PlaceHolder error text</div>
 			<form action="#" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
@@ -94,5 +94,119 @@
 				</div>
 			</form>
 		</div>
+	</div>
+	<div id="albumEditOverlay" class="overlay hidden">
+		<div class="albumEditContainer">
+			<form action="#">
+				<div class="homeTable">
+					<table>
+						<tbody>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="odd">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+							<tr class="even">
+								<td><input type="checkbox" name="newPictures"></td>
+								<td><img src="../static/ImagePlaceholder.png"></td>
+								<td><p>Image Title</p></td>
+								<td><p>22-12-24</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="errorText">PlaceHolder error text</div>
+				<div class="inlineButtons">
+					<input class="btn" id="addPicturesBtn" type="submit" name="AddPictures" value="Add">
+					<a class="btnSecondary" id="cancelAddPicturesBtn">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="removeFromLastAlbumOverlay" class="overlay hidden">
+		<div class="binaryChoiceContainer">
+		<p>Are you sure you want to remove this picture from the album?</p>
+		<img src="../static/ImagePlaceholder.png"></img>
+		<p>This is the last instance of the picture in any album,
+			deleting this picture from the last album will delete
+			all comments associated with it and permanently delete it from the server.</p>
+		<form id="buttons">
+			<input id="confirmRemoveFromLastAlbum" class="btn" type="submit" name="Delete" value="Yes">
+			<a id="cancelRemoveFromLastAlbum" class="btnSecondary">No</a>
+		</form>
+	</div>
 	</div>
 </div>
