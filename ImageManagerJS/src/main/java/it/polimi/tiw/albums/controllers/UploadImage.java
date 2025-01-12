@@ -130,7 +130,7 @@ public class UploadImage extends HttpServlet {
         	return -1;
         }
         if (!albumDao.albumBelongsToUser(albumId, userId)) {
-        	sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Album does not belong to user.");
+        	sendResponse(response, HttpServletResponse.SC_FORBIDDEN, "Album does not belong to user.");
             return -1;
         }
 
