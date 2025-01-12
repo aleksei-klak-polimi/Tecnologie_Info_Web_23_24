@@ -72,16 +72,12 @@ private Connection con;
 	}
 	
 	
-	public List<Picture> getPicturesFromAlbumByPage(int albumId, int albumPage, int pageSize) throws SQLException{
+	public List<Picture> getPicturesFromAlbum(int albumId) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
-		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC LIMIT ? OFFSET ?;";
+		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC;";
 		
-		
-		int imageOffset = (albumPage -1) * pageSize;
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, albumId);
-			pstat.setInt(2, pageSize);
-			pstat.setInt(3, imageOffset);
 			
 			try(ResultSet qres = pstat.executeQuery()){
 				while(qres.next()) {
