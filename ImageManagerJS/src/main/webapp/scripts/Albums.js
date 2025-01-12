@@ -1,5 +1,5 @@
 /**
- * Contains logic for displaying old and creating new albums
+ * Contains logic for displaying existing and creating new albums
  */
 
 (function(){
@@ -90,6 +90,7 @@
 			
 			const linkToAlbum = document.createElement("a");
 			linkToAlbum.setAttribute("data-albumId", album.id);
+			linkToAlbum.setAttribute("data-albumOwner", !showAuthor);
 			linkToAlbum.addEventListener("click", e => (handleViewAlbum(e)));
 			linkToAlbum.innerText = album.title;
 			
@@ -160,8 +161,12 @@
 		
 		//Load into session storge the albumId for access by other scripts
 		let albumId = e.target.getAttribute("data-albumId");
+		let albumOwner = e.target.getAttribute("data-albumOwner");
+		let albumTitle = e.target.textContent;
 		
 		sessionStorage.setItem("albumId", albumId);
+		sessionStorage.setItem("albumOwner", albumOwner);
+		sessionStorage.setItem("albumTitle", albumTitle);
 		
 		replaceHtml('static/pages/Album.html');
 	}
