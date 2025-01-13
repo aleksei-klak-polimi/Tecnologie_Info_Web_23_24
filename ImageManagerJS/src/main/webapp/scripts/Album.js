@@ -65,6 +65,7 @@
 							otherImages = JSON.parse(recievedObjects[1]);
 							
 							let commentList = JSON.parse(recievedObjects[2]);
+							comments = new Map();
 
 							commentList.forEach((comment) => {
 								if (!comment.pictureId) {
@@ -82,7 +83,7 @@
 							});
 							
 							//Update components
-							imageDisplayComponent.update(albumImages);
+							imageDisplayComponent.update(albumImages, comments);
 							imageUploaderComponent.update(otherImages);
 							
 						}
@@ -136,10 +137,12 @@
 		const thumbnailSlotTemplate = document.getElementsByClassName("thumbnailSlot")[0];
 		const emptySlotTemplate = document.getElementsByClassName("emptySlot")[0];
 		const deleteLastInstanceComponent = new DeleteLastInstanceOverlay();
+		const imageContainerComponent = new imageContainerOverlay();
 		
 		//METHODS
 		this.registerEvents = function(){
 			deleteLastInstanceComponent.registerEvents(parentReference);
+			imageContainerComponent.registerEvents(parentReference);
 			
 			const previousImgs = document.getElementById("previousImgs");
 			const nextImgs = document.getElementById("nextImgs");
@@ -190,7 +193,9 @@
 		}
 		
 		
-		this.update = function(images){
+		this.update = function(images, comments){
+			imageContainerComponent.update(null, comments, images);
+			
 			imagesLocal = images;
 			//Check if user owns album
 			if (!sessionStorage.getItem("albumOwner")) {
@@ -223,6 +228,12 @@
 				const imageHtml = thumbnailSlotTemplate.cloneNode(true);
 				imageHtml.getElementsByTagName("img")[0].setAttribute("src", getImageHost() + image.thumbnailPath)
 				imageHtml.getElementsByTagName("img")[0].setAttribute("data-pictureId", image.id);
+				imageHtml.getElementsByTagName("img")[0].addEventListener("click", (e) =>{
+					e.preventDefault();
+					imageContainerComponent.update(image.id);
+					imageContainerComponent.show();
+				});
+				
 				imageHtml.getElementsByClassName("imageTitle")[0].textContent = image.title;
 				imageHtml.getElementsByClassName("removeImageButton")[0].addEventListener("click", (e) => {
 					e.preventDefault();
@@ -490,68 +501,248 @@
 	}
 	
 	//DeleteLastInstanceOverlay class
-		function DeleteLastInstanceOverlay(){
-			//ATTRIBUTES
-			let overlay = document.getElementById("removeFromLastAlbumOverlay");
-			const self = this;
-			let pictureIdLocal;
-			
-			//METHODS
-			this.registerEvents = function(parent){
-				
-				//Listener Logic for cancel button
-				document.getElementById("cancelRemoveFromLastAlbum").addEventListener("click", (e)=>{
-					e.preventDefault();
-					self.hide();
-				});
-				
-				//Listener logic for submit button
-				document.getElementById("confirmRemoveFromLastAlbum").addEventListener("click", (e) => {
-					e.preventDefault();
-					const requestUrl = 'DeleteImage?pictureId=' + pictureIdLocal;
+	function DeleteLastInstanceOverlay() {
+		//ATTRIBUTES
+		let overlay = document.getElementById("removeFromLastAlbumOverlay");
+		const self = this;
+		let pictureIdLocal;
 
-					postRequest(requestUrl, e.target.closest("form"), deletePicturesCallback);
-					
-				});
+		//METHODS
+		this.registerEvents = function(parent) {
+
+			//Listener Logic for cancel button
+			document.getElementById("cancelRemoveFromLastAlbum").addEventListener("click", (e) => {
+				e.preventDefault();
+				self.hide();
+			});
+
+			//Listener logic for submit button
+			document.getElementById("confirmRemoveFromLastAlbum").addEventListener("click", (e) => {
+				e.preventDefault();
+				const requestUrl = 'DeleteImage?pictureId=' + pictureIdLocal;
+
+				postRequest(requestUrl, e.target.closest("form"), deletePicturesCallback);
+
+			});
+
+			//Callback logic for addPicturesToAlbum
+			function deletePicturesCallback(x) {
+				if (x.readyState === XMLHttpRequest.DONE) {
+					try {
+						self.hide();
+						if (x.status === 200) {
+							parent.update();
+						}
+						else if ([400, 402, 403, 500].includes(x.status)) {
+							const response = JSON.parse(x.responseText);
+							alert(response.error);
+						}
+						else if (x.status === 401) {
+							const response = JSON.parse(x.responseText);
+							handleUnauthorized(response);
+						}
+					} catch (e) {
+						console.error("Error parsing JSON response: " + e.message);
+					}
+				}
+			}
+		}
+
+		this.show = function() {
+			overlay.classList.remove('hidden');
+			overlay.classList.add('active');
+		}
+
+		this.hide = function() {
+			overlay.classList.remove('active');
+			overlay.classList.add('hidden');
+		}
+
+		this.update = function(src, pictureId) {
+			pictureIdLocal = pictureId;
+			overlay.getElementsByTagName("img")[0].setAttribute("src", src);
+		}
+	}
+	
+	
+	//imageContainerOverlay class
+	function imageContainerOverlay() {
+		//ATTRIBUTES
+		const modal = document.getElementById("imageContainerOverlay");
+		const self = this;
+		let pictures;
+		let pictureId;
+		let allComments;
+		const commentSectionComponent = new commentSectionDisplay();
+		commentSectionComponent.show();
+		
+		
+		//METHODS
+		this.registerEvents = function(parent) {
+			commentSectionComponent.registerEvents(parent);
+			
+			modal.getElementsByClassName("closeOverlayButton")[0].addEventListener("click", (e)=>{
+				e.preventDefault();
+				this.hide();
+			})
+		}
+		
+		this.update = function(_pictureId, _comments, _pictures){
+			if(_comments){
+				allComments = _comments;
+			}
+			if(_pictures){
+				pictures = _pictures;
+			}
+			
+			if(_pictureId){
+				pictureId = _pictureId;
+			}
+			
+			if (pictureId !== undefined){
+				const picture = pictures.find((element) => element.id === pictureId);
 				
-				//Callback logic for addPicturesToAlbum
-				function deletePicturesCallback(x){
+				modal.getElementsByTagName("img")[1].setAttribute("src", getImageHost() + picture.path);
+				document.getElementById("imageTitle").innerText = picture.title;
+				document.getElementById("imageDate").innerText = picture.uploadDate;
+				
+				document.getElementById("imageDescription").firstElementChild.innerText = picture.description;
+				
+				const pictureComments = allComments.get(pictureId);
+				commentSectionComponent.update(pictureComments, pictureId);
+			}
+		}
+		
+		this.show = function() {
+			modal.classList.remove('hidden');
+			modal.classList.add('active');
+		}
+
+		this.hide = function() {
+			modal.classList.remove('active');
+			modal.classList.add('hidden');
+		}
+			
+	}
+	
+	
+	function commentSectionDisplay(){
+		const self = this;
+		const commentForm = document.getElementById("commentForm");
+		const commentSection = document.getElementById("commentSection");
+		const commentTemplate = commentSection.getElementsByClassName("comment")[0].cloneNode(true);
+		const errorDiv = commentForm.getElementsByClassName("errorText")[0];
+		const errorParent = errorDiv.parentElement;
+		let pictureId;
+		
+		errorParent.removeChild(errorDiv);
+		
+		this.registerEvents = function(parent){
+			document.getElementById("submitComment").addEventListener("click", e => {
+				e.preventDefault();
+				const form = e.target.closest("form");
+				if(form.checkValidity()){
+					if(validForm(form)){
+						const request = "PostComment?pictureId="+pictureId;
+						postRequest(request, form, (x) => postCommentCallback(x, parent));
+					}
+				}
+				else{
+					commentForm.reportValidity();
+				}
+				
+				function validForm(form){
+					const regex = new RegExp("^[a-zA-Z0-9(?:\\r\\n|\\r|\\n|\\xB0)\\x3F\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$");
+					const textContent = form.getElementsByTagName("textarea")[0].value.trim();
+					
+					if(textContent.length === 0){
+						displayError("Comment body can't be empty");
+						return false;
+					}
+					else if(textContent.length > 1023){
+						displayError("Comment body too long");
+						return false;
+					}
+					else if(!regex.test(textContent)){
+						displayError("Comment contains unsupported characters");
+						return false;
+					}
+					
+					return true;
+				}
+				
+				function postCommentCallback(x, parent){
 					if (x.readyState === XMLHttpRequest.DONE) {
 						try {
-							self.hide();
-							if (x.status === 200) {
+							if(x.status === 200){
+								self.reset();
 								parent.update();
 							}
-							else if ([400, 402, 403, 500].includes(x.status)) {
+							else{
 								const response = JSON.parse(x.responseText);
-								alert(response.error);
+								displayError(response.error);
 							}
-							else if (x.status === 401) {
-								const response = JSON.parse(x.responseText);
-								handleUnauthorized(response);
-							}
-						} catch (e) {
+								
+						}catch (e) {
 							console.error("Error parsing JSON response: " + e.message);
 						}
 					}
 				}
-			}
+				
+				
+				function displayError(message) {
+					errorDiv.textContent = message;
+					errorParent.appendChild(errorDiv);
+					alert(message);
+				}
+				
+			});
+		}
+		
+		this.update = function(comments, _pictureId){
+			pictureId = _pictureId;
 			
-			this.show = function(){
-				overlay.classList.remove('hidden');
-				overlay.classList.add('active');
+			//Update comment header
+			const commentSection = document.getElementById("commentSection");
+			const commentSectionHeader = document.getElementById("commentSectionHeader");
+			const commentNumber = comments === undefined ? 0 : comments.length;
+
+			commentSectionHeader.firstElementChild.innerText = commentNumber;
+			commentSectionHeader.lastElementChild.innerText = commentNumber != 1 ? "Comments" : "Comment";
+
+			//Clear old comments
+			while (commentSection.lastChild != commentSectionHeader) {
+				commentSection.removeChild(commentSection.lastChild);
 			}
-			
-			this.hide = function(){
-				overlay.classList.remove('active');
-				overlay.classList.add('hidden');
-			}
-			
-			this.update = function(src, pictureId){
-				pictureIdLocal = pictureId;
-				overlay.getElementsByTagName("img")[0].setAttribute("src", src);
+
+			//Add new comments
+			if (commentNumber > 0) {
+				comments.forEach((comment) => {
+					const commentHtml = commentTemplate.cloneNode(true);
+					commentHtml.getElementsByClassName("commentAuthor")[0].innerText = comment.author;
+					commentHtml.getElementsByClassName("commentBody")[0].innerText = comment.body;
+					commentHtml.getElementsByClassName("commentDate")[0].innerText = comment.postDate;
+
+					commentSection.appendChild(commentHtml);
+				});
 			}
 		}
+		
+		this.show = function(){
+			commentForm.style.visibility = "visible";
+			commentSection.style.visibility = "visible";
+		}
+
+		this.hide = function(){
+			commentForm.style.visibility = "hidden";
+			commentSection.style.visibility = "hidden";
+		}
+
+		this.reset = function(){
+			commentForm.reset();
+		}
+	}
+	
 	
 })();
 

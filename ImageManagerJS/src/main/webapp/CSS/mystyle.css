@@ -464,9 +464,30 @@ textarea{
 
 
 /*IMAGE SPECIFIC CSS*/
+#imageContainerOverlay .closeOverlayButton{
+	width: 40px;
+	height: 40px;
+	position: absolute;
+  	top: 0;
+  	right:0;
+  	cursor: pointer;
+  	margin-right: 40px;
+  	/*Make svg gray*/
+  	filter: invert(53%) sepia(0%) saturate(0%) hue-rotate(176deg) brightness(94%) contrast(100%);
+}
+
+#imageContainerOverlay .closeOverlayButton:hover{
+  	/*Make svg light gray*/
+  	filter: invert(90%) sepia(0%) saturate(611%) hue-rotate(257deg) brightness(84%) contrast(92%);
+}
+
 .imageContainer{
+	max-width: 600px;
 	width: 80vw;
-	margin: 40px auto;
+	max-height: 90vh;
+	overflow-y: auto;
+	margin: auto;
+	margin-top: 50px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -543,8 +564,6 @@ textarea{
   	border-top-width: 1px;
     border-style: solid;
     border-color: gray;
-	
-    min-height: 50%;
 }
 
 .imageContainer #commentForm .formTitle{
