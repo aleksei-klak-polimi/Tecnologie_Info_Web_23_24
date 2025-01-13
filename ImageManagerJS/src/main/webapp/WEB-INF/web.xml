@@ -74,6 +74,7 @@
 		<url-pattern>/GetOtherAlbums</url-pattern>
 		<url-pattern>/GetUserAlbums</url-pattern>
 		<url-pattern>/LogOut</url-pattern>
+		<url-pattern>/PostComment</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>
