@@ -74,7 +74,7 @@ private Connection con;
 	
 	public List<Picture> getPicturesFromAlbum(int albumId) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
-		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC;";
+		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate, P.description FROM Picture P JOIN Album_Picture AP ON AP.pictureId = P.id WHERE AP.albumId = ? ORDER BY P.uploadDate DESC, P.id DESC;";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, albumId);
@@ -86,7 +86,9 @@ private Connection con;
 					picture.setPath(qres.getString("path"));
 					picture.setThumbnailPath(qres.getString("thumbnailPath"));
 					picture.setTitle(qres.getString("title"));
-					
+					picture.setDescription(qres.getString("description"));
+					picture.setUploadDate(qres.getDate("uploadDate"));
+
 					pictures.add(picture);
 				}
 			}
@@ -151,7 +153,7 @@ private Connection con;
 	
 	public List<Picture> getPicturesNotInAlbum(int albumId, int uploader) throws SQLException{
 		List<Picture> pictures = new ArrayList<Picture>();
-		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate FROM Picture P WHERE P.uploader = ? AND P.id NOT IN (SELECT pictureId FROM Album_Picture WHERE albumId = ?);";
+		String query ="SELECT P.id, P.path, P.thumbnailPath, P.title, P.uploadDate, P.description FROM Picture P WHERE P.uploader = ? AND P.id NOT IN (SELECT pictureId FROM Album_Picture WHERE albumId = ?);";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, uploader);
@@ -164,6 +166,7 @@ private Connection con;
 					picture.setPath(qres.getString("path"));
 					picture.setThumbnailPath(qres.getString("thumbnailPath"));
 					picture.setTitle(qres.getString("title"));
+					picture.setDescription(qres.getString("description"));
 					picture.setUploadDate(qres.getDate("uploadDate"));
 					
 					pictures.add(picture);
