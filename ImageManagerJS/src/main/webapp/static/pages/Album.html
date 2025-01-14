@@ -223,10 +223,29 @@
 				<div id="imageDescription">
 				<p>Image Description</p>
 				</div>
-				<div class="buttons forOwner">
+				<div id="editImageButtons" class="buttons forOwner">
 					<a class="btn">Edit image details</a>
 					<a class="btn">Delete Image</a>
 				</div>
+			</div>
+			<div id="editImageContainer">
+				<form action="#" id="editImageForm" autocomplete="off">
+					<div>
+						<div id="inlineTextInputs">
+							<input 	type="text" name="title" id="editedImageTitle" placeholder="Image Title"
+									required maxlength="127" minlength="3"
+									pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
+							<input 	id="editedImageDate" name="date" type="date"
+									required>
+						</div>
+						<textarea id="editedImageDescription" maxlength="1023" name="description" placeholder="Image Description"></textarea>
+					</div>
+					<div>
+						<input id="submitEditImage" type="submit" name="Edit" value="Confirm changes" class="btn">
+						<a id="cancelEditImage" class="btnSecondary">Cancel</a>
+					</div>
+				</form>
+				<div class="errorText">PlaceHolder error text</div>
 			</div>
 			<form id="commentForm">
 				<div class="formTitle">New Comment</div>

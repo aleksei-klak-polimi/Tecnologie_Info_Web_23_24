@@ -573,13 +573,17 @@
 		let pictures;
 		let pictureId;
 		let allComments;
-		const commentSectionComponent = new commentSectionDisplay();
-		commentSectionComponent.show();
+		const imageDisplayComponent = new standardImageDisplay();
+		const imageEditComponent = new EditImageDisplay();
+		imageDisplayComponent.show();
+		imageEditComponent.hide();
+		
 		
 		
 		//METHODS
 		this.registerEvents = function(parent) {
-			commentSectionComponent.registerEvents(parent);
+			imageDisplayComponent.registerEvents(parent, imageEditComponent);
+			imageEditComponent.registerEvents(parent, imageDisplayComponent);
 			
 			modal.getElementsByClassName("closeOverlayButton")[0].addEventListener("click", (e)=>{
 				e.preventDefault();
@@ -607,10 +611,13 @@
 				document.getElementById("imageDate").innerText = picture.uploadDate;
 				
 				document.getElementById("imageDescription").firstElementChild.innerText = picture.description;
-				
 				const pictureComments = allComments.get(pictureId);
-				commentSectionComponent.update(pictureComments, pictureId);
+				
+				imageDisplayComponent.update(pictureComments, picture);
+				imageEditComponent.update(picture);
 			}
+			
+			this.reset();
 		}
 		
 		this.show = function() {
@@ -621,6 +628,11 @@
 		this.hide = function() {
 			modal.classList.remove('active');
 			modal.classList.add('hidden');
+		}
+		
+		this.reset = function(){
+			imageDisplayComponent.show();
+			imageEditComponent.hide();
 		}
 			
 	}
@@ -729,17 +741,175 @@
 		}
 		
 		this.show = function(){
-			commentForm.style.visibility = "visible";
-			commentSection.style.visibility = "visible";
+			commentForm.removeAttribute("style");
+			commentSection.removeAttribute("style");
 		}
 
 		this.hide = function(){
-			commentForm.style.visibility = "hidden";
-			commentSection.style.visibility = "hidden";
+			commentForm.style.display = "none";
+			commentSection.style.display = "none";
 		}
 
 		this.reset = function(){
 			commentForm.reset();
+		}
+	}
+	
+	
+	function standardImageDisplay(){
+		const self = this;
+		const imageDescription = document.getElementById("imageDescription");
+		const editImageButtons = document.getElementById("editImageButtons");
+		const commentSection = new commentSectionDisplay();
+		
+		
+		this.registerEvents = function(parent, editImageComponent){
+			commentSection.registerEvents(parent);
+			
+			editImageButtons.getElementsByTagName("a")[0].addEventListener("click", (e) => {
+				e.preventDefault();
+				this.hide();
+				editImageComponent.show();
+			})
+			
+			editImageButtons.getElementsByTagName("a")[1].addEventListener("click", (e) => {
+				e.preventDefault();
+				//TODO show delete image prompt.
+			})
+		}
+		
+		this.show = function(){
+			imageDescription.removeAttribute("style");
+			commentSection.show();
+			
+			if (sessionStorage.getItem("albumOwner") && sessionStorage.getItem("albumOwner") === "true")
+				editImageButtons.removeAttribute("style");
+			else
+				editImageButtons.style.display = "none";
+		}
+		
+		this.hide = function(){
+			imageDescription.style.display = "none";
+			editImageButtons.style.display = "none";
+			commentSection.hide();
+		}
+		
+		this.update = function(comments, picture){
+			commentSection.update(comments, picture.id);
+			imageDescription.firstElementChild.innerText = picture.description;
+		}
+		
+		this.reset = function(){
+			commentSection.reset();
+		}
+	}
+	
+	
+	function EditImageDisplay (){
+		const self = this;
+		const editImageContainer = document.getElementById("editImageContainer");
+		const form = editImageContainer.getElementsByTagName("form")[0];
+		const errorDiv = editImageContainer.getElementsByClassName("errorText")[0];
+		const errorParent = errorDiv.parentElement;
+		let picture;
+
+		errorParent.removeChild(errorDiv);
+		
+		
+		this.registerEvents = function(parent, imageDisplayComponent){
+			document.getElementById("cancelEditImage").addEventListener("click", (e) => {
+				e.preventDefault();
+				this.hide();
+				this.reset();
+				imageDisplayComponent.show();
+			});
+			
+			document.getElementById("submitEditImage").addEventListener("click", (e) =>{
+				e.preventDefault();
+				
+				if(picture){
+					const request = "EditImage?pictureId="+picture.id;
+					
+					if(form.checkValidity()){
+						const description = form.getElementsByTagName("textarea")[0].value.trim();
+						if(description.length > 0){
+							if(!validDescription(description))
+								return;
+						}
+						postRequest(request, form, (x) => editImageCallback(x, parent));
+					}
+					else{
+						form.reportValidity();
+					}
+					
+					function editImageCallback(x, parent){
+						if (x.readyState === XMLHttpRequest.DONE) {
+							try {
+								if (x.status === 200) {
+									self.reset();
+									parent.update();
+								}
+								else {
+									const response = JSON.parse(x.responseText);
+									displayError(response.error);
+								}
+
+							} catch (e) {
+								console.error("Error parsing JSON response: " + e.message);
+							}
+						}
+					}
+					
+					function validDescription(description) {
+						const regex = new RegExp("^[a-zA-Z0-9(?:\\r\\n|\\r|\\n|\\xB0)\\x3F\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$");
+
+						if (description.length > 1023) {
+							displayError("Description too long");
+							return false;
+						}
+						else if (!regex.test(description)) {
+							displayError("Description contains unsupported characters");
+							return false;
+						}
+
+						return true;
+					}
+					
+					function displayError(message) {
+						errorDiv.textContent = message;
+						errorParent.appendChild(errorDiv);
+						alert(message);
+					}
+				}
+				
+			});
+		}
+		
+		this.update = function(_picture){
+			picture = _picture;
+			this.reset();
+		}
+		
+		this.hide = function(){
+			editImageContainer.style.display = "none";
+		}
+		
+		this.show = function(){
+			editImageContainer.removeAttribute("style");
+		}
+		
+		this.reset = function(){
+			if(picture){
+				document.getElementById("editedImageTitle").value = picture.title;
+				document.getElementById("editedImageDescription").value = picture.description;
+				document.getElementById("editedImageDate").value = picture.uploadDate;
+				
+				if(errorParent.lastElementChild === errorDiv)
+					errorParent.removeChild(errorDiv);
+			}
+			else{
+				form.reset();
+			}
 		}
 	}
 	
