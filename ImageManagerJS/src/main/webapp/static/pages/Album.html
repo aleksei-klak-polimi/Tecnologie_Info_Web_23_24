@@ -196,16 +196,19 @@
 			</form>
 		</div>
 	</div>
-	<div id="removeFromLastAlbumOverlay" class="overlay hidden">
+	<div id="deleteImageOverlay" class="overlay hidden">
 		<div class="binaryChoiceContainer">
-		<p>Are you sure you want to remove this picture from the album?</p>
+		<p class="removeFromLastAlbumMessage">Are you sure you want to remove this picture from the album?</p>
+		<p class="defaultDeleteMessage">Are you sure you want to delete this picture?</p>
 		<img src="static/ImagePlaceholder.png"></img>
-		<p>This is the last instance of the picture in any album,
+		<p class="removeFromLastAlbumMessage">This is the last instance of the picture in any album,
 			deleting this picture from the last album will delete
 			all comments associated with it and permanently delete it from the server.</p>
+		<p class="defaultDeleteMessage">Deleting this picture will remove it from all albums, delete
+			all comments associated with it and permanently delete it from the server.</p>
 		<form id="buttons">
-			<input id="confirmRemoveFromLastAlbum" class="btn" type="submit" name="Delete" value="Yes">
-			<a id="cancelRemoveFromLastAlbum" class="btnSecondary">No</a>
+			<input id="confirmDeleteImage" class="btn" type="submit" name="Delete" value="Yes">
+			<a id="cancelDeleteImage" class="btnSecondary">No</a>
 		</form>
 	</div>
 	</div>
