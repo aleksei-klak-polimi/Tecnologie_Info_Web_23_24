@@ -75,7 +75,7 @@ public class GetImagesByAlbum extends HttpServlet {
             	comments.addAll(commentDao.getCommentsByPicture(picture.getId()));
             }
             
-            Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").create();
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String pitcuresJson = gson.toJson(pictures);
             String otherPicturesJson = gson.toJson(otherPictures);
             String commentsJson = gson.toJson(comments);
