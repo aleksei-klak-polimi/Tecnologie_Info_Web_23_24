@@ -631,7 +631,7 @@ textarea{
 
 
 /*EDIT IMAGE SPECIFIC CSS*/
-#imageEditor form{
+#editImageContainer form{
 	display:flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -642,7 +642,7 @@ textarea{
 	margin-top: 25px;
 }
 
-#imageEditor form div{
+#editImageContainer form div{
 	display:flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -650,38 +650,38 @@ textarea{
 	height: 35vh;
 }
 
-#imageEditor form #inlineTextInputs{
+#editImageContainer form #inlineTextInputs{
 	display:flex;
 	flex-direction: row;
 	justify-content: space-between;
 	height: auto;
 }
 
-#imageEditor form div:nth-child(1){
+#editImageContainer form div:nth-child(1){
 	flex-grow: 1;
 }
 
-#imageEditor form input{
+#editImageContainer form input{
 	width: auto;
 }
 
-#imageEditor form a{
+#editImageContainer form a{
 	padding: 15px;
 }
 
-#imageEditor form #imageTitle{
+#editImageContainer form #imageTitle{
 	flex-grow: 1;
 	margin-right: 10px;
 }
 
-#imageEditor form textarea{
+#editImageContainer form textarea{
 	flex-grow: 1;
 	width: 100%;
 	height: 30vh;
 	margin-top: 10px;
 }
 
-#imageEditor .errorText{
+#editImageContainer .errorText{
 	margin-top: 5px;
 }
 
@@ -694,7 +694,6 @@ textarea{
 	padding:20px;
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
 	overflow: hidden;
 
   	background-color: white;
