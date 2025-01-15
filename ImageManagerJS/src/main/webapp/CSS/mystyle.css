@@ -493,6 +493,7 @@ textarea{
   	right:0;
   	cursor: pointer;
   	margin-right: 40px;
+  	margin-top: 7px;
   	/*Make svg gray*/
   	filter: invert(53%) sepia(0%) saturate(0%) hue-rotate(176deg) brightness(94%) contrast(100%);
 }
@@ -505,10 +506,10 @@ textarea{
 .imageContainer{
 	max-width: 600px;
 	width: 80vw;
-	max-height: 90vh;
+	max-height: 85vh;
 	overflow-y: auto;
 	margin: auto;
-	margin-top: 50px;
+	margin-top: 70px;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
@@ -709,9 +710,10 @@ textarea{
 /*EDIT ALBUM SPECIFIC CSS*/
 
 .albumEditContainer{
-	max-height: calc(100vh - 40px - 10px - 20px);
+	max-height: 85vh;
 	width: auto;
 	margin: 40px auto;
+	margin-top: 70px;
 	padding:20px;
 	display: flex;
 	flex-direction: column;
