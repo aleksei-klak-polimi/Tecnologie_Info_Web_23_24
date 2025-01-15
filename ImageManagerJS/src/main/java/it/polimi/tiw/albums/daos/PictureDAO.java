@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.polimi.tiw.albums.beans.Picture;
+import it.polimi.tiw.albums.beans.UserAlbumOrdering;
 
 public class PictureDAO{
 private Connection con;
@@ -229,6 +230,46 @@ private Connection con;
 			}
 			pstat.executeBatch();
 		}
+	}
+	
+	
+	
+	public void changePictureOrderPreferenceInAlbum(List<UserAlbumOrdering> orders, int albumId, int userId)throws SQLException{
+		String query ="INSERT INTO User_Album_Ordering (userId, albumId, pictureId, pictureOrder) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE pictureOrder = ?";
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			
+			for(UserAlbumOrdering order : orders) {
+				pstat.setInt(1, userId);
+				pstat.setInt(2, albumId);
+				pstat.setInt(3, order.getPictureId());
+				pstat.setInt(4, order.getPictureOrder());
+				pstat.setInt(5, order.getPictureOrder());
+				pstat.addBatch();
+			}
+			pstat.executeBatch();
+		}
+	}
+	
+	public List<UserAlbumOrdering> getPictureOrderPreferenceInAlbumByUser(int userId, int albumId) throws SQLException{
+		List<UserAlbumOrdering> orders = new ArrayList<>();
+		String query="SELECT pictureId, pictureOrder FROM User_Album_Ordering WHERE userId = ? AND albumId = ?";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, userId);
+			pstat.setInt(2, albumId);
+			
+			try(ResultSet qres = pstat.executeQuery()){
+				while(qres.next()) {
+					UserAlbumOrdering order = new UserAlbumOrdering();
+					order.setPictureId(qres.getInt("pictureId"));
+					order.setPictureOrder(qres.getInt("pictureOrder"));
+					
+					orders.add(order);
+				}
+			}
+		}
+		
+		return orders;
 	}
 }
 
