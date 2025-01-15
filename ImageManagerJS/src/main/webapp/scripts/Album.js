@@ -24,6 +24,7 @@
 		const imageDetailsComponent = new ImageView(this);
 		const deleteImageComponent = new DeleteImage(this);
 		const editAlbumPictures = new AddImages(this);
+		const reorderAlbumPictures = new ReorderAlbumView(this);
 		
 		//Set initial component visibility
 		albumDisplayComponent.show();
@@ -34,6 +35,7 @@
 		imageDetailsComponent.hide();
 		deleteImageComponent.hide();
 		editAlbumPictures.hide();
+		reorderAlbumPictures.hide();
 		
 		//GETTERS
 		this.getAlbumImages = function(){
@@ -56,6 +58,7 @@
 			imageDetailsComponent.registerEvents();
 			deleteImageComponent.registerEvents();
 			editAlbumPictures.registerEvents();
+			reorderAlbumPictures.registerEvents();
 
 			function handleRedirectHome(e) {
 				e.preventDefault();
@@ -113,6 +116,7 @@
 							albumDisplayComponent.update();
 							imageDetailsComponent.refresh();
 							editAlbumPictures.refresh();
+							reorderAlbumPictures.refresh();
 
 						}
 						else if (x.status == 401) {
@@ -146,7 +150,9 @@
 			//Close any other open overlay
 			deleteImageComponent.hide();
 			editAlbumPictures.hide();
+			reorderAlbumPictures.hide();
 			editAlbumPictures.reset();
+			reorderAlbumPictures.reset();
 			
 			//Open new overlay
 			imageDetailsComponent.update(pictureId);
@@ -156,8 +162,10 @@
 		this.showDeleteImage = function(pictureId, albumMessage){
 			imageDetailsComponent.hide();
 			editAlbumPictures.hide();
+			reorderAlbumPictures.hide();
 			imageDetailsComponent.reset();
 			editAlbumPictures.reset();
+			reorderAlbumPictures.reset();
 			
 			deleteImageComponent.update(pictureId, albumMessage);
 			deleteImageComponent.show();
@@ -166,9 +174,21 @@
 		this.showOtherImages = function(){
 			imageDetailsComponent.hide();
 			deleteImageComponent.hide();
+			reorderAlbumPictures.hide();
 			imageDetailsComponent.reset();
+			reorderAlbumPictures.reset();
 			
 			editAlbumPictures.show();
+		}
+		
+		this.showReorderAlbumPictures = function(){
+			imageDetailsComponent.hide();
+			editAlbumPictures.hide();
+			deleteImageComponent.hide();
+			imageDetailsComponent.reset();
+			editAlbumPictures.reset();
+			
+			reorderAlbumPictures.show();
 		}
 	}
 
@@ -185,6 +205,7 @@
 		
 		const previousImgs = document.getElementById("previousImgs");
 		const nextImgs = document.getElementById("nextImgs");
+		const reorderImgBtn = document.getElementById("albumDisplayHeader").getElementsByTagName("img")[0];
 		
 		this.registerEvents = function() {
 			//Listener logic for next and prev buttons
@@ -197,6 +218,11 @@
 				e.preventDefault();
 				changeAlbumPage(1);
 				this.refresh();
+			});
+			
+			reorderImgBtn.addEventListener("click", (e) =>{
+				e.preventDefault();
+				manager.showReorderAlbumPictures();
 			});
 
 			function changeAlbumPage(delta) {
@@ -432,6 +458,7 @@
 			document.getElementById("cancelAddPicturesBtn").addEventListener("click", (e) => {
 				e.preventDefault();
 				this.hide();
+				this.reset();
 			});
 
 			//Listener logic for submit button
@@ -1013,6 +1040,119 @@
 
 		this.reset = function() {
 			commentForm.reset();
+		}
+	}
+	
+	
+	
+	
+	
+	function ReorderAlbumView(_manager){
+		const manager = _manager;
+		const modal = document.getElementById("albumReorderOverlay");
+		const rowTemplate = modal.getElementsByTagName("li")[0].cloneNode(true);
+		const list = modal.getElementsByTagName("ul")[0];
+		const errorDiv = modal.getElementsByClassName("errorText")[0];
+		const errorParent = errorDiv.parentElement;
+		let draggedItem;
+		
+		errorParent.removeChild(errorDiv);
+		
+		this.registerEvents = function(){
+			document.getElementById("cancelReorderPicturesBtn").addEventListener("click", (e) => {
+				e.preventDefault();
+				this.hide();
+				this.reset();
+			});
+			
+			document.getElementById("confirmReorderPicturesBtn").addEventListener("click", (e) => {
+				e.preventDefault();
+				this.hide();
+				//TODO
+			});
+			
+			list.addEventListener('dragstart', handleDragStart);
+			list.addEventListener('dragover', handleDragOver);
+			list.addEventListener('drop', handleDrop);
+		}
+		
+		this.refresh = function(){
+			//Remove old images
+			while (list.firstChild) {
+				list.removeChild(list.lastChild);
+			}
+
+			//Populate with new images
+			manager.getAlbumImages().forEach((image) => {
+				const row = rowTemplate.cloneNode(true);
+				row.setAttribute("data-pictureId", image.id);
+				row.setAttribute("data-uploadDate", image.uploadDate);
+				row.setAttribute("draggable", true);
+				row.getElementsByTagName("img")[0].setAttribute("src", getImageHost() + image.thumbnailPath);
+				row.getElementsByTagName("p")[0].innerText = image.title;
+				row.getElementsByTagName("p")[1].innerText = image.uploadDate;
+				
+				list.appendChild(row);
+			});
+		}
+		
+		this.reset = function(){
+			draggedItem = null;
+			this.refresh();
+			
+			if(errorDiv.parentNode && errorDiv.parentNode.isEqualNode(errorParent))
+				errorParent.removeChild(errorDiv);
+		}
+		
+		this.show = function() {
+			modal.classList.remove('hidden');
+			modal.classList.add('active');
+		}
+
+		this.hide = function() {
+			modal.classList.remove('active');
+			modal.classList.add('hidden');
+		}
+		
+		
+		
+		//Logic for drag-to-reorder
+		// Drag start event handler
+		function handleDragStart(event) {
+			draggedItem = event.target.closest("li");
+
+			// Calculate the offset of the cursor for the dragImage to match the 
+			//list item
+			const rect = draggedItem.getBoundingClientRect();
+			const offsetX = event.clientX - rect.left;
+			const offsetY = event.clientY - rect.top;
+			
+			event.dataTransfer.setDragImage(draggedItem, offsetX, offsetY);
+			event.dataTransfer.effectAllowed = 'move';
+		}
+		
+		// Drag over event handler
+		function handleDragOver(event) {
+			event.preventDefault();
+			event.dataTransfer.dropEffect = 'move';
+			const targetItem = event.target.closest("li");
+			
+			if (targetItem !== draggedItem && targetItem.classList.contains('draggable')) {
+				const boundingRect = targetItem.getBoundingClientRect();
+				const offset = boundingRect.y + (boundingRect.height / 2);
+				if (event.clientY - offset > 0 && (!targetItem.nextSibling || !targetItem.nextSibling.isEqualNode(draggedItem))){
+					targetItem.parentNode.insertBefore(draggedItem, targetItem.nextSibling);
+				} 
+				else if(event.clientY - offset <= 0 && (!targetItem.previousSibling || !targetItem.previousSibling.isEqualNode(draggedItem))){
+					targetItem.parentNode.insertBefore(draggedItem, targetItem);
+				}
+			}
+		}
+		
+		// Drop event handler
+		function handleDrop(event) {
+			event.preventDefault();
+			draggedItem = null;
 		}
 	}
 })();

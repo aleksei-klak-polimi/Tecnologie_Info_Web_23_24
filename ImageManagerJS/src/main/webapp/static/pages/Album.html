@@ -2,7 +2,10 @@
     <script src="/ImageManagerJS/scripts/Album.js" charset="utf-8" defer></script>
 	<div id="imageDisplayContainer" class="albumContainer">
 		<div class="albumRow" id="imageBrowser">
-			<p id="albumTitle">Album Title goes here</p>
+			<div id="albumDisplayHeader">
+				<p id="albumTitle">Album Title goes here</p>
+				<img src="static/icons/cog.svg" class="primaryIcon"/>
+			</div>
 			<div id="albumTable"><table>
 				<tbody>
 					<tr id="imagesRow">
@@ -284,6 +287,91 @@
 					<div class="commentDate">22-12-24</div>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div id="albumReorderOverlay" class="overlay hidden">
+		<div class="albumEditContainer">
+			<form action="#">
+				<div class="homeTable">
+					<ul>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+						<li class="draggable" draggable="true">
+							<img src="static/ImagePlaceholder.png">
+							<p>Image Title</p>
+							<p>22-12-24</p>
+						</li>
+					</ul>
+				</div>
+				<div class="errorText">PlaceHolder error text</div>
+				<div class="inlineButtons">
+					<input class="btn" id="confirmReorderPicturesBtn" type="submit" name="AddPictures" value="Add">
+					<a class="btnSecondary" id="cancelReorderPicturesBtn">Cancel</a>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

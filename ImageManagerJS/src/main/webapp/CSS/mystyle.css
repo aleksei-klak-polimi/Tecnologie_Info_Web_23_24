@@ -310,6 +310,27 @@ textarea{
 	padding-bottom: 10px;
 }
 
+.albumContainer #albumDisplayHeader{
+	display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.albumContainer #albumDisplayHeader img{
+	height: 50px;
+	padding-right: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.albumContainer #albumDisplayHeader img:hover{
+	height: 50px;
+	padding-right: 10px;
+    padding-bottom: 10px;
+    /*Make svg gray*/
+  	filter: invert(53%) sepia(0%) saturate(0%) hue-rotate(176deg) brightness(94%) contrast(100%);
+}
+
 .albumContainer #albumTable{
 	overflow-x: auto;
 }
@@ -752,7 +773,22 @@ textarea{
 	padding: 15px;
 }
 
+#albumReorderOverlay ul{
+	width: 100%;
+}
 
+#albumReorderOverlay li{
+	cursor: grab;
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    column-gap: 30px;
+}
+
+#albumReorderOverlay li:not(:first-child){
+	border-top: 1px solid lightgray;
+}
 
 /*DELETE IMAGE AND LOGOUT SPECIFIC CSS*/
 .binaryChoiceContainer{
