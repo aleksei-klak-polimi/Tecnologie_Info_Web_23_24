@@ -118,6 +118,29 @@ CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`Album_Picture` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `ImageManagerDB`.`User_Album_Ordering`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`User_Album_Ordering` (
+  `userId` INT NOT NULL,
+  `albumId` INT NOT NULL,
+  `pictureId` INT NOT NULL,
+  `pictureOrder` INT NOT NULL,
+  PRIMARY KEY (`userId`, `albumId`, `pictureId`),
+  INDEX `fk_User_Album_Ordering_2_idx` (`albumId` ASC, `pictureId` ASC) VISIBLE,
+  CONSTRAINT `fk_User_Album_Ordering_1`
+    FOREIGN KEY (`userId`)
+    REFERENCES `ImageManagerDB`.`User` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_User_Album_Ordering_2`
+    FOREIGN KEY (`albumId` , `pictureId`)
+    REFERENCES `ImageManagerDB`.`Album_Picture` (`albumId` , `pictureId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
