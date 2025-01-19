@@ -8,13 +8,17 @@ function postRequest(url, formElement, callBack, reset){
 	req.open('POST', url);
 	
 	if(formElement){
-		var formData = new FormData(formElement);	
-		req.send(formData);
+		if(!(formElement instanceof FormData)){
+			var formData = new FormData(formElement);	
+			req.send(formData);
+		}
+		else
+			req.send(formElement);
 	}
 	else
 		req.send();
 
-	if (formElement !== null && reset === true) {
+	if (formElement !== null && !formElement instanceof FormData && reset === true) {
 		formElement.reset();
 	}
 }
