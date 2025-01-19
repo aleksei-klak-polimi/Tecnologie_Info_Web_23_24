@@ -160,12 +160,13 @@ public class DisplayAlbum extends HttpServlet {
 	
 	private String buildImageHost(HttpServletRequest request) {
         String serverDomain = request.getServerName();
-        if ("localhost".equals(serverDomain)) {
-            serverDomain += ":" + request.getServerPort();
-        }
-
         ServletContext context = getServletContext();
-        return "http://" + serverDomain + ":" + serverPort + context.getInitParameter("ImageHost");
+        if ("localhost".equals(serverDomain)) {
+            return "http://" + serverDomain + ":" + request.getServerPort() + context.getInitParameter("ImageHost");
+        }
+        else {
+        	return "http://" + serverDomain + ":" + serverPort + context.getInitParameter("ImageHost");
+        }
     }
 	
 	private boolean hasMorePages(int albumId, int albumPage) throws SQLException {
