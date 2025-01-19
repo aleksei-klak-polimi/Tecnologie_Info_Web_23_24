@@ -268,8 +268,17 @@ private Connection con;
 				}
 			}
 		}
-		
 		return orders;
+	}
+	
+	public void resetPictureOrderPreferenceInAlbumByUser(int userId, int albumId) throws SQLException{
+		String query="DELETE FROM User_Album_Ordering WHERE userId = ? AND albumId = ?";
+		
+		try(PreparedStatement pstat = con.prepareStatement(query)){
+			pstat.setInt(1, userId);
+			pstat.setInt(2, albumId);
+			pstat.executeUpdate();
+		}
 	}
 }
 
