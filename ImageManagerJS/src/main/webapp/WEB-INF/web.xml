@@ -76,6 +76,8 @@
 		<url-pattern>/LogOut</url-pattern>
 		<url-pattern>/PostComment</url-pattern>
 		<url-pattern>/EditImage</url-pattern>
+		<url-pattern>/ResetPictureOrder</url-pattern>
+		<url-pattern>/UpdatePictureOrder</url-pattern>
 	</filter-mapping>
 	
 	<filter-mapping>
