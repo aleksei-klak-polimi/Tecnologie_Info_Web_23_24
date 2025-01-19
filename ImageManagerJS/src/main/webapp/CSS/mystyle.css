@@ -162,7 +162,7 @@ textarea{
 }
 
 /*HOMEPAGE SPECIFIC CSS*/
-#homeContainer{
+#albumsContainer{
 	width: 80vw;
 	margin: 40px auto;
 	display: flex;
@@ -211,26 +211,26 @@ textarea{
     border-radius: 8px;
 }
 
-#homeContainer table{
+#albumsContainer table{
 	width: 100%;
 	border-collapse: collapse;
 	text-align: left;
 }
 
-#homeContainer table .odd{
+#albumsContainer table .odd{
 	background-color:lightgray;
 }
 
-#homeContainer table a{
+#albumsContainer table a{
 	text-decoration: none;
 	color: black;
 }
 
-#homeContainer table td, th{
+#albumsContainer table td, th{
 	padding: 3px;
 }
 
-#homeContainer form{
+#albumsContainer form{
 	border-width: 1px;
     border-style: solid;
     border-color: lightgray;
@@ -243,14 +243,14 @@ textarea{
   	align-items: flex-start;
 }
 
-#homeContainer form input{
+#albumsContainer form input{
 	display: block;
 	box-sizing: border-box;
 	width: 100%;
 	padding:10px;
 }
 
-#homeContainer form input[type="text"]{
+#albumsContainer form input[type="text"]{
 	border-width: 1px;
     border-style: solid;
     border-color: lightgray;

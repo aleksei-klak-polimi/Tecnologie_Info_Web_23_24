@@ -5,18 +5,18 @@
 (function(){
 	const imageDisplaySize = 5;
 	
-	const albumPageManager = new AlbumPageManager();
-	albumPageManager.registerEvents();
-	albumPageManager.update();
-	albumPageManager.show();
-	
-	function AlbumPageManager(){
+	window.AlbumPageManager = function(_manager){
 		//ATTRIBUTES
+		const manager = _manager;
 		const albumContainer = document.getElementById("albumOuterContainer");
 		let albumImages = [];
 		let unsortedImages = [];
 		let otherImages = [];
 		let comments = new Map();
+		
+		let albumId = null;
+		let albumOwner = false;
+		let albumTitle = null;
 		
 		//COMPONENTS
 		const albumDisplayComponent = new AlbumDisplay(this);
@@ -26,17 +26,6 @@
 		const deleteImageComponent = new DeleteImage(this);
 		const editAlbumPictures = new AddImages(this);
 		const reorderAlbumPictures = new ReorderAlbumView(this);
-		
-		//Set initial component visibility
-		albumDisplayComponent.show();
-		if (sessionStorage.getItem("albumOwner") && sessionStorage.getItem("albumOwner") === "true")
-			imageUploaderComponent.show();
-		else
-			imageUploaderComponent.hide();
-		imageDetailsComponent.hide();
-		deleteImageComponent.hide();
-		editAlbumPictures.hide();
-		reorderAlbumPictures.hide();
 		
 		//GETTERS
 		this.getAlbumImages = function(){
@@ -51,91 +40,113 @@
 		this.getComments = function(){
 			return comments;
 		}
-
+		
+		this.getAlbumId = function(){
+			return albumId;
+		}
+		this.getAlbumTitle = function(){
+			return albumTitle;
+		}
+		this.isAlbumOwner = function(){
+			return albumOwner;
+		}
 
 		//METHODS
-		this.registerEvents = function() {
-			document.getElementById("Home").addEventListener("click", (e) => handleRedirectHome(e));
-			
+		this.init = function(){
+			//Set initial component visibility
+			albumDisplayComponent.show();
+			if (albumOwner)
+				imageUploaderComponent.show();
+			else
+				imageUploaderComponent.hide();
+			imageDetailsComponent.hide();
+			deleteImageComponent.hide();
+			editAlbumPictures.hide();
+			reorderAlbumPictures.hide();
+		}
+		
+		this.registerEvents = function() {		
 			albumDisplayComponent.registerEvents();
 			imageUploaderComponent.registerEvents();
 			imageDetailsComponent.registerEvents();
 			deleteImageComponent.registerEvents();
 			editAlbumPictures.registerEvents();
 			reorderAlbumPictures.registerEvents();
-
-			function handleRedirectHome(e) {
-				e.preventDefault();
-
-				//Removing event listener is not directly possible
-				//Replace the target with a clone to discard the listeners.
-				let newHomeBtn = e.target.cloneNode(true);
-				e.target.parentNode.replaceChild(newHomeBtn, e.target);
-
-				//Clear session storage
-				sessionStorage.removeItem("albumPage");
-				sessionStorage.removeItem("albumId");
-				sessionStorage.removeItem("albumOwner");
-
-				replaceHtml('static/pages/Albums.html');
-			}
 		}
 
 
-		this.update = function() {
-			let albumId = sessionStorage.getItem("albumId");
-			let request = "GetImagesByAlbum?albumId=" + albumId;
-			getRequest(request, x => (refreshImagesCallback(x)));
+		this.update = function(_albumId, _albumOwner, _albumTitle) {
+			if(_albumId){
+				albumId = Number(_albumId);
+			}
+			if(_albumOwner){
+				if(_albumOwner === true || _albumOwner === "true"){
+					albumOwner = true;
+					imageUploaderComponent.show();
+				}
+				else{
+					albumOwner = false;
+					imageUploaderComponent.hide();
+				}
+			}
+			if(_albumTitle){
+				albumTitle = _albumTitle;
+			}
+			
+			if(albumId){
+				let request = "GetImagesByAlbum?albumId=" + albumId;
+				getRequest(request, x => (refreshImagesCallback(x)));
 
-			function refreshImagesCallback(x) {
-				if (x.readyState === XMLHttpRequest.DONE) {
-					try {
-						const response = JSON.parse(x.responseText);
+				function refreshImagesCallback(x) {
+					if (x.readyState === XMLHttpRequest.DONE) {
+						try {
+							const response = JSON.parse(x.responseText);
 
-						if (x.status === 200) {
-							const recievedObjects = JSON.parse(response.data);
-							
-							//Retrieve and sort images according to user preference
-							unsortedImages = JSON.parse(recievedObjects[0]);
-							let imageOrder = JSON.parse(recievedObjects[1]);
-							albumImages = sortImages(unsortedImages, imageOrder);
+							if (x.status === 200) {
+								const recievedObjects = JSON.parse(response.data);
 
-							otherImages = JSON.parse(recievedObjects[2]);
-							
-							let commentList = JSON.parse(recievedObjects[3]);
-							comments = new Map();
+								//Retrieve and sort images according to user preference
+								unsortedImages = JSON.parse(recievedObjects[0]);
+								let imageOrder = JSON.parse(recievedObjects[1]);
+								albumImages = sortImages(unsortedImages, imageOrder);
 
-							commentList.forEach((comment) => {
-								if (!comment.pictureId) {
-									console.warn("Comment missing 'pictureId' field:", comment);
-									return;
-								}
+								otherImages = JSON.parse(recievedObjects[2]);
 
-								// Check if the id already exists in the map
-								if (!comments.has(comment.pictureId)) {
-									comments.set(comment.pictureId, []);
-								}
+								let commentList = JSON.parse(recievedObjects[3]);
+								comments = new Map();
 
-								// Add the object to the list corresponding to its id
-								comments.get(comment.pictureId).push(comment);
-							});
+								commentList.forEach((comment) => {
+									if (!comment.pictureId) {
+										console.warn("Comment missing 'pictureId' field:", comment);
+										return;
+									}
 
-							//Refresh components
-							albumDisplayComponent.update();
-							imageDetailsComponent.refresh();
-							editAlbumPictures.refresh();
-							reorderAlbumPictures.refresh();
+									// Check if the id already exists in the map
+									if (!comments.has(comment.pictureId)) {
+										comments.set(comment.pictureId, []);
+									}
 
+									// Add the object to the list corresponding to its id
+									comments.get(comment.pictureId).push(comment);
+								});
+
+								//Refresh components
+								albumDisplayComponent.update();
+								imageDetailsComponent.refresh();
+								editAlbumPictures.refresh();
+								reorderAlbumPictures.refresh();
+
+							}
+							else if (x.status == 401) {
+								handleUnauthorized(response);
+							}
+							else {
+								handleError(response, x.status);
+							}
 						}
-						else if (x.status == 401) {
-							handleUnauthorized(response);
+						catch (e) {
+							console.error("Error parsing JSON response:", e.message);
 						}
-						else {
-							handleError(response, x.status);
-						}
-					}
-					catch (e) {
-						console.error("Error parsing JSON response:", e.message);
 					}
 				}
 			}
@@ -155,12 +166,7 @@
 		}
 		
 		this.showImageDetails = function(pictureId){
-			//Close any other open overlay
-			deleteImageComponent.hide();
-			editAlbumPictures.hide();
-			reorderAlbumPictures.hide();
-			editAlbumPictures.reset();
-			reorderAlbumPictures.reset();
+			this.hideOverlays();
 			
 			//Open new overlay
 			imageDetailsComponent.update(pictureId);
@@ -168,35 +174,33 @@
 		}
 		
 		this.showDeleteImage = function(pictureId, albumMessage){
-			imageDetailsComponent.hide();
-			editAlbumPictures.hide();
-			reorderAlbumPictures.hide();
-			imageDetailsComponent.reset();
-			editAlbumPictures.reset();
-			reorderAlbumPictures.reset();
+			this.hideOverlays();
 			
 			deleteImageComponent.update(pictureId, albumMessage);
 			deleteImageComponent.show();
 		};
 		
 		this.showOtherImages = function(){
-			imageDetailsComponent.hide();
-			deleteImageComponent.hide();
-			reorderAlbumPictures.hide();
-			imageDetailsComponent.reset();
-			reorderAlbumPictures.reset();
+			this.hideOverlays();
 			
 			editAlbumPictures.show();
 		}
 		
 		this.showReorderAlbumPictures = function(){
+			this.hideOverlays();
+			
+			reorderAlbumPictures.show();
+		}
+		
+		this.hideOverlays = function(){
 			imageDetailsComponent.hide();
 			editAlbumPictures.hide();
 			deleteImageComponent.hide();
+			reorderAlbumPictures.hide();
+			
 			imageDetailsComponent.reset();
 			editAlbumPictures.reset();
-			
-			reorderAlbumPictures.show();
+			reorderAlbumPictures.reset();
 		}
 		
 		
@@ -276,14 +280,6 @@
 		}
 		
 		this.show = function(){
-			//If user is not owner hide all "remove Image" buttons
-			let editCommandsVisibility = sessionStorage.getItem("albumOwner") === "true" ? "visible" : "hidden";
-			
-			const ownerContent = Array.from(document.getElementsByClassName("forOwner"));
-			for (let i = 0; i < ownerContent.length; i++) {
-				ownerContent[i].style.visibility = editCommandsVisibility;
-			}
-			
 			imageDisplay.removeAttribute("style");
 		}
 		
@@ -305,7 +301,7 @@
 			const images = manager.getAlbumImages();
 			
 			//Update Album Title
-			const albumTitle = sessionStorage.getItem("albumTitle") ? sessionStorage.getItem("albumTitle") : "Missing album title";
+			const albumTitle = manager.getAlbumTitle() ? manager.getAlbumTitle() : "Missing album title";
 			document.getElementById("albumTitle").textContent = albumTitle;
 
 			//Clear old images
@@ -334,7 +330,7 @@
 						let pictureId = e.target.parentNode.parentNode.parentNode.getElementsByTagName("img")[0].getAttribute("data-pictureId");
 						let src = e.target.parentNode.parentNode.parentNode.getElementsByTagName("img")[0].getAttribute("src");
 
-						let albumId = sessionStorage.getItem("albumId");
+						let albumId = manager.getAlbumId();
 						let requestPath = "RemoveFromAlbum?albumId=" + albumId + "&pictureId=" + pictureId;
 
 						postRequest(requestPath, null, (x) => removeImageFromAlbumCallback(x, pictureId, src));
@@ -370,6 +366,14 @@
 
 			for (let i = 0; i < imageDisplaySize - imagesToDraw.length; i++) {
 				imagesRow.appendChild(emptySlotTemplate.cloneNode(true));
+			}
+			
+			//If user is not owner hide all "remove Image" buttons
+			let editCommandsVisibility = manager.isAlbumOwner() === true ? "visible" : "hidden";
+
+			const ownerContent = Array.from(imageDisplay.getElementsByClassName("forOwner"));
+			for (let i = 0; i < ownerContent.length; i++) {
+				ownerContent[i].style.visibility = editCommandsVisibility;
 			}
 
 			//Rendering logic for previousImgs button
@@ -421,7 +425,7 @@
 				e.preventDefault();
 				const form = e.target.closest("form");
 
-				const albumId = sessionStorage.getItem("albumId");
+				const albumId = manager.getAlbumId();
 				const requestUrl = 'UploadImage?albumId=' + albumId;
 
 				if (form.checkValidity()) {
@@ -468,7 +472,7 @@
 		}
 
 		this.show = function() {
-			imageUploader.style.removeProperty("display");
+			imageUploader.style.display = "";
 		}
 
 		this.hide = function() {
@@ -503,7 +507,7 @@
 				e.preventDefault();
 
 				const form = e.target.closest("form");
-				const albumId = sessionStorage.getItem("albumId");
+				const albumId = manager.getAlbumId();
 				const requestUrl = 'AddToAlbum?albumId=' + albumId;
 
 				if (form.checkValidity()) {
@@ -684,7 +688,6 @@
 		const modal = document.getElementById("imageContainerOverlay");
 		const imageDisplayComponent = new ImageDetailsView(_manager, this);
 		const imageEditComponent = new EditImageView(_manager, this);
-		imageDisplayComponent.show();
 		imageEditComponent.hide();
 
 
@@ -796,7 +799,7 @@
 			imageDescription.removeAttribute("style");
 			commentSection.show();
 
-			if (sessionStorage.getItem("albumOwner") && sessionStorage.getItem("albumOwner") === "true")
+			if (manager.isAlbumOwner() && manager.isAlbumOwner() === true)
 				editImageButtons.removeAttribute("style");
 			else
 				editImageButtons.style.display = "none";
@@ -1117,7 +1120,7 @@
 				
 				//Check that form is not empty
 				if(!formData.entries().next().done){
-					const albumId = sessionStorage.getItem("albumId");
+					const albumId = manager.getAlbumId();
 					
 					if(!albumId)
 						return;
