@@ -775,6 +775,18 @@ textarea{
 	padding: 15px;
 }
 
+.albumEditContainer .albumEditContainerHeader{
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+}
+
+.albumEditContainer #resetPictureOrdering{
+	font-size: 0.9em;
+	width: auto;
+	padding: 5px;
+}
+
 #albumReorderOverlay ul{
 	width: 100%;
 }
