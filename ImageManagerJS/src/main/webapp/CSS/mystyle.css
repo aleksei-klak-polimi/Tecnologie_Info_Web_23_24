@@ -860,7 +860,7 @@ textarea{
 
 
 /*AUTHETICATION SPECIFIC CSS*/
-#authContainer{
+.authContainer{
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
@@ -869,7 +869,7 @@ textarea{
 	padding: 30px;
 }
 
-#authContainer #formContainer{
+.authContainer #formContainer{
 	background-color: #ffffff;
     border: 1px solid lightgray;
     border-radius: 8px;
@@ -881,7 +881,7 @@ textarea{
 	margin-right:auto;
 }
 
-#authContainer h1 {
+.authContainer h1 {
 	text-align: left;
     margin-bottom: 40px;
     max-width: fit-content; /* Allow h1 to control its width */
@@ -889,22 +889,22 @@ textarea{
     margin-top : 0;
 }
 
-#authContainer form{
+.authContainer form{
 	row-gap: 60px;
 }
 
-#authContainer #textInputsContainer{
+.authContainer #textInputsContainer{
 	width: 100%;
 }
 
-#authContainer #textContainer{
+.authContainer #textContainer{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	row-gap: 20px;
 }
 
-#authContainer .errorText{
+.authContainer .errorText{
 	text-align:left;
 	font-size: 0.75em;
 	padding-top: 10px;

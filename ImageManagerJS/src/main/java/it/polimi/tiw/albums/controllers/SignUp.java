@@ -57,15 +57,6 @@ public class SignUp extends HttpServlet{
 	}
 	
 	
-	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String path = "/WEB-INF/Sign-Up.html";
-		ServletContext sc = getServletContext();
-		sc.getRequestDispatcher(path).forward(request, response);
-	}
-	
-	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//Retrieve inputs

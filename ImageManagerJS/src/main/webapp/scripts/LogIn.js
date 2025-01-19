@@ -3,79 +3,196 @@
  */
 
 (function (){
-	const errorDiv = document.getElementsByClassName("errorText")[0];
-	const errorParent = errorDiv.parentNode;
-	
-	//Clean-up place-holder html
-	errorParent.removeChild(errorDiv);
-	
-	//Event listener for form submission
-	document.getElementById("logInBtn").addEventListener("click", (e) => handleLogIn(e))
-	
-	//Event listener for switch to sign-up
-	document.getElementById("signUpBtn").addEventListener("click", (e) => redirectToSignUp(e));
+	const authPageManager = new AuthPageManager();
+	authPageManager.registerEvents();
 	
 	
-	
-	/**
-	 * Redirects to the sign-up page.
-	 * @param {Event} e - The event object.
-	 */
-	function redirectToSignUp(e) {
-		e.preventDefault();
-		window.location.href = "/ImageManagerJS/SignUp";
-	}
-	
-	/**
-	 * Handles the logIn form submission.
-	 * @param {Event} e - The event object.
-	 */
-	function handleLogIn(e) {
-		e.preventDefault();
-		const form = e.target.closest("form");
+	function AuthPageManager(){
+		const logInView = new LogInView(this);
+		const signUpView = new SignUpView(this);
 		
-		if (form.checkValidity()) {
-			postRequest('LogIn', e.target.closest("form"), handleLogInCallback);
+		signUpView.hide();
+		
+		
+		this.registerEvents = function(){
+			logInView.registerEvents();
+			signUpView.registerEvents();
 		}
-		else {
-			form.reportValidity();
+		
+		
+		this.showLogIn = function(){
+			signUpView.hide();
+			signUpView.reset();
+			logInView.show();
+		}
+		
+		this.showSignUp = function() {
+			logInView.hide();
+			logInView.reset();
+			signUpView.show();
 		}
 	}
 	
 	
-	/**
-	 * Callback function for handling the server response to logIn.
-	 * @param {XMLHttpRequest} x - The XMLHttpRequest object.
-	 */
-	function handleLogInCallback(x){
-		if (x.readyState === XMLHttpRequest.DONE) {
-			try {
-				const response = JSON.parse(x.responseText);
+	function LogInView(_manager){
+		const manager = _manager;
+		const logInContainer = document.getElementById("logInContainer");
+		const form = logInContainer.getElementsByTagName("form")[0];
+		const errorDiv = logInContainer.getElementsByClassName("errorText")[0];
+		const errorParent = errorDiv.parentNode;
+		errorParent.removeChild(errorDiv);
+		
+		
+		this.registerEvents = function(){
+			document.getElementById("logInBtn").addEventListener("click", (e) => handleLogIn(e));
+			document.getElementById("redirectToSignUp").addEventListener("click", (e) => redirectToSignUp(e));
+		
+			function redirectToSignUp(e) {
+				e.preventDefault();
+				manager.showSignUp();
+			}
+			
+			function handleLogIn(e) {
+				e.preventDefault();
+				const form = e.target.closest("form");
 
-				if (x.status === 200) {
-					if (response.redirect) {
-						window.location.href = response.redirect;
+				if (form.checkValidity()) {
+					postRequest('LogIn', e.target.closest("form"), handleLogInCallback);
+				}
+				else {
+					form.reportValidity();
+				}
+			}
+			
+			function handleLogInCallback(x) {
+				if (x.readyState === XMLHttpRequest.DONE) {
+					try {
+						const response = JSON.parse(x.responseText);
+
+						if (x.status === 200) {
+							if (response.redirect) {
+								window.location.href = response.redirect;
+							}
+						}
+						else if ([400, 401, 402].includes(x.status)) {
+							displayError(response.error);
+						}
+					} catch (e) {
+						console.error("Error parsing JSON response: " + e.message);
 					}
 				}
-				else if ([400, 401, 402].includes(x.status)) {
-					displayError(response.error);
-				}
-			} catch (e) {
-				console.error("Error parsing JSON response: " + e.message);
 			}
+			
+			function displayError(message) {
+				errorDiv.textContent = message;
+				errorParent.appendChild(errorDiv);
+				alert(message);
+			}
+		}
+		
+		this.hide = function(){
+			logInContainer.style.display = "none";
+		}
+		
+		this.show = function(){
+			logInContainer.style.display = "";
+		}
+		
+		this.reset = function(){
+			form.reset();
+			
+			if (errorParent.contains(errorDiv))
+				errorParent.removeChild(errorDiv);
 		}
 	}
 	
 	
-	/**
-	 * Displays an error message in the UI.
-	 * @param {string} message - The error message to display.
-	 */
-	function displayError(message) {
-		errorDiv.textContent = message;
-		errorParent.appendChild(errorDiv);
-		alert(message);
+	function SignUpView(_manager) {
+		const manager = _manager;
+		const signUpContainer = document.getElementById("signUpContainer");
+		const form = signUpContainer.getElementsByTagName("form")[0];
+		const errorDiv = signUpContainer.getElementsByClassName("errorText")[0];
+		const errorParent = errorDiv.parentNode;
+		errorParent.removeChild(errorDiv);
+
+
+		this.registerEvents = function() {
+			document.getElementById("signUpBtn").addEventListener("click", (e) => handleSignUp(e));
+			document.getElementById("redirectToLogIn").addEventListener("click", (e) => redirectToLogIn(e));
+
+			function redirectToLogIn(e) {
+				e.preventDefault();
+				manager.showLogIn();
+			}
+
+			function handleSignUp(e) {
+				e.preventDefault();
+				const form = e.target.closest("form");
+
+				if (form.checkValidity()) {
+					if (matchingPasswords()) {
+						postRequest('SignUp', e.target.closest("form"), handleSignUpCallback);
+					}
+					else {
+						displayError("Passwords don't match.");
+					}
+				}
+				else {
+					form.reportValidity();
+				}
+			}
+
+			function handleSignUpCallback(x) {
+				if (x.readyState == XMLHttpRequest.DONE) {
+					try {
+						const response = JSON.parse(x.responseText);
+
+						if (x.status == 200) {
+							if (response.redirect) {
+								window.location.href = response.redirect;
+							}
+						}
+						else if ([400, 401, 402].includes(x.status)) {
+							displayError(response.error);
+						}
+					}
+					catch (e) {
+						console.error("Error parsing JSON response: " + e.message);
+					}
+				}
+			}
+			
+			function matchingPasswords() {
+				var pwd = document.getElementById("password").textContent;
+				var repeatPwd = document.getElementById("repeatPassword").textContent;
+
+				return (pwd === repeatPwd)
+			}
+
+			function displayError(message) {
+				errorDiv.textContent = message;
+				errorParent.appendChild(errorDiv);
+				alert(message);
+			}
+		}
+
+		this.hide = function() {
+			signUpContainer.style.display = "none";
+		}
+
+		this.show = function() {
+			signUpContainer.style.display = "";
+		}
+
+		this.reset = function() {
+			form.reset();
+
+			if (errorParent.contains(errorDiv))
+				errorParent.removeChild(errorDiv);
+		}
 	}
+	
+	
 })();
 
 
