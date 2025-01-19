@@ -34,6 +34,7 @@ public class DisplayAlbum extends HttpServlet {
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private int defaultPageSize;
+	private int serverPort;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
 	private Connection conn;
@@ -54,11 +55,13 @@ public class DisplayAlbum extends HttpServlet {
 		
 		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
 		Properties props = new Properties();
+
 		try {
 			conn = DBConnector.getConnection(getServletContext());
 			
 			props.load(input);
 			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
+			serverPort = Integer.parseInt(props.getProperty("externalPort"));
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
@@ -162,7 +165,7 @@ public class DisplayAlbum extends HttpServlet {
         }
 
         ServletContext context = getServletContext();
-        return "http://" + serverDomain + context.getInitParameter("ImageHost");
+        return "http://" + serverDomain + ":" + serverPort + context.getInitParameter("ImageHost");
     }
 	
 	private boolean hasMorePages(int albumId, int albumPage) throws SQLException {

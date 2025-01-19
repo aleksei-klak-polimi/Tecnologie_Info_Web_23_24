@@ -36,6 +36,7 @@ public class DisplayImage extends HttpServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private int defaultPageSize;
+	private int serverPort;
 	private Connection conn;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
@@ -59,6 +60,7 @@ public class DisplayImage extends HttpServlet{
 			
 			props.load(input);
 			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
+			serverPort = Integer.parseInt(props.getProperty("externalPort"));
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
@@ -196,7 +198,7 @@ public class DisplayImage extends HttpServlet{
         }
 
         ServletContext context = getServletContext();
-        return "http://" + serverDomain + context.getInitParameter("ImageHost");
+        return "http://" + serverDomain + ":" + serverPort + context.getInitParameter("ImageHost");
     }
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
