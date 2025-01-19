@@ -14,6 +14,7 @@
 		//ATTRIBUTES
 		const albumContainer = document.getElementById("albumOuterContainer");
 		let albumImages = [];
+		let unsortedImages = [];
 		let otherImages = [];
 		let comments = new Map();
 		
@@ -40,6 +41,9 @@
 		//GETTERS
 		this.getAlbumImages = function(){
 			return albumImages;
+		}
+		this.getUnsortedImages = function(){
+			return unsortedImages;
 		}
 		this.getOtherImages = function(){
 			return otherImages;
@@ -90,11 +94,15 @@
 
 						if (x.status === 200) {
 							const recievedObjects = JSON.parse(response.data);
+							
+							//Retrieve and sort images according to user preference
+							unsortedImages = JSON.parse(recievedObjects[0]);
+							let imageOrder = JSON.parse(recievedObjects[1]);
+							albumImages = sortImages(unsortedImages, imageOrder);
 
-							albumImages = JSON.parse(recievedObjects[0]);
-							otherImages = JSON.parse(recievedObjects[1]);
-
-							let commentList = JSON.parse(recievedObjects[2]);
+							otherImages = JSON.parse(recievedObjects[2]);
+							
+							let commentList = JSON.parse(recievedObjects[3]);
 							comments = new Map();
 
 							commentList.forEach((comment) => {
@@ -189,6 +197,35 @@
 			editAlbumPictures.reset();
 			
 			reorderAlbumPictures.show();
+		}
+		
+		
+		//HELPER METHODS
+		function sortImages(albumImages, imageOrder){
+			const sortedByPreference = [];
+			const sortedByDefault = [];
+			const sortingMap = new Map();
+			
+			//Populate map for o(1) access later in the sorting
+			imageOrder.forEach((image) => {
+				sortingMap.set(image.pictureId, image.pictureOrder);
+			});
+			
+			//Sort pictures
+			albumImages.forEach((image) =>{
+				if(sortingMap.has(image.id)){
+					const position = sortingMap.get(image.id);
+					sortedByPreference[position] = image;
+				}
+				else
+					sortedByDefault.push(image);
+			});
+			
+			
+			// Remove holes in sortedByPreference
+			const cleanSortedByPreference = sortedByPreference.filter(Boolean);
+			//Join and return the two arrays
+			return sortedByDefault.concat(cleanSortedByPreference);
 		}
 	}
 
@@ -1054,7 +1091,9 @@
 		const list = modal.getElementsByTagName("ul")[0];
 		const errorDiv = modal.getElementsByClassName("errorText")[0];
 		const errorParent = errorDiv.parentElement;
+		const self = this
 		let draggedItem;
+		let defaultOrdering = false;
 		
 		errorParent.removeChild(errorDiv);
 		
@@ -1065,10 +1104,64 @@
 				this.reset();
 			});
 			
+			document.getElementById("resetPictureOrdering").addEventListener("click", (e) => {
+				e.preventDefault();
+				const images = manager.getUnsortedImages();
+				drawImages(images);
+				defaultOrdering = true;
+			})
+			
 			document.getElementById("confirmReorderPicturesBtn").addEventListener("click", (e) => {
 				e.preventDefault();
-				this.hide();
-				//TODO
+				const formData = extractPictureOrderToFormData();
+				
+				//Check that form is not empty
+				if(!formData.entries().next().done){
+					const albumId = sessionStorage.getItem("albumId");
+					
+					if(!albumId)
+						return;
+					
+					//Check if user wants to return to use default ordering
+					//or update the custom ordering
+					if(!defaultOrdering){
+						const requestPath = "UpdatePictureOrder?albumId="+albumId;
+						postRequest(requestPath, formData, updatePictureOrderCallback);
+					}
+					else{
+						const requestPath = "ResetPictureOrder?albumId="+albumId;
+						postRequest(requestPath, formData, updatePictureOrderCallback);
+					}
+					
+				}
+				
+				
+				
+				function updatePictureOrderCallback(x){
+					if (x.readyState == XMLHttpRequest.DONE) {
+						if (x.status == 200){
+							manager.update();
+							self.hide();
+						}
+						else {
+							try{
+								const response = JSON.parse(x.responseText);
+								
+								if(x.status === 401){
+									handleUnauthorized(response);
+								}
+								else{
+									errorDiv.textContent = message;
+									errorParent.insertBefore(errorParent.lastElementChild);
+									alert(message);
+								}
+							} 
+							catch (e) {
+								console.error("Error parsing JSON response: " + e.message);
+							}
+						}
+					}
+				}
 			});
 			
 			list.addEventListener('dragstart', handleDragStart);
@@ -1077,13 +1170,17 @@
 		}
 		
 		this.refresh = function(){
+			const images = manager.getAlbumImages();
+			drawImages(images);
+		}
+		
+		function drawImages(images){
 			//Remove old images
 			while (list.firstChild) {
 				list.removeChild(list.lastChild);
 			}
-
 			//Populate with new images
-			manager.getAlbumImages().forEach((image) => {
+			images.forEach((image) => {
 				const row = rowTemplate.cloneNode(true);
 				row.setAttribute("data-pictureId", image.id);
 				row.setAttribute("data-uploadDate", image.uploadDate);
@@ -1091,7 +1188,7 @@
 				row.getElementsByTagName("img")[0].setAttribute("src", getImageHost() + image.thumbnailPath);
 				row.getElementsByTagName("p")[0].innerText = image.title;
 				row.getElementsByTagName("p")[1].innerText = image.uploadDate;
-				
+
 				list.appendChild(row);
 			});
 		}
@@ -1116,7 +1213,7 @@
 		
 		
 		
-		//Logic for drag-to-reorder
+		//DRAG-TO-REORDER-LOGIC
 		// Drag start event handler
 		function handleDragStart(event) {
 			draggedItem = event.target.closest("li");
@@ -1142,9 +1239,11 @@
 				const offset = boundingRect.y + (boundingRect.height / 2);
 				if (event.clientY - offset > 0 && (!targetItem.nextSibling || !targetItem.nextSibling.isEqualNode(draggedItem))){
 					targetItem.parentNode.insertBefore(draggedItem, targetItem.nextSibling);
+					defaultOrdering = false;
 				} 
 				else if(event.clientY - offset <= 0 && (!targetItem.previousSibling || !targetItem.previousSibling.isEqualNode(draggedItem))){
 					targetItem.parentNode.insertBefore(draggedItem, targetItem);
+					defaultOrdering = false;
 				}
 			}
 		}
@@ -1154,7 +1253,27 @@
 			event.preventDefault();
 			draggedItem = null;
 		}
+		
+		
+		//Helper functions
+		function extractPictureOrderToFormData() {
+			const formData = new FormData();
+			const items = Array.from(list.getElementsByTagName("li"));
+			
+			items.forEach((item, index) => {
+				const pictureId = item.getAttribute("data-pictureid");
+				if (pictureId) {
+					formData.append(String(pictureId), String(index));
+				} else {
+					console.warn(`List item at position ${index} does not have a "data-pictureid" attribute.`);
+				}
+			});
+			return formData;
+		}
+		
 	}
+	
+	
 })();
 
 

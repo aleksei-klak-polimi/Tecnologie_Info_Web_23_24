@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 
 import it.polimi.tiw.albums.beans.Picture;
 import it.polimi.tiw.albums.beans.User;
+import it.polimi.tiw.albums.beans.UserAlbumOrdering;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import it.polimi.tiw.albums.beans.Comment;
@@ -68,6 +69,7 @@ public class GetImagesByAlbum extends HttpServlet {
             CommentDAO commentDao = new CommentDAO(conn);
             
             List<Picture> pictures = pictureDao.getPicturesFromAlbum(albumId);
+            List<UserAlbumOrdering> pictureOrder = pictureDao.getPictureOrderPreferenceInAlbumByUser(user.getId(), albumId);
             List<Picture> otherPictures = pictureDao.getPicturesNotInAlbum(albumId, user.getId());
             List<Comment> comments = new ArrayList<>();
             
@@ -77,11 +79,13 @@ public class GetImagesByAlbum extends HttpServlet {
             
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
             String pitcuresJson = gson.toJson(pictures);
+            String pictureOrderJson = gson.toJson(pictureOrder);
             String otherPicturesJson = gson.toJson(otherPictures);
             String commentsJson = gson.toJson(comments);
             List<String> jsonList = new ArrayList<>();
             
             jsonList.add(pitcuresJson);
+            jsonList.add(pictureOrderJson);
             jsonList.add(otherPicturesJson);
             jsonList.add(commentsJson);
             
