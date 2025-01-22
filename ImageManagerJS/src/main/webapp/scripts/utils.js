@@ -39,7 +39,22 @@ function getPage(url, callback){
 }
 
 function getImageHost(){
-	return "http://localhost:8080/ImageManager";
+	const url = window.location.href;
+	
+	//Regular expression to extract everything between http:// (or https://) and the next "/"
+	const domainRegex = /^(https?:\/\/[^\/]+)/;
+	const match = url.match(domainRegex);
+	
+	if (match && match[1]) {
+		const serverDomain = match[1]; // Extracted server domain
+		// Append the image host to the server domain
+		const imageHost = serverDomain + "/ImageManager";
+		return imageHost;
+	}
+	else {
+		console.error("Server domain not found in the URL.");
+		return null;
+	}
 }
 
 
