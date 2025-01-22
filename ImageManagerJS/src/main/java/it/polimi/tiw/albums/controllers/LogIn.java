@@ -11,7 +11,6 @@ import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.UserDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -53,15 +52,6 @@ public class LogIn extends HttpServlet {
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
 		}
-	}
-	
-	
-	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String path = "/WEB-INF/Log-In.html";
-		ServletContext sc = getServletContext();
-		sc.getRequestDispatcher(path).forward(request, response);
 	}
 	
 	
@@ -113,7 +103,6 @@ public class LogIn extends HttpServlet {
 				HttpSession s = request.getSession();
 				s.setAttribute("user", user);
 				
-				String homePath = request.getServletContext().getContextPath() + "/Home";
 				sendResponse(response, HttpServletResponse.SC_OK, new Gson().toJson(user));
 			}
 			else {

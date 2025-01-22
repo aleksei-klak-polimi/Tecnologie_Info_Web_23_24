@@ -106,7 +106,7 @@
 						if (x.status === 200) {
 							if (response.redirect){
 								sessionStorage.removeItem("user");
-								window.location.href = "LogIn";
+								window.location.href = "Auth";
 							}
 							else {
 								console.warn("Server responded 200 to LogOut but provided no redirect.");

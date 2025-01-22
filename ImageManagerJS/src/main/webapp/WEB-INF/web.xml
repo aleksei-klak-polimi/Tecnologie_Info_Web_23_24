@@ -45,17 +45,27 @@
 		<param-value>/uploads/images/thumbnails/</param-value>
 	</context-param>
 	
-	<filter>
-		<filter-name>NotLoggedInFilter</filter-name>
-		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilter</filter-class>
-	</filter>
+	<servlet>
+    	<servlet-name>Home</servlet-name>
+    	<jsp-file>/static/pages/Home.html</jsp-file>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>Home</servlet-name>
+    	<url-pattern>/Home</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+    	<servlet-name>Auth</servlet-name>
+    	<jsp-file>/static/pages/Log-In.html</jsp-file>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>Auth</servlet-name>
+    	<url-pattern>/Auth</url-pattern>
+	</servlet-mapping>
+	
 	<filter>
 		<filter-name>NotLoggedInFilterAPI</filter-name>
 		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilterAPI</filter-class>
-	</filter>
-	<filter>
-		<filter-name>AlreadyLoggedInFilter</filter-name>
-		<filter-class>it.polimi.tiw.albums.filters.AlreadyLoggedInFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>
