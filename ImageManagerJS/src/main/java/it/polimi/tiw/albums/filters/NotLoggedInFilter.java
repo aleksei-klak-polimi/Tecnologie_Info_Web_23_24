@@ -2,9 +2,6 @@ package it.polimi.tiw.albums.filters;
 
 import java.io.IOException;
 
-import com.google.gson.Gson;
-
-import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
