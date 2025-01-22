@@ -50,8 +50,8 @@
 			});
 		}
 		
-		this.showAlbum = function(albumId, albumOwner, albumTitle){
-			albumPageManager.update(albumId, albumOwner, albumTitle);
+		this.showAlbum = function(albumId){
+			albumPageManager.update(albumId);
 			albumsPageManager.hide();
 			albumPageManager.show();
 		}

@@ -75,26 +75,13 @@
 		}
 
 
-		this.update = function(_albumId, _albumOwner, _albumTitle) {
+		this.update = function(_albumId) {
 			if(_albumId){
 				albumId = Number(_albumId);
 			}
-			if(_albumOwner){
-				if(_albumOwner === true || _albumOwner === "true"){
-					albumOwner = true;
-					imageUploaderComponent.show();
-				}
-				else{
-					albumOwner = false;
-					imageUploaderComponent.hide();
-				}
-			}
-			if(_albumTitle){
-				albumTitle = _albumTitle;
-			}
 			
 			if(albumId){
-				let request = "GetImagesByAlbum?albumId=" + albumId;
+				let request = "GetAlbum?albumId=" + albumId;
 				getRequest(request, x => (refreshImagesCallback(x)));
 
 				function refreshImagesCallback(x) {
@@ -106,13 +93,28 @@
 								const recievedObjects = JSON.parse(response.data);
 
 								//Retrieve and sort images according to user preference
-								unsortedImages = JSON.parse(recievedObjects[0]);
-								let imageOrder = JSON.parse(recievedObjects[1]);
+								const album = JSON.parse(recievedObjects[0]);
+								albumTitle = album.title;
+								
+								const user = JSON.parse(sessionStorage.getItem("user"));
+								const username = user.username;
+								
+								if(album.owner === username){
+									albumOwner = true;
+									imageUploaderComponent.show();
+								}
+								else{
+									albumOwner = false;
+									imageUploaderComponent.hide();
+								}
+								
+								unsortedImages = JSON.parse(recievedObjects[1]);
+								let imageOrder = JSON.parse(recievedObjects[2]);
 								albumImages = sortImages(unsortedImages, imageOrder);
 
-								otherImages = JSON.parse(recievedObjects[2]);
+								otherImages = JSON.parse(recievedObjects[3]);
 
-								let commentList = JSON.parse(recievedObjects[3]);
+								let commentList = JSON.parse(recievedObjects[4]);
 								comments = new Map();
 
 								commentList.forEach((comment) => {

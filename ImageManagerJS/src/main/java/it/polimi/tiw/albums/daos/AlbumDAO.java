@@ -82,7 +82,7 @@ private Connection con;
 	
 	public Album getAlbumById(int albumId) throws SQLException{
 		Album album = null;
-		String query = "SELECT id, title, owner, creationDate FROM Album WHERE id = ? ;";
+		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE Album.id = ? ;";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
 			pstat.setInt(1, albumId);
@@ -91,7 +91,7 @@ private Connection con;
 				while(qres.next()) {
 					album = new Album();
 					album.setId(qres.getInt("id"));
-					album.setOwner(qres.getString("owner"));
+					album.setOwner(qres.getString("username"));
 					album.setTitle(qres.getString("title"));
 					album.setCreationDate(qres.getDate("creationDate"));
 				}

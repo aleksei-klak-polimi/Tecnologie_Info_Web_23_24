@@ -14,6 +14,7 @@ import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.beans.UserAlbumOrdering;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
+import it.polimi.tiw.albums.beans.Album;
 import it.polimi.tiw.albums.beans.Comment;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.daos.CommentDAO;
@@ -27,15 +28,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/GetImagesByAlbum")
-public class GetImagesByAlbum extends HttpServlet {
+@WebServlet("/GetAlbum")
+public class GetAlbum extends HttpServlet {
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private Connection conn;
 	
 	
 	// CONSTRUCTOR
-	public GetImagesByAlbum() {
+	public GetAlbum() {
 		super();
 	}
 	
@@ -66,8 +67,10 @@ public class GetImagesByAlbum extends HttpServlet {
             if (albumId == -1) return;
             
             PictureDAO pictureDao = new PictureDAO(conn);
+            AlbumDAO albumDao = new AlbumDAO(conn);
             CommentDAO commentDao = new CommentDAO(conn);
             
+            Album album = albumDao.getAlbumById(albumId);
             List<Picture> pictures = pictureDao.getPicturesFromAlbum(albumId);
             List<UserAlbumOrdering> pictureOrder = pictureDao.getPictureOrderPreferenceInAlbumByUser(user.getId(), albumId);
             List<Picture> otherPictures = pictureDao.getPicturesNotInAlbum(albumId, user.getId());
@@ -78,12 +81,14 @@ public class GetImagesByAlbum extends HttpServlet {
             }
             
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+            String albumJson = gson.toJson(album);
             String pitcuresJson = gson.toJson(pictures);
             String pictureOrderJson = gson.toJson(pictureOrder);
             String otherPicturesJson = gson.toJson(otherPictures);
             String commentsJson = gson.toJson(comments);
             List<String> jsonList = new ArrayList<>();
             
+            jsonList.add(albumJson);
             jsonList.add(pitcuresJson);
             jsonList.add(pictureOrderJson);
             jsonList.add(otherPicturesJson);
