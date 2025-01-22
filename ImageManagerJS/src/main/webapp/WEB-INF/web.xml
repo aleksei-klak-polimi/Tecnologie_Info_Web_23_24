@@ -76,8 +76,7 @@
 		<url-pattern>/GetImagesByAlbum</url-pattern>
 		<url-pattern>/DeleteImage</url-pattern>
 		<url-pattern>/CreateAlbum</url-pattern>
-		<url-pattern>/GetOtherAlbums</url-pattern>
-		<url-pattern>/GetUserAlbums</url-pattern>
+		<url-pattern>/GetAlbums</url-pattern>
 		<url-pattern>/LogOut</url-pattern>
 		<url-pattern>/PostComment</url-pattern>
 		<url-pattern>/EditImage</url-pattern>

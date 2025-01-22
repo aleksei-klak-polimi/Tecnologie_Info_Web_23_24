@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 
 import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import it.polimi.tiw.albums.beans.Album;
-import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import jakarta.servlet.ServletException;
@@ -19,10 +18,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/GetOtherAlbums")
-public class GetOtherAlbums extends HttpServlet{
+@WebServlet("/GetAlbums")
+public class GetAlbums extends HttpServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private Connection conn;
@@ -46,15 +44,12 @@ public class GetOtherAlbums extends HttpServlet{
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			HttpSession s = request.getSession();
-			User user = (User) s.getAttribute("user");
-			
+		try {			
 			AlbumDAO albumDao = new AlbumDAO(conn);
-			List<Album> otherAlbums = albumDao.getAlbumsByOthers(user.getId());
+			List<Album> albums = albumDao.getAllAlbums();
 			
 			Gson gson = new GsonBuilder().setDateFormat("yyyy/MM/dd").create();
-			String json = gson.toJson(otherAlbums);
+			String json = gson.toJson(albums);
 			
 			sendResponse(response, HttpServletResponse.SC_OK, json);
 		}
@@ -65,26 +60,26 @@ public class GetOtherAlbums extends HttpServlet{
 	}
 	
 	
-	// HELPER METHODS
-	private void sendResponse(HttpServletResponse response, int status, String content) throws IOException {
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		ApiResponse responseObj = new ApiResponse();
-
-		response.setStatus(status);
-		switch (status) {
-		case 200:
-			responseObj.setData(content);
-			break;
-
-		// Following cases share same logic
-		case 500:
-			responseObj.setError(content);
-			break;
-
+	//HELPER METHODS
+		private void sendResponse(HttpServletResponse response, int status, String content) throws IOException {
+			response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    ApiResponse responseObj = new ApiResponse();
+			
+			response.setStatus(status);
+			switch(status) {
+				case 200: 
+					responseObj.setData(content);
+					break;
+				
+				//Following cases share same logic
+				case 500:
+					responseObj.setError(content);
+					break;
+				
+			}
+			response.getWriter().write(new Gson().toJson(responseObj));
 		}
-		response.getWriter().write(new Gson().toJson(responseObj));
-	}
 }
 
 

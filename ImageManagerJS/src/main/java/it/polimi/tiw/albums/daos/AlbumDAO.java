@@ -101,13 +101,11 @@ private Connection con;
 		return album;
 	}
 	
-	
-	public List<Album> getAlbumsByUser(int userId) throws SQLException{
+	public List<Album> getAllAlbums() throws SQLException{
 		List<Album> albums = new ArrayList<Album>();
-		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id = ? ORDER BY creationDate DESC, id DESC;";
+		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id ORDER BY creationDate DESC, id DESC;";
 		
 		try(PreparedStatement pstat = con.prepareStatement(query)){
-			pstat.setInt(1, userId);
 			
 			try(ResultSet qres = pstat.executeQuery()){
 				while(qres.next()) {
@@ -124,33 +122,6 @@ private Connection con;
 		
 		return albums;
 	}
-	
-	
-	
-	public List<Album> getAlbumsByOthers(int userIdToExclude) throws SQLException{
-		List<Album> albums = new ArrayList<Album>();
-		String query = "SELECT Album.id, Album.title, Album.creationDate, User.username FROM Album JOIN User ON Album.owner = User.id WHERE User.id != ? ORDER BY creationDate DESC, id DESC;";
-		
-		try(PreparedStatement pstat = con.prepareStatement(query)){
-			pstat.setInt(1, userIdToExclude);
-			
-			try(ResultSet qres = pstat.executeQuery()){
-				while(qres.next()) {
-					Album album = new Album();
-					album.setId(qres.getInt("id"));
-					album.setOwner(qres.getString("username"));
-					album.setTitle(qres.getString("title"));
-					album.setCreationDate(qres.getDate("creationDate"));
-					
-					albums.add(album);
-				}
-			}
-		}
-		
-		return albums;
-	}
-	
-	
 	
 	public void createAlbum(int owner, String title, Date creationDate) throws SQLException {
 		String query = "INSERT INTO Album (title, owner, creationDate) VALUES (?, ?, ?);";

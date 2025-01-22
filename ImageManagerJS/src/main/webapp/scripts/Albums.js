@@ -62,21 +62,35 @@
 		}
 		
 		this.update = function(){
-			clearAlbums(myAlbums);
-			clearAlbums(otherAlbums);
+			getRequest('GetAlbums', x => (refreshAlbumsCallback(x)));
 			
-			getRequest('GetUserAlbums', x => (refreshAlbumsCallback(myAlbums, x, false)));
-			getRequest('GetOtherAlbums', x => (refreshAlbumsCallback(otherAlbums, x, true)));
-			
-			function refreshAlbumsCallback(tbody, x, showAuthor) {
+			function refreshAlbumsCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					try {
 						const response = JSON.parse(x.responseText);
 
 						if (x.status === 200) {
 							if (response.data) {
+								clearAlbums(myAlbums);
+								clearAlbums(otherAlbums);
+								
 								const albums = JSON.parse(response.data);
-								populateAlbums(tbody, albums, showAuthor);
+								
+								const myAlbumsList = [];
+								const otherAlbumsList = [];
+								
+								const user = JSON.parse(sessionStorage.getItem("user"));
+								const username = user.username;
+								
+								albums.forEach((album) => {
+									if(album.owner === username)
+										myAlbumsList.push(album);
+									else
+										otherAlbumsList.push(album);
+								})
+								
+								populateAlbums(myAlbums, myAlbumsList, false);
+								populateAlbums(otherAlbums, otherAlbumsList, true);
 							}
 							else {
 								console.warn("Server did not send data in response.");
