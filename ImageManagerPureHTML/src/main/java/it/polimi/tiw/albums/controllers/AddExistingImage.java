@@ -1,12 +1,10 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,7 +33,6 @@ import jakarta.servlet.http.HttpSession;
 public class AddExistingImage extends HttpServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private int defaultBatchSize;
 	private Connection conn;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
@@ -54,21 +51,13 @@ public class AddExistingImage extends HttpServlet{
 	public void init() throws ServletException {
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
-		
-		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
-		Properties props = new Properties();
+
 		try {
 			conn = DBConnector.getConnection(getServletContext());
-			
-			props.load(input);
-			defaultBatchSize = Integer.parseInt(props.getProperty("DBBatchSize"));
-
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
-		} catch(IOException e) {
-			throw new UnavailableException("Couldn't read config file");
 		}
 
 	}
@@ -193,14 +182,7 @@ public class AddExistingImage extends HttpServlet{
 	
 	private void addPicturesToAlbum(List<Integer> pictureIds, int albumId) throws SQLException {
 		PictureDAO pictureDao = new PictureDAO(conn);
-		
-		//If the input is very large
-		//to avoid overloading the database connection driver
-		//send inputs in chunks of max size
-		for(int i = 0; i < pictureIds.size(); i+=defaultBatchSize) {
-			List<Integer> chunk = pictureIds.subList(i, Math.min(pictureIds.size(), i + defaultBatchSize));
-			pictureDao.addExistingPicturesToAlbum(chunk, albumId);
-		}
+		pictureDao.addExistingPicturesToAlbum(pictureIds, albumId);
 	}
 	
 	private String buildImageHost(HttpServletRequest request) {

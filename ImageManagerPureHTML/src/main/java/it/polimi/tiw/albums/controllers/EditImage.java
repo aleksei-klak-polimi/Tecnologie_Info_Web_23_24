@@ -1,13 +1,11 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,6 +15,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import it.polimi.tiw.albums.beans.Album;
 import it.polimi.tiw.albums.beans.Picture;
 import it.polimi.tiw.albums.beans.User;
+import it.polimi.tiw.albums.controllers.helpers.ConfigManager;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.controllers.helpers.TemplateEngineBuilder;
 import it.polimi.tiw.albums.daos.AlbumDAO;
@@ -51,20 +50,17 @@ public class EditImage extends HttpServlet{
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
 		
-		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
-		Properties props = new Properties();
 		try {
 			conn = DBConnector.getConnection(getServletContext());
 			
-			props.load(input);
-			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
+			ConfigManager config = ConfigManager.getInstance();
+
+			defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
 			
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
-		} catch(IOException e) {
-			throw new UnavailableException("Couldn't read config file");
 		}
 	}
 

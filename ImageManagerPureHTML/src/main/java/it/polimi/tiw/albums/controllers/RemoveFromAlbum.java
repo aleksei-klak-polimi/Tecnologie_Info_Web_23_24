@@ -1,12 +1,11 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import it.polimi.tiw.albums.beans.User;
+import it.polimi.tiw.albums.controllers.helpers.ConfigManager;
 import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.daos.PictureDAO;
@@ -37,21 +36,17 @@ public class RemoveFromAlbum extends HttpServlet{
 	// SERVLET METHODS
 	@Override
 	public void init() throws ServletException {
-		InputStream input = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
-		Properties props = new Properties();
-		
 		try {
 			conn = DBConnector.getConnection(getServletContext());
 			
-			props.load(input);
-			defaultPageSize = Integer.parseInt(props.getProperty("imagesPerPage"));
+			ConfigManager config = ConfigManager.getInstance();
+			
+			defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
 
 		} catch (ClassNotFoundException e) {
 			throw new UnavailableException("Can't load database driver");
 		} catch (SQLException e) {
 			throw new UnavailableException("Couldn't get db connection");
-		} catch(IOException e) {
-			throw new UnavailableException("Couldn't read config file");
 		}
 	}
 	
