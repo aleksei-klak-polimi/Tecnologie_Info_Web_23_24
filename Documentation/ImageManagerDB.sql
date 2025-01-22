@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `ImageManagerDB`.`User_Album_Ordering` (
   CONSTRAINT `fk_User_Album_Ordering_2`
     FOREIGN KEY (`albumId` , `pictureId`)
     REFERENCES `ImageManagerDB`.`Album_Picture` (`albumId` , `pictureId`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
