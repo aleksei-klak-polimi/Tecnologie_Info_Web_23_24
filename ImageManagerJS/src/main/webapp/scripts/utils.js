@@ -30,14 +30,6 @@ function getRequest(url, callBack){
 	req.send();
 }
 
-function getPage(url, callback){
-	let req = new XMLHttpRequest();
-	req.onload = function(){callback(req)};
-	req.open('GET', url);
-	req.responseType = 'document';
-	req.send();
-}
-
 function getImageHost(){
 	const url = window.location.href;
 	

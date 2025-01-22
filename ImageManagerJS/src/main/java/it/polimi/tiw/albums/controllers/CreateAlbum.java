@@ -102,11 +102,6 @@ public class CreateAlbum extends HttpServlet{
 			
 			response.setStatus(status);
 			switch(status) {
-				case 200 : 
-					responseObj.setRedirect(content);
-					break;
-				
-				//Following cases share same logic
 				case 500:
 				case 400:
 					responseObj.setError(content);
