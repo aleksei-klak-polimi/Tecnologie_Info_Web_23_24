@@ -44,6 +44,11 @@
 		
 		
 		this.registerEvents = function(){
+			//Ignore spaces
+			form.addEventListener("keydown", (e)=>{
+				if(e.key === ' ')
+					e.preventDefault();
+			});
 			document.getElementById("logInBtn").addEventListener("click", (e) => handleLogIn(e));
 			document.getElementById("redirectToSignUp").addEventListener("click", (e) => redirectToSignUp(e));
 		
@@ -56,11 +61,8 @@
 				e.preventDefault();
 				const form = e.target.closest("form");
 
-				if (form.checkValidity()) {
+				if (validateForm(form)) {
 					postRequest('LogIn', e.target.closest("form"), handleLogInCallback);
-				}
-				else {
-					form.reportValidity();
 				}
 			}
 			
@@ -91,10 +93,26 @@
 				}
 			}
 			
-			function displayError(message) {
+			function validateForm(form){
+				const username = form.querySelector("[name='username']").value;
+				const password = form.querySelector("[name='password']").value;
+				
+				if(!isValidUsername(username)){
+					displayError("provided username is not valid.", true);
+					return false;
+				}
+				else if(!isValidPassword(password)){
+					displayError("provided password is not valid.", true);
+					return false;
+				}
+				return true;
+			}
+			
+			function displayError(message, dontAlert) {
 				errorDiv.textContent = message;
 				errorParent.appendChild(errorDiv);
-				alert(message);
+				if(!dontAlert)
+					alert(message);
 			}
 		}
 		
@@ -125,6 +143,12 @@
 
 
 		this.registerEvents = function() {
+			//Ignore spaces
+			form.addEventListener("keydown", (e) => {
+				if (e.key === ' ')
+					e.preventDefault();
+			});
+			
 			document.getElementById("signUpBtn").addEventListener("click", (e) => handleSignUp(e));
 			document.getElementById("redirectToLogIn").addEventListener("click", (e) => redirectToLogIn(e));
 
@@ -137,16 +161,8 @@
 				e.preventDefault();
 				const form = e.target.closest("form");
 
-				if (form.checkValidity()) {
-					if (matchingPasswords()) {
-						postRequest('SignUp', e.target.closest("form"), handleSignUpCallback);
-					}
-					else {
-						displayError("Passwords don't match.");
-					}
-				}
-				else {
-					form.reportValidity();
+				if (validateForm(form)) {
+					postRequest('SignUp', e.target.closest("form"), handleSignUpCallback);
 				}
 			}
 
@@ -175,17 +191,36 @@
 				}
 			}
 			
-			function matchingPasswords() {
-				var pwd = document.getElementById("password").textContent;
-				var repeatPwd = document.getElementById("repeatPassword").textContent;
+			function validateForm(form) {
+				const username = form.querySelector("[name='username']").value;
+				const email = form.querySelector("[name='email']").value;
+				const password = form.querySelector("[name='password']").value;
+				const repeatPassword = form.querySelector("[name='repeatPassword']").value;
 
-				return (pwd === repeatPwd)
+				if (!isValidUsername(username)) {
+					displayError("provided username is not valid.", true);
+					return false;
+				}
+				else if (!isValidEmail(email)) {
+					displayError("provided email is not valid.", true);
+					return false;
+				}
+				else if (!isValidPassword(password)) {
+					displayError("provided password is not valid.", true);
+					return false;
+				}
+				else if(password !== repeatPassword){
+					displayError("Passwords don't match.", true);
+					return false;
+				}
+				return true;
 			}
 
-			function displayError(message) {
+			function displayError(message, dontAlert) {
 				errorDiv.textContent = message;
 				errorParent.appendChild(errorDiv);
-				alert(message);
+				if(!dontAlert)
+					alert(message);
 			}
 		}
 
