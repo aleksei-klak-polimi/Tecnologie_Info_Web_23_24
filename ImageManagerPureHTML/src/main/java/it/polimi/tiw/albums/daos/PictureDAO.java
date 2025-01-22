@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.polimi.tiw.albums.beans.Picture;
+import it.polimi.tiw.albums.controllers.helpers.ConfigManager;
 
 public class PictureDAO{
 private Connection con;
@@ -221,14 +222,23 @@ private Connection con;
 	
 	public void addExistingPicturesToAlbum(List<Integer> pictureIds, int albumId) throws SQLException {
 		String query ="INSERT INTO Album_Picture (pictureId, albumId) VALUES (?, ?)";
-		try (PreparedStatement pstat = con.prepareStatement(query)){
-			
-			for(int pictureId:pictureIds) {
-				pstat.setInt(1, pictureId);
-				pstat.setInt(2, albumId);
-				pstat.addBatch();
+		
+		//If the input is very large
+		//to avoid overloading the database connection driver
+		//send inputs in chunks of max size
+		int batchSize = Integer.parseInt(ConfigManager.getInstance().getProperty("DBBatchSize"));
+		
+		for(int i = 0; i < pictureIds.size(); i+=batchSize) {
+			List<Integer> chunk = pictureIds.subList(i, Math.min(pictureIds.size(), i + batchSize));
+			try (PreparedStatement pstat = con.prepareStatement(query)){
+				
+				for(int pictureId:chunk) {
+					pstat.setInt(1, pictureId);
+					pstat.setInt(2, albumId);
+					pstat.addBatch();
+				}
+				pstat.executeBatch();
 			}
-			pstat.executeBatch();
 		}
 	}
 }
