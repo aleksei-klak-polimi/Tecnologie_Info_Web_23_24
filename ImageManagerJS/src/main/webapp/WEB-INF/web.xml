@@ -59,11 +59,6 @@
 	</filter>
 	
 	<filter-mapping>
-		<filter-name>NotLoggedInFilter</filter-name>
-		<url-pattern>/Home</url-pattern>
-	</filter-mapping>
-	
-	<filter-mapping>
 		<filter-name>NotLoggedInFilterAPI</filter-name>
 		<url-pattern>/UploadImage</url-pattern>
 		<url-pattern>/RemoveFromAlbum</url-pattern>
@@ -78,12 +73,6 @@
 		<url-pattern>/EditImage</url-pattern>
 		<url-pattern>/ResetPictureOrder</url-pattern>
 		<url-pattern>/UpdatePictureOrder</url-pattern>
-	</filter-mapping>
-	
-	<filter-mapping>
-		<filter-name>AlreadyLoggedInFilter</filter-name>
-		<url-pattern>/SignUp</url-pattern>
-		<url-pattern>/LogIn</url-pattern>
 	</filter-mapping>
 	
 	<welcome-file-list>

@@ -70,8 +70,13 @@
 						const response = JSON.parse(x.responseText);
 
 						if (x.status === 200) {
-							if (response.redirect) {
-								window.location.href = response.redirect;
+							if (response.data){
+								const user = response.data
+								sessionStorage.setItem("user", user);
+								window.location.href = "Home";
+							}
+							else{
+								console.warn("Server responded 200 but sent to user obj")
 							}
 						}
 						else if ([400, 401, 402].includes(x.status)) {
@@ -148,8 +153,13 @@
 						const response = JSON.parse(x.responseText);
 
 						if (x.status == 200) {
-							if (response.redirect) {
-								window.location.href = response.redirect;
+							if (response.data) {
+								const user = response.data
+								sessionStorage.setItem("user", user);
+								window.location.href = "Home";
+							}
+							else{
+								console.warn("Server responded 200 but sent to user obj")
 							}
 						}
 						else if ([400, 401, 402].includes(x.status)) {

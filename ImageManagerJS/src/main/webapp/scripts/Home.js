@@ -5,12 +5,19 @@
 (function (){
 	let homeManager;
 	
-	document.addEventListener("DOMContentLoaded", () =>{
-		homeManager = new HomeManager();
-		homeManager.registerEvents();
-	});
+	if(sessionStorage.getItem("user")){
+		document.addEventListener("DOMContentLoaded", () =>{
+			homeManager = new HomeManager();
+			homeManager.registerEvents();
+		});
+	}
+	else{
+		console.log("Not logged in");
+		window.location.href = "LogIn";
+	}
 	
 	function HomeManager(){
+		const self = this;
 		const albumsPageManager = new AlbumsPageManager(this);
 		const albumPageManager = new AlbumPageManager(this);
 		albumPageManager.init();
@@ -40,9 +47,7 @@
 			
 			document.getElementById("Home").addEventListener("click", (e) => {
 				e.preventDefault();
-				albumPageManager.hide();
-				albumsPageManager.show();
-				albumPageManager.reset();
+				self.showAlbums();
 			});
 		}
 		
@@ -50,6 +55,12 @@
 			albumPageManager.update(albumId, albumOwner, albumTitle);
 			albumsPageManager.hide();
 			albumPageManager.show();
+		}
+		
+		this.showAlbums = function(){
+			albumPageManager.hide();
+			albumsPageManager.show();
+			albumPageManager.reset();
 		}
 	}
 	
@@ -94,8 +105,10 @@
 						const response = JSON.parse(x.responseText);
 
 						if (x.status === 200) {
-							if (response.redirect)
-								window.location.href = response.redirect;
+							if (response.redirect){
+								sessionStorage.removeItem("user");
+								window.location.href = "LogIn";
+							}
 							else {
 								console.warn("Server responded 200 to LogOut but provided no redirect.");
 							}

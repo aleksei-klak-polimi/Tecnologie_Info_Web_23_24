@@ -118,9 +118,7 @@ public class SignUp extends HttpServlet{
 			// Add user information to html session
 			HttpSession s = request.getSession();
 			s.setAttribute("user", user);
-
-			String homePath = request.getServletContext().getContextPath() + "/Home";
-			sendResponse(response, HttpServletResponse.SC_OK, homePath);
+			sendResponse(response, HttpServletResponse.SC_OK, new Gson().toJson(user));
 			
 		} catch (SQLException e) {
 			e.printStackTrace(); // for debugging
@@ -140,7 +138,7 @@ public class SignUp extends HttpServlet{
 		response.setStatus(status);
 		switch (status) {
 		case 200:
-			responseObj.setRedirect(content);
+			responseObj.setData(content);
 			break;
 
 		// Following cases share same logic

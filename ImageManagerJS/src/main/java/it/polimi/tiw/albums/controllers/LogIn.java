@@ -114,7 +114,7 @@ public class LogIn extends HttpServlet {
 				s.setAttribute("user", user);
 				
 				String homePath = request.getServletContext().getContextPath() + "/Home";
-				sendResponse(response, HttpServletResponse.SC_OK, homePath);
+				sendResponse(response, HttpServletResponse.SC_OK, new Gson().toJson(user));
 			}
 			else {
 				sendResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Password and username do not match.");
@@ -132,7 +132,7 @@ public class LogIn extends HttpServlet {
 		response.setStatus(status);
 		switch(status) {
 			case 200 : 
-				responseObj.setRedirect(content);
+				responseObj.setData(content);
 				break;
 			
 			//Following cases share same logic
