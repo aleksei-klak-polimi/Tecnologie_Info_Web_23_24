@@ -27,17 +27,28 @@
 				e.preventDefault();
 				const form = e.target.closest("form");
 
-				if (form.checkValidity()) {
+				if (validateForm(form)) {
 					postRequest("CreateAlbum", form, handleCreateAlbumCallback, true);
-				} else {
-					form.reportValidity();
 				}
 			}
 			
+			function validateForm(form) {
+				const albumTitle = form.querySelector("[name='albumTitle']").value;
+
+				if (!isValidTitle(albumTitle)) {
+					displayError("provided album title is not valid.", true);
+					return false;
+				}
+				return true;
+			}
 			
 			function handleCreateAlbumCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					if (x.status === 200) {
+						form.reset();
+						if(errorParent.contains(errorDiv))
+							errorParent.removeChild(errorDiv);
+						
 						self.update();
 					} else if (x.status === 401) {
 						handleUnauthorized();
@@ -53,10 +64,11 @@
 			}
 			
 			
-			function displayError(message) {
+			function displayError(message, dontAlert) {
 				errorDiv.textContent = message;
 				errorParent.appendChild(errorDiv);
-				alert(message);
+				if(!dontAlert)
+					alert(message);
 			}
 		}
 		

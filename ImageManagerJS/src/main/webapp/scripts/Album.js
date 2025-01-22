@@ -250,6 +250,9 @@
 		const nextImgs = document.getElementById("nextImgs");
 		const reorderImgBtn = document.getElementById("albumDisplayHeader").getElementsByTagName("img")[0];
 		
+		let hoverTimeout;
+		const hoverDuration = 0.75;
+		
 		this.registerEvents = function() {
 			//Listener logic for next and prev buttons
 			previousImgs.addEventListener("click", (e) => {
@@ -318,9 +321,13 @@
 				const imageHtml = thumbnailSlotTemplate.cloneNode(true);
 				imageHtml.getElementsByTagName("img")[0].setAttribute("src", getImageHost() + image.thumbnailPath);
 				imageHtml.getElementsByTagName("img")[0].setAttribute("data-pictureId", image.id);
-				imageHtml.getElementsByTagName("img")[0].addEventListener("click", (e) => {
-					e.preventDefault();
-					manager.showImageDetails(image.id);
+				imageHtml.getElementsByTagName("img")[0].addEventListener("mouseenter", () => {
+					hoverTimeout = setTimeout(() =>{
+						manager.showImageDetails(image.id);
+					}, hoverDuration * 1000);
+				});
+				imageHtml.getElementsByTagName("img")[0].addEventListener("mouseleave", () => {
+					clearTimeout(hoverTimeout);
 				});
 
 				imageHtml.getElementsByClassName("imageTitle")[0].textContent = image.title;
@@ -429,14 +436,32 @@
 				const albumId = manager.getAlbumId();
 				const requestUrl = 'UploadImage?albumId=' + albumId;
 
-				if (form.checkValidity()) {
+				if (validateForm(form)) {
 					postRequest(requestUrl, e.target.closest("form"), uploadImageCallback);
 				}
-				else {
-					form.reportValidity();
-				}
 			});
-
+			
+			function validateForm(form) {
+				const imageTitle = form.querySelector("[name='title']").value;
+				const image = form.querySelector("[name='image']").value;
+				const imageDescription = form.querySelector("[name='description']").value;
+				
+				
+				if(!image){
+					displayError("missing image file!", true);
+					return false;
+				}
+				else if (!isValidTitle(imageTitle)) {
+					displayError("provided image title is not valid.", true);
+					return false;
+				}
+				else if (!isValidImageDescription(imageDescription)) {
+					displayError("provided image description is not valid.", true);
+					return false;
+				}
+				return true;
+			} 
+			
 			function uploadImageCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					try {
@@ -457,10 +482,11 @@
 				}
 			}
 
-			function displayError(message) {
+			function displayError(message, dontAlert) {
 				errorDiv.textContent = message;
 				errorParent.insertBefore(errorDiv, errorParent.firstChild);
-				alert(message);
+				if(!dontAlert)
+					alert(message);
 			}
 		}
 
@@ -510,11 +536,19 @@
 				const albumId = manager.getAlbumId();
 				const requestUrl = 'AddToAlbum?albumId=' + albumId;
 
-				if (form.checkValidity()) {
+				if (validateForm(form)) {
 					postRequest(requestUrl, e.target.closest("form"), addPicturesCallback);
 				}
-				else {
-					form.reportValidity();
+				
+				function validateForm(form) {
+					const checkboxes = form.querySelectorAll("input[type='checkbox']");
+					
+					//Check that at least one is selected
+					if(!Array.from(checkboxes).some(x => x.checked)){
+						displayError("No pictures were checked.", true);
+						return false;
+					}
+					return true;
 				}
 			});
 
@@ -540,10 +574,11 @@
 				}
 			}
 
-			function displayError(message) {
+			function displayError(message, dontAlert) {
 				errorDiv.textContent = message;
 				errorParent.insertBefore(errorDiv, errorParent.children[1]);
-				alert(message);
+				if(!dontAlert)
+					alert(message);
 			}
 		}
 
@@ -654,7 +689,6 @@
 			const src = getImageHost() + picture.thumbnailPath;
 			overlay.getElementsByTagName("img")[0].setAttribute("src", src);
 
-			//TODO change text if last picture instance or simply delete
 			if (albumMessage) {
 				Array.prototype.forEach.call(overlay.getElementsByClassName("removeFromLastAlbumMessage"), function(element) {
 					element.removeAttribute("style");
@@ -862,17 +896,30 @@
 				if (picture) {
 					const request = "EditImage?pictureId=" + picture.id;
 
-					if (form.checkValidity()) {
-						const description = form.getElementsByTagName("textarea")[0].value.trim();
-						if (description.length > 0) {
-							if (!validDescription(description))
-								return;
-						}
+					if (validateForm(form)) {
 						postRequest(request, form, (x) => editImageCallback(x));
 					}
-					else {
-						form.reportValidity();
-					}
+					
+					function validateForm(form) {
+						const imageTitle = form.querySelector("[name='title']").value;
+						const date = form.querySelector("[name='date']").value;
+						const imageDescription = form.querySelector("[name='description']").value;
+
+
+						if (!isValidDate(date)) {
+							displayError("provided image date is not valid.", true);
+							return false;
+						}
+						else if (!isValidTitle(imageTitle)) {
+							displayError("provided image title is not valid.", true);
+							return false;
+						}
+						else if (!isValidImageDescription(imageDescription)) {
+							displayError("provided image description is not valid.", true);
+							return false;
+						}
+						return true;
+					} 
 
 					function editImageCallback(x) {
 						if (x.readyState === XMLHttpRequest.DONE) {
@@ -893,28 +940,13 @@
 						}
 					}
 
-					function validDescription(description) {
-						const regex = new RegExp("^[a-zA-Z0-9(?:\\r\\n|\\r|\\n|\\xB0)\\x3F\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$");
-
-						if (description.length > 1023) {
-							displayError("Description too long");
-							return false;
-						}
-						else if (!regex.test(description)) {
-							displayError("Description contains unsupported characters");
-							return false;
-						}
-
-						return true;
-					}
-
-					function displayError(message) {
+					function displayError(message, dontAlert) {
 						errorDiv.textContent = message;
 						errorParent.appendChild(errorDiv);
-						alert(message);
+						if(!dontAlert)
+							alert(message);
 					}
 				}
-
 			});
 		}
 
@@ -975,33 +1007,25 @@
 			document.getElementById("submitComment").addEventListener("click", e => {
 				e.preventDefault();
 				const form = e.target.closest("form");
-				if (form.checkValidity()) {
-					if (validForm(form)) {
-						const request = "PostComment?pictureId=" + pictureId;
-						postRequest(request, form, (x) => postCommentCallback(x, parent));
-					}
+
+				if (validateForm(form)) {
+					const request = "PostComment?pictureId=" + pictureId;
+					postRequest(request, form, (x) => postCommentCallback(x, parent));
 				}
-				else {
-					commentForm.reportValidity();
-				}
-
-				function validForm(form) {
-					const regex = new RegExp("^[a-zA-Z0-9(?:\\r\\n|\\r|\\n|\\xB0)\\x3F\\x21\\x40\\x23\\x24\\x25\\x5E\\x26\\x2A\\x28\\x29\\x5F\\x2B\\x2D\\x3D\\x5B\\x5D\\x7B\\x7D\\x7C\\x3B\\x3A\\x27\\x22\\x2C\\x2E\\x3C\\x3E\\x3F\\x2F\\x5C\\x7E\\x20]+$");
-					const textContent = form.getElementsByTagName("textarea")[0].value.trim();
-
-					if (textContent.length === 0) {
-						displayError("Comment body can't be empty");
-						return false;
-					}
-					else if (textContent.length > 1023) {
-						displayError("Comment body too long");
-						return false;
-					}
-					else if (!regex.test(textContent)) {
-						displayError("Comment contains unsupported characters");
+				
+				
+				function validateForm(form) {
+					const comment = form.querySelector("[name='comment']").value;
+					
+					if(!comment){
+						displayError("Comment body can't be empty!", true);
 						return false;
 					}
 
+					if (!isValidCommentBody(comment)) {
+						displayError("provided comment is not valid.", true);
+						return false;
+					}
 					return true;
 				}
 
@@ -1024,10 +1048,11 @@
 				}
 
 
-				function displayError(message) {
+				function displayError(message, dontAlert) {
 					errorDiv.textContent = message;
 					errorParent.appendChild(errorDiv);
-					alert(message);
+					if(!dontAlert)
+						alert(message);
 				}
 
 			});
@@ -1078,6 +1103,8 @@
 
 		this.reset = function() {
 			commentForm.reset();
+			if(errorParent.contains(errorDiv))
+				errorParent.removeChild(errorDiv);
 		}
 	}
 	

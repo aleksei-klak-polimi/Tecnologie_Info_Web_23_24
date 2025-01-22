@@ -5,6 +5,7 @@
 <title>Home</title>
 <link rel="stylesheet" type="text/css" media="all" href="/ImageManagerJS/CSS/mystyle.css"/>
 <script src="/ImageManagerJS/scripts/utils.js" charset="utf-8" defer></script>
+<script src="/ImageManagerJS/scripts/InputSanitizer.js" charset="utf-8" defer></script>
 <script src="/ImageManagerJS/scripts/Album.js" charset="utf-8" defer></script>
 <script src="/ImageManagerJS/scripts/Albums.js" charset="utf-8" defer></script>
 <script src="/ImageManagerJS/scripts/Home.js" charset="utf-8" defer></script>
@@ -109,9 +110,7 @@
 			</div>
 			<form action="#" autocomplete="off">
 				<p>Create new Album</p>
-				<input 	type="text" name="albumTitle" placeholder="Album Title" required
-						maxlength="127" minlength="3"
-						pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
+				<input 	type="text" name="albumTitle" placeholder="Album Title">
 				<input id="submitCreateAlbum" type="submit" value="Create Album" class="btn">
 				<div class="errorText">PlaceHolder
 					error text</div>
@@ -362,7 +361,7 @@
 								</form>
 							</div>
 							<div class="imageFrame">
-								<a href="#"><img src="static/ImagePlaceholder.png"></a>
+								<a><img src="static/ImagePlaceholder.png"></a>
 							</div>
 							<div class="imageFooter">
 								<p class="imageTitle">ImagePlaceholder Title</p>
@@ -375,7 +374,7 @@
 								</form>
 							</div>
 							<div class="imageFrame">
-								<a href="#"><img src="static/ImagePlaceholder.png"></a>
+								<a><img src="static/ImagePlaceholder.png"></a>
 							</div>
 							<div class="imageFooter">
 								<p class="imageTitle">ImagePlaceholder Title</p>
@@ -388,7 +387,7 @@
 								</form>
 							</div>
 							<div class="imageFrame">
-								<a href="#"><img src="static/ImagePlaceholder.png"></a>
+								<a><img src="static/ImagePlaceholder.png"></a>
 							</div>
 							<div class="imageFooter">
 								<p class="imageTitle">ImagePlaceholder Title</p>
@@ -427,14 +426,11 @@
 			<form action="#" id="createAlbumForm" enctype="multipart/form-data" autocomplete="off">
 				<div>
 					<label for="file">Upload Image</label>
-					<input type="file" id="file" name="image" accept=".png, .jpg, .jpeg" required>
+					<input type="file" id="file" name="image" accept=".png, .jpg, .jpeg">
 				</div>
 				<div>
-					<input 	type="text" name="title" placeholder="Image Title" required
-							maxlength="127" minlength="3"
-							pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
-					<textarea 	id="uploadDescription" name="description" placeholder="Image Description"
-								maxlength="1023"></textarea>
+					<input 	type="text" name="title" placeholder="Image Title">
+					<textarea id="uploadDescription" name="description" placeholder="Image Description"></textarea>
 				</div>
 				<div>
 					<input type="submit" id="uploadImage" value="Upload Image" class="btn">
@@ -570,7 +566,9 @@
 					<div id="imageDate">22-12-24</div>
 				</div>
 				<div id="imageWrapper">
-					<img src="static/ImagePlaceholder.png">
+					<div id="imageScrollbars">
+						<img src="static/ImagePlaceholder.png">
+					</div>
 				</div>
 				<div id="imageDescription">
 				<p>Image Description</p>
@@ -584,13 +582,10 @@
 				<form action="#" id="editImageForm" autocomplete="off">
 					<div>
 						<div id="inlineTextInputs">
-							<input 	type="text" name="title" id="editedImageTitle" placeholder="Image Title"
-									required maxlength="127" minlength="3"
-									pattern="^[a-zA-Z0-9\x21\x40\x23\x24\x25\x5E\x26\x2A\x28\x29\x5F\x2B\x2D\x3D\x5B\x5D\x7B\x7D\x7C\x3B\x3A\x27\x22\x2C\x2E\x3C\x3E\x3F\x2F\x5C\x7E\x20]+$">
-							<input 	id="editedImageDate" name="date" type="date"
-									required>
+							<input 	type="text" name="title" id="editedImageTitle" placeholder="Image Title">
+							<input 	id="editedImageDate" name="date" type="date">
 						</div>
-						<textarea id="editedImageDescription" maxlength="1023" name="description" placeholder="Image Description"></textarea>
+						<textarea id="editedImageDescription" name="description" placeholder="Image Description"></textarea>
 					</div>
 					<div>
 						<input id="submitEditImage" type="submit" name="Edit" value="Confirm changes" class="btn">
@@ -602,7 +597,7 @@
 			<form id="commentForm">
 				<div class="formTitle">New Comment</div>
 				<div id="inputs">
-					<textarea name="comment" placeholder="Write your comment here..." required maxlength="1023"></textarea>
+					<textarea name="comment" placeholder="Write your comment here..."></textarea>
 					<input id="submitComment" type="submit" class="btn" value="Post">
 				</div>
 				<div class="errorText">PlaceHolder error text</div>
