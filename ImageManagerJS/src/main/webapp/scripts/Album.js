@@ -87,9 +87,8 @@
 				function refreshImagesCallback(x) {
 					if (x.readyState === XMLHttpRequest.DONE) {
 						try {
-							const response = JSON.parse(x.responseText);
-
 							if (x.status === 200) {
+								const response = JSON.parse(x.responseText);
 								const recievedObjects = JSON.parse(response.data);
 
 								//Retrieve and sort images according to user preference
@@ -140,9 +139,10 @@
 
 							}
 							else if (x.status == 401) {
-								handleUnauthorized(response);
+								handleUnauthorized();
 							}
 							else {
+								const response = JSON.parse(x.responseText);
 								handleError(response, x.status);
 							}
 						}
@@ -349,8 +349,7 @@
 									displayError(response.error);
 								}
 								else if (x.status === 401) {
-									const response = JSON.parse(x.responseText);
-									handleUnauthorized(response);
+									handleUnauthorized();
 								}
 								else if (x.status == 405) {
 									alert("Last instance");
@@ -450,8 +449,7 @@
 							displayError(response.error);
 						}
 						else if (x.status === 401) {
-							const response = JSON.parse(x.responseText);
-							handleUnauthorized(response);
+							handleUnauthorized();
 						}
 					} catch (e) {
 						console.error("Error parsing JSON response: " + e.message);
@@ -534,8 +532,7 @@
 							displayError(response.error);
 						}
 						else if (x.status === 401) {
-							const response = JSON.parse(x.responseText);
-							handleUnauthorized(response);
+							handleUnauthorized();
 						}
 					} catch (e) {
 						console.error("Error parsing JSON response: " + e.message);
@@ -632,8 +629,7 @@
 							alert(response.error);
 						}
 						else if (x.status === 401) {
-							const response = JSON.parse(x.responseText);
-							handleUnauthorized(response);
+							handleUnauthorized();
 						}
 					} catch (e) {
 						console.error("Error parsing JSON response: " + e.message);
@@ -1150,10 +1146,8 @@
 						}
 						else {
 							try{
-								const response = JSON.parse(x.responseText);
-								
 								if(x.status === 401){
-									handleUnauthorized(response);
+									handleUnauthorized();
 								}
 								else{
 									errorDiv.textContent = message;

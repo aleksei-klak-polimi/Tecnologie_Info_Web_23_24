@@ -101,21 +101,12 @@
 			function handleLogOutCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					try {
-						const response = JSON.parse(x.responseText);
-
-						if (x.status === 200) {
-							if (response.redirect){
-								sessionStorage.removeItem("user");
-								window.location.href = "Auth";
-							}
-							else {
-								console.warn("Server responded 200 to LogOut but provided no redirect.");
-							}
-						}
-						else if (x.status === 401) {
-							handleUnauthorized(response);
+						if (x.status === 200 || x.status === 401) {
+							sessionStorage.clear();
+							window.location.href = "Auth";
 						}
 						else {
+							const response = JSON.parse(x.responseText);
 							handleError(response, x.status);
 						}
 					}

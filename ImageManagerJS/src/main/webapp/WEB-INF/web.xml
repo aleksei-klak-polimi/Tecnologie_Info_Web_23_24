@@ -64,16 +64,16 @@
 	</servlet-mapping>
 	
 	<filter>
-		<filter-name>NotLoggedInFilterAPI</filter-name>
-		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilterAPI</filter-class>
+		<filter-name>NotLoggedInFilter</filter-name>
+		<filter-class>it.polimi.tiw.albums.filters.NotLoggedInFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>
-		<filter-name>NotLoggedInFilterAPI</filter-name>
+		<filter-name>NotLoggedInFilter</filter-name>
 		<url-pattern>/UploadImage</url-pattern>
 		<url-pattern>/RemoveFromAlbum</url-pattern>
 		<url-pattern>/AddToAlbum</url-pattern>
-		<url-pattern>/GetImagesByAlbum</url-pattern>
+		<url-pattern>/GetAlbum</url-pattern>
 		<url-pattern>/DeleteImage</url-pattern>
 		<url-pattern>/CreateAlbum</url-pattern>
 		<url-pattern>/GetAlbums</url-pattern>

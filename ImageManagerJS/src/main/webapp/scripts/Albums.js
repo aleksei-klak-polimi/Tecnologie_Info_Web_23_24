@@ -40,8 +40,7 @@
 					if (x.status === 200) {
 						self.update();
 					} else if (x.status === 401) {
-						const response = JSON.parse(x.responseText);
-						handleUnauthorized(response);
+						handleUnauthorized();
 					} else {
 						try {
 							const response = JSON.parse(x.responseText);
@@ -67,9 +66,8 @@
 			function refreshAlbumsCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					try {
-						const response = JSON.parse(x.responseText);
-
 						if (x.status === 200) {
+							const response = JSON.parse(x.responseText);
 							if (response.data) {
 								clearAlbums(myAlbums);
 								clearAlbums(otherAlbums);
@@ -97,9 +95,10 @@
 							}
 						}
 						else if (x.status == 401) {
-							handleUnauthorized(response);
+							handleUnauthorized();
 						}
 						else {
+							const response = JSON.parse(x.responseText);
 							handleError(response, x.status);
 						}
 					}

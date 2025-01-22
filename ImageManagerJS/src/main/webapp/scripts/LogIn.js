@@ -67,9 +67,8 @@
 			function handleLogInCallback(x) {
 				if (x.readyState === XMLHttpRequest.DONE) {
 					try {
-						const response = JSON.parse(x.responseText);
-
 						if (x.status === 200) {
+							const response = JSON.parse(x.responseText);
 							if (response.data){
 								const user = response.data
 								sessionStorage.setItem("user", user);
@@ -79,7 +78,11 @@
 								console.warn("Server responded 200 but sent to user obj")
 							}
 						}
-						else if ([400, 401, 402].includes(x.status)) {
+						else if(x.status === 401){
+							handleUnauthorized();
+						}
+						else if ([400, 402].includes(x.status)) {
+							const response = JSON.parse(x.responseText);
 							displayError(response.error);
 						}
 					} catch (e) {

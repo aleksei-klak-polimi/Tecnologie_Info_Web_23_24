@@ -43,16 +43,10 @@ function getImageHost(){
 }
 
 
-/**
- * Handles unauthorized responses.
- * @param {Object} response - The server response.
- */
-function handleUnauthorized(response) {
-	if (response.redirect) {
-		window.location.href = response.redirect;
-	} else {
-		console.warn("Server responded 401 but provided no redirect.");
-	}
+
+function handleUnauthorized() {
+	sessionStorage.clear();
+	window.location.href = "Auth";
 }
 
 
