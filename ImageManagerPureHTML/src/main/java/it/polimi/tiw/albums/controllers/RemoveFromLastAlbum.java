@@ -1,10 +1,8 @@
 package it.polimi.tiw.albums.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.apache.commons.io.FilenameUtils;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.web.IWebExchange;
@@ -80,36 +78,6 @@ public class RemoveFromLastAlbum extends DBServlet{
             String imageHost = buildImageHost(request);
 
             prepareContextAndRender(request, response, path, picture, album, albumPage, imageHost);
-		}
-		catch (SQLException e) {
-			e.printStackTrace(); // for debugging
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database access failed");
-		}
-	}
-	
-	
-	
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			HttpSession session = request.getSession();
-			User user = (User) session.getAttribute("user");
-			int userId = user.getId();
-			
-			//PARSE INPUTS
-			int albumId = validateAndRetrieveAlbumId(request, response, userId);
-			if(albumId == -1) return;
-			Album album = getAlbumById(albumId);
-			
-			int pictureId = validateAndRetrievePictureId(request, response, albumId);
-            if(pictureId == -1) return;
-            Picture picture = getPictureById(pictureId);
-            
-            int albumPage = validateAndRetrieveAlbumPage(request, response, albumId);
-            
-            deleteImage(request, picture);
-            redirectToAlbum(request, response, album.getId(), albumPage);
-            
 		}
 		catch (SQLException e) {
 			e.printStackTrace(); // for debugging
@@ -212,38 +180,6 @@ public class RemoveFromLastAlbum extends DBServlet{
         ServletContext context = getServletContext();
         return "http://" + serverDomain + context.getInitParameter("ImageHost");
     }
-	
-	private void deleteImage(HttpServletRequest request, Picture picture) throws SQLException {
-		ServletContext context = getServletContext();
-		String uploadImagePath = context.getInitParameter("uploadImagePath");
-		String uploadThumbnailPath = context.getInitParameter("uploadThumbnailPath");
-		
-		String pictureName = FilenameUtils.getName(picture.getPath());
-		String thumbNailName = FilenameUtils.getName(picture.getThumbnailPath());
-		
-		File pictureFile = new File(request.getServletContext().getRealPath("/").concat(uploadImagePath).concat(pictureName));
-		File thumbNailFile = new File(request.getServletContext().getRealPath("/").concat(uploadThumbnailPath).concat(thumbNailName));
-		
-		//Remove image from database
-		PictureDAO pictureDao = new PictureDAO(conn);
-		pictureDao.deletePictureById(picture.getId());
-		
-		//Delete image from system
-		if(!pictureFile.delete()) {
-			System.out.println("Couldn't deleted the image: " + pictureFile.getName());
-			System.out.println("Full file path: " + request.getServletContext().getRealPath("/").concat(uploadImagePath).concat(pictureName));
-		}
-		if(!thumbNailFile.delete()) {
-			System.out.println("Couldn't deleted the thumbnail: " + pictureFile.getName());
-			System.out.println("Full file path: " + request.getServletContext().getRealPath("/").concat(uploadThumbnailPath).concat(thumbNailName));
-		}
-	}
-	
-	private void redirectToAlbum(HttpServletRequest request, HttpServletResponse response, int albumId, int albumPage) throws IOException, SQLException {
-		String paramString = String.format("?albumId=%d&albumPage=%d", albumId, albumPage);
-		String path = request.getServletContext().getContextPath() + "/Album" + paramString;
-		response.sendRedirect(path);
-	}
 
 	private void prepareContextAndRender(HttpServletRequest request, HttpServletResponse response,
 			String path, Picture picture, Album album, int albumPage,
