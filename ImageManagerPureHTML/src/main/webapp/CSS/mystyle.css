@@ -496,6 +496,8 @@ textarea{
 	display:flex;
 	justify-content: center;
 	
+	max-height: 75vh;
+	
 	padding: 5px 0;
 	
   	border-width: 0px;
@@ -505,8 +507,12 @@ textarea{
     border-color: gray;
 }
 
+.imageContainer #imageScrollbars{
+	overflow: auto;
+}
+
 .imageContainer img{
-	max-width:100%;
+	/*max-width:100%;*/
 }
 
 .imageContainer #imageDescription{

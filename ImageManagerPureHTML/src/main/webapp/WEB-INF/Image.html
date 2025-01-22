@@ -20,8 +20,10 @@
 					<div id="imageDate" th:text="${picture.uploadDate}">22-12-24</div>
 				</div>
 				<div id="imageWrapper">
+					<div id="imageScrollbars">
 					<img src="../static/ImagePlaceholder.png"
 						th:src="@{${imageHost} + ${picture.path}}">
+					</div>
 				</div>
 				<div id="imageDescription">
 				<p th:each="line : ${#strings.arraySplit(picture.description, '\n')}" th:text="${line}">Image
