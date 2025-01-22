@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import com.google.gson.Gson;
 
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.MultipartConfig;
