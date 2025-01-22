@@ -12,7 +12,6 @@
 		});
 	}
 	else{
-		console.log("Not logged in");
 		window.location.href = "LogIn";
 	}
 	
