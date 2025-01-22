@@ -1,7 +1,6 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import it.polimi.tiw.albums.beans.Picture;
 import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.ConfigManager;
-import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.controllers.helpers.TemplateEngineBuilder;
 import it.polimi.tiw.albums.beans.Album;
 import it.polimi.tiw.albums.daos.AlbumDAO;
@@ -21,22 +19,19 @@ import it.polimi.tiw.albums.daos.PictureDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/Album")
-public class DisplayAlbum extends HttpServlet {
+public class DisplayAlbum extends DBServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private int defaultPageSize;
 	private int serverPort;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
-	private Connection conn;
 	
 	
 	// CONSTRUCTOR
@@ -49,22 +44,15 @@ public class DisplayAlbum extends HttpServlet {
 	// SERVLET METHODS
 	@Override
 	public void init() throws ServletException {
+		super.init();
+		
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
-
-		try {
-			conn = DBConnector.getConnection(getServletContext());
 			
-			ConfigManager config = ConfigManager.getInstance();
+		ConfigManager config = ConfigManager.getInstance();
 
-			defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
-			serverPort = Integer.parseInt(config.getProperty("externalPort"));
-
-		} catch (ClassNotFoundException e) {
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
-		}
+		defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
+		serverPort = Integer.parseInt(config.getProperty("externalPort"));
 	}
 	
 	

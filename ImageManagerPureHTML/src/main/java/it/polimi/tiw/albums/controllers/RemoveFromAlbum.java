@@ -1,29 +1,24 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import it.polimi.tiw.albums.beans.User;
 import it.polimi.tiw.albums.controllers.helpers.ConfigManager;
-import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.daos.PictureDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/RemoveFromAlbum")
-public class RemoveFromAlbum extends HttpServlet{
+public class RemoveFromAlbum extends DBServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private int defaultPageSize;
-	private Connection conn;
 
 	
 	// CONSTRUCTOR
@@ -36,18 +31,11 @@ public class RemoveFromAlbum extends HttpServlet{
 	// SERVLET METHODS
 	@Override
 	public void init() throws ServletException {
-		try {
-			conn = DBConnector.getConnection(getServletContext());
+		super.init();
+		
+		ConfigManager config = ConfigManager.getInstance();
 			
-			ConfigManager config = ConfigManager.getInstance();
-			
-			defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
-
-		} catch (ClassNotFoundException e) {
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
-		}
+		defaultPageSize = Integer.parseInt(config.getProperty("imagesPerPage"));
 	}
 	
 	

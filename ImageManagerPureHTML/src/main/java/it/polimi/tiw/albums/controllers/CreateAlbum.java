@@ -1,28 +1,23 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import it.polimi.tiw.albums.beans.User;
-import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.AlbumDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
 
 @WebServlet("/CreateAlbum")
-public class CreateAlbum extends HttpServlet{
+public class CreateAlbum extends DBServlet{
 	//ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private Connection conn;
 	
 	
 	
@@ -34,21 +29,6 @@ public class CreateAlbum extends HttpServlet{
 	
 	
 	//SERVLET METHODS
-	@Override
-	public void init() throws ServletException {
-		try {
-			conn = DBConnector.getConnection(getServletContext());
-
-		} catch (ClassNotFoundException e) {
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
-		}
-		
-	}
-	
-	
-	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		//Retrieve inputs

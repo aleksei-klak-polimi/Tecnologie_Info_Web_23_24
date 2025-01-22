@@ -1,7 +1,6 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,14 +11,11 @@ import com.google.gson.Gson;
 import it.polimi.tiw.albums.CommunicationAPI.ApiResponse;
 import it.polimi.tiw.albums.beans.Picture;
 import it.polimi.tiw.albums.beans.User;
-import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.daos.PictureDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -31,30 +27,20 @@ import jakarta.servlet.http.Part;
  maxFileSize = 1024 * 1024 * 10, // 10 MB
  maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
-public class EditImage extends HttpServlet{
+public class EditImage extends DBServlet{
 	// ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private Connection conn;
 
+	
+	
+	
+	
 	// CONSTRUCTOR
 	public EditImage() {
 		super();
 	}
 
 	// SERVLET METHODS
-	@Override
-	public void init() throws ServletException {
-		try {
-			conn = DBConnector.getConnection(getServletContext());		
-		} catch (ClassNotFoundException e) {
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
-		}
-	}
-
-
-
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {

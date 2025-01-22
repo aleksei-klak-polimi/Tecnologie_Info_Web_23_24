@@ -2,7 +2,6 @@ package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.thymeleaf.ITemplateEngine;
@@ -11,25 +10,21 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import it.polimi.tiw.albums.beans.User;
-import it.polimi.tiw.albums.controllers.helpers.DBConnector;
 import it.polimi.tiw.albums.controllers.helpers.TemplateEngineBuilder;
 import it.polimi.tiw.albums.daos.UserDAO;
 import it.polimi.tiw.albums.utils.InputSanitizer;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/LogIn")
-public class LogIn extends HttpServlet {
+public class LogIn extends DBServlet{
 	// ATTRIBUTES
 	private static final long serialVersionUID = 1L;
 	private ITemplateEngine templateEngine;
 	private JakartaServletWebApplication application;
-	private Connection conn;
 
 	
 	
@@ -43,17 +38,10 @@ public class LogIn extends HttpServlet {
 	// SERVLET METHODS
 	@Override
 	public void init() throws ServletException {
+		super.init();
+		
 		this.application = JakartaServletWebApplication.buildApplication(getServletContext());
 		this.templateEngine = TemplateEngineBuilder.buildTemplateEngine(this.application);
-
-		try {
-			conn = DBConnector.getConnection(getServletContext());
-
-		} catch (ClassNotFoundException e) {
-			throw new UnavailableException("Can't load database driver");
-		} catch (SQLException e) {
-			throw new UnavailableException("Couldn't get db connection");
-		}
 	}
 	
 	

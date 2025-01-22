@@ -1,7 +1,6 @@
 package it.polimi.tiw.albums.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.google.gson.Gson;
@@ -16,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -27,14 +25,17 @@ import jakarta.servlet.http.HttpSession;
 		maxFileSize = 1024 * 1024 * 10,      // 10 MB
 		maxRequestSize = 1024 * 1024 * 100   // 100 MB
 )
-public class ResetPictureOrder extends HttpServlet{
+public class ResetPictureOrder extends DBServlet{
 	// ATTRIBUTES
 	private static final long serialVersionUID = 1L;
-	private Connection conn;
 
+	
+	
+	
+	
 	// CONSTRUCTOR
 	public ResetPictureOrder() {
-				super();
+		super();
 	}
 
 	// SERVLET METHODS
