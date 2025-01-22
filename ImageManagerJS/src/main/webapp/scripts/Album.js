@@ -351,7 +351,7 @@
 								else if (x.status === 401) {
 									handleUnauthorized();
 								}
-								else if (x.status == 405) {
+								else if (x.status === 422) {
 									alert("Last instance");
 									manager.showDeleteImage(pictureId, true);
 								}

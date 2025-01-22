@@ -63,7 +63,7 @@ public class RemoveFromAlbum extends HttpServlet{
 			
 			//Picture is in no other albums, redirect to delete picture
 			if(lastPictureInstance(request, response, pictureId))
-				sendResponse(response, HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Last instace of picture, please delete instead of revmoing from album.");
+				sendResponse(response, 422, "LastInstace.");
 			else {
 				//If picture is present in more than one album then simply remove from current one
 				removePicture(albumId, pictureId);
