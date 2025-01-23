@@ -12,7 +12,7 @@
 		});
 	}
 	else{
-		window.location.href = "LogIn";
+		window.location.href = "Auth";
 	}
 	
 	function HomeManager(){

@@ -85,6 +85,6 @@
 	</filter-mapping>
 	
 	<welcome-file-list>
-		<welcome-file>LogIn</welcome-file>
+		<welcome-file>Auth</welcome-file>
 	</welcome-file-list>
 </web-app>
