@@ -469,7 +469,12 @@
 							self.reset();
 							manager.update();
 						}
-						else if ([400, 402, 403, 500].includes(x.status)) {
+						else if(x.status === 403){
+							const response = JSON.parse(x.responseText);
+							displayError(response.error);
+							self.hide();
+						}
+						else if ([400, 402, 500].includes(x.status)) {
 							const response = JSON.parse(x.responseText);
 							displayError(response.error);
 						}
@@ -561,7 +566,12 @@
 							self.reset();
 							manager.update();
 						}
-						else if ([400, 402, 403, 500].includes(x.status)) {
+						else if (x.status === 403) {
+							const response = JSON.parse(x.responseText);
+							displayError(response.error);
+							self.hide();
+						}
+						else if ([400, 402, 500].includes(x.status)) {
 							const response = JSON.parse(x.responseText);
 							displayError(response.error);
 						}
@@ -659,7 +669,12 @@
 						if (x.status === 200) {
 							manager.update();
 						}
-						else if ([400, 402, 403, 500].includes(x.status)) {
+						else if (x.status === 403) {
+							const response = JSON.parse(x.responseText);
+							alert(response.error);
+							self.hide();
+						}
+						else if ([400, 402, 500].includes(x.status)) {
 							const response = JSON.parse(x.responseText);
 							alert(response.error);
 						}
