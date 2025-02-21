@@ -507,12 +507,8 @@ textarea{
     border-color: gray;
 }
 
-.imageContainer #imageScrollbars{
-	overflow: auto;
-}
-
 .imageContainer img{
-	/*max-width:100%;*/
+	max-width:100%;
 }
 
 .imageContainer #imageDescription{
