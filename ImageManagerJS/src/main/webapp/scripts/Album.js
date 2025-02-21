@@ -321,13 +321,8 @@
 				const imageHtml = thumbnailSlotTemplate.cloneNode(true);
 				imageHtml.getElementsByTagName("img")[0].setAttribute("src", getImageHost() + image.thumbnailPath);
 				imageHtml.getElementsByTagName("img")[0].setAttribute("data-pictureId", image.id);
-				imageHtml.getElementsByTagName("img")[0].addEventListener("mouseenter", () => {
-					hoverTimeout = setTimeout(() =>{
-						manager.showImageDetails(image.id);
-					}, hoverDuration * 1000);
-				});
-				imageHtml.getElementsByTagName("img")[0].addEventListener("mouseleave", () => {
-					clearTimeout(hoverTimeout);
+				imageHtml.getElementsByTagName("img")[0].addEventListener("click", () => {
+					manager.showImageDetails(image.id);
 				});
 
 				imageHtml.getElementsByClassName("imageTitle")[0].textContent = image.title;
